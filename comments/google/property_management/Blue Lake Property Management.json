@@ -1,0 +1,18 @@
+[
+  {
+    "author": "Shelby Burkhart",
+    "rating": 5.0,
+    "review": "The best landlords in the greater Skagit area! Treat you like a member of the family & are always there to help you at the drop of hat!",
+    "ownerResponse": []
+  },
+  {
+    "author": "Megan Anderson",
+    "rating": 5.0,
+    "review": "Great customer service",
+    "ownerResponse": [
+      {
+        "text": "Thank you Megan!"
+      }
+    ]
+  }
+]

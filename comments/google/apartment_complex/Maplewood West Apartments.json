@@ -1,0 +1,20 @@
+[
+  {
+    "author": "Charlotte Jane",
+    "rating": 5.0,
+    "review": "Cute apartments with well tended yards, very nice inside, and fabulous neighborhood.",
+    "ownerResponse": []
+  },
+  {
+    "author": "Steve",
+    "rating": 4.0,
+    "review": "Very well- managed and well maintained",
+    "ownerResponse": []
+  },
+  {
+    "author": "Tiger Woo",
+    "rating": 3.0,
+    "review": "Quiet neighborhood",
+    "ownerResponse": []
+  }
+]
