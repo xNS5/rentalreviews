@@ -45,6 +45,5 @@ Yelp does have an official API which is nice, however upon further investiation 
 
 ## Reddit
 
-Reddit has an official API, and getting the comments on a given post was trivial. See the [Python Reddit API Wrapper](https://praw.readthedocs.io/en/stable/) for more technical details. To gather the comments, [/r/Bellingham](https://www.reddit.com/r/Bellingham/) and [/r/WWU](https://www.reddit.com/r/WWU/) were manually searched for relevant posts using key phrases such as "Property management company", "rental", "apartment", to gather a list of URLs. Those URLs were used to get the post ID, and that post ID was used to get the comments. The files generated from these posts aren't organized by specific property management companies.
-
+Reddit has an official API, and getting the comments on a given post was trivial. See the [Python Reddit API Wrapper](https://praw.readthedocs.io/en/stable/) for more details. To gather the comments, [/r/Bellingham](https://www.reddit.com/r/Bellingham/) and [/r/WWU](https://www.reddit.com/r/WWU/) were manually searched for relevant posts using key phrases such as "Property management company", "rental", "apartment", to gather a list of URLs. Those URLs were used to get the post ID, and that post ID was used to get the comments on a given post. The files generated from these posts aren't organized by specific property management companies.
 
