@@ -1,0 +1,48 @@
+{% import 'macros.html' as macros %}
+<!DOCTYPE html>
+<html lang="{{lang}}">
+
+<!-- https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css -->
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <meta content="#ffffff" name="theme-color" />
+  <meta content="#da532c" name="msapplication-TileColor" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora&display=swap" rel="stylesheet">
+ 
+  <link rel="stylesheet" href="/main.css">
+
+  {% block user_custom_stylesheet %}
+  {% endblock %}
+  <title>
+    {% block title %}
+    {{ config.title }}
+    {% endblock title %}
+  </title>
+
+  {% block analytics %}
+  <div id="analytics-div" on></div>
+  {% endblock analytics %}
+</head>
+
+<body>  
+    
+    {% block content %}
+    {% endblock %}
+
+</body>
+
+
+
+<script type="text/javascript" src='{{ get_url(path="js/jquery.min.js") }}'></script>
+<script type="text/javascript" src='{{ get_url(path="js/jquery.scrolly.min.js") }}'></script>
+<script type="text/javascript" src='{{ get_url(path="js/browser.min.js") }}'></script>
+<script type="text/javascript" src='{{ get_url(path="js/breakpoints.min.js") }}'></script>
+<script type="text/javascript" src='{{ get_url(path="js/main.js") }}'></script>
+<script type="text/javascript" src='{{ get_url(path="js/util.js") }}'></script>
+<script type="text/javascript" src="{{ get_url(path='js/site.js') }}"></script>
+
+</html>
