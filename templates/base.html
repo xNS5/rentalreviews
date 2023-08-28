@@ -1,48 +1,45 @@
-{% import 'macros.html' as macros %}
+{%- import 'macros/head.html' as macros_head -%}
+{% import 'macros/math.html' as macros_math -%}
+{% import 'macros/header.html' as macros_header -%}
+{% import 'macros/footer.html' as macros_footer -%}
+{% import 'macros/javascript.html' as macros_js -%}
+{% import 'macros/page-publish-metadata.html' as macros_publish -%}
+{% import 'macros/section-navigation.html' as macros_section_nav -%}
+{% import 'macros/docs-sidebar.html' as macros_sidebar -%}
+{% import 'macros/docs-navigation.html' as macros_navigation -%}
+{% import 'macros/docs-toc.html' as macros_toc -%}
 <!DOCTYPE html>
-<html lang="{{lang}}">
-
-<!-- https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css -->
-
+<html lang="{{ config.extra.language_code | default(value="en-US") }}">
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
-  <meta content="#ffffff" name="theme-color" />
-  <meta content="#da532c" name="msapplication-TileColor" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora&display=swap" rel="stylesheet">
- 
-  <link rel="stylesheet" href="/main.css">
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{{ macros_head::resource() }}
+{{ macros_head::stylesheet() }}
 
-  {% block user_custom_stylesheet %}
-  {% endblock %}
-  <title>
-    {% block title %}
-    {{ config.title }}
-    {% endblock title %}
-  </title>
+{% block seo %}
+  {% if config.extra.title_separator %}
+    {% set title_separator = " " ~ config.extra.title_separator ~ " " %}
+  {% else %}
+    {% set title_separator = " | " %}
+  {% endif %}
+{% endblock seo %}
 
-  {% block analytics %}
-  <div id="analytics-div" on></div>
-  {% endblock analytics %}
+{{ macros_head::favicons() }}
+{% block math %}{{ macros_math::math() }}{% endblock math %}
 </head>
+{% block body %}{% set page_class="home" %}{% endblock body %}
+<body class="{{ page_class }}">
+  {% block header %}
+    {{ macros_header::header(current_section="/") }}
+  {% endblock header %}
 
-<body>  
-    
-    {% block content %}
-    {% endblock %}
+  {% block content %}{% endblock content %}
 
+  {% block footer %}
+    {{ macros_footer::footer() }}
+  {% endblock footer %}
+
+  {{ macros_js::javascript() }}  
 </body>
-
-
-
-<script type="text/javascript" src='{{ get_url(path="js/jquery.min.js") }}'></script>
-<script type="text/javascript" src='{{ get_url(path="js/jquery.scrolly.min.js") }}'></script>
-<script type="text/javascript" src='{{ get_url(path="js/browser.min.js") }}'></script>
-<script type="text/javascript" src='{{ get_url(path="js/breakpoints.min.js") }}'></script>
-<script type="text/javascript" src='{{ get_url(path="js/main.js") }}'></script>
-<script type="text/javascript" src='{{ get_url(path="js/util.js") }}'></script>
-<script type="text/javascript" src="{{ get_url(path='js/site.js') }}"></script>
-
 </html>

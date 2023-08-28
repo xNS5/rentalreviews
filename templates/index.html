@@ -1,9 +1,61 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}
-{{ config.title }} | {{ section.title }}
-{% endblock title %}
+{% block seo %}
+  {{ super() }}
+
+  {% if config.title %}
+    {% set title = config.title %}
+  {% else %}
+    {% set title = "" %}
+  {% endif %}
+  
+  {% if config.extra.title_addition and title %}
+    {% set title_addition = title_separator ~ config.extra.title_addition %}
+  {% elif config.extra.title_addition %}
+    {% set title_addition = config.extra.title_addition %}
+  {% else %}
+    {% set title_addition = "" %}
+  {% endif %}
+  
+  {% set description = config.description %}
+  
+  {{ macros_head::seo(title=title, title_addition=title_addition, description=description, is_home=true) }}
+{% endblock seo %}
 
 {% block content %}
+<div class="wrap container" role="document">
+  <div class="content">
+    <section class="section container-fluid mt-n3 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-md-10 text-center">
+          <h1 class="mt-0">{{ section.title }}</h1>
+        </div>
+        <div class="col-lg-9 col-xl-11">
+          {{section.content | safe }}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 
-{% endblock %}
+<section class="section section-sm">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      {% if section.extra.list %}
+        {% for val in section.extra.list %}
+        <div class="col-lg-5">
+          <h2 class="h4">{{ val.title }}</h2>
+          <p>{{ val.content | safe }}</p>
+        </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-sm container-fluid">
+  <div class="row justify-content-center text-center">
+    <div class="col-lg-9"></div>
+  </div>
+</section>
+{% endblock content %}
