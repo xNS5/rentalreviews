@@ -1,3 +1,6 @@
 [submodule "themes/adidoks"]
 	path = themes/adidoks
 	url = https://github.com/xNS5/adidoks.git
+[submodule "themes/boring"]
+	path = themes/boring
+	url = https://github.com/ssiyad/boring

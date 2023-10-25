@@ -4,7 +4,7 @@ title="Methods"
 
 # Background
 
-Michael Kennedy is a Software Developer with experience in both full-stack development and web automation. The data for the reviews were pulled from the following websites: Google Maps, Yelp, and Reddit. Sites like Zillow and Apartments.com were attempted, however they have some rate limiting technology in place which made it challenging.  
+Michael Kennedy is a Software Developer with experience in both full-stack development and web automation. The data for the reviews were pulled from the following websites: Google Maps, Yelp, and Reddit. Sites like Zillow and Apartments.com were attempted, however they have some rate limiting technology in place which made it challenging without some kind of proxy service acting as an intermediary between my requests and the companies' servers.  
  
 ---
 
