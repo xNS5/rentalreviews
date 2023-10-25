@@ -14,7 +14,7 @@ We are committed to maintaining the privacy and security of your personal inform
 
 ## **Information Collection and Usage**
 
-When you visit our website, we may collect certain non-personal, non-identifiable information automatically. This includes your IP address, browser type, operating system, and referring website. This information is collected through the use of cookies and similar tracking technologies, including Google Analytics.
+When you visit our website, we may collect certain non-personal, non-identifiable information automatically. This includes your IP address, browser type, operating system, and referring website. This information is collected through the use of Google Analytics.
 
 Google Analytics is a web analytics service provided by Google, Inc. ("Google"). It helps us understand how visitors interact with our website by collecting and reporting information anonymously. The data collected by Google Analytics includes information about your visit to our website, including the pages you viewed, the time you spent on each page, the links you clicked on, and other interactions you had on the site. We use this information to improve the user experience, enhance our content, and optimize our website's performance.
 
@@ -22,17 +22,12 @@ Google Analytics is a web analytics service provided by Google, Inc. ("Google").
 
 It is important to note that we do not sell, share, rent, or otherwise transfer your personal information to any third-party companies for their marketing purposes. The data collected through Google Analytics is used solely for the purpose of analyzing website traffic and user behavior, and it is not linked to any personally identifiable information.
 
-## **Cookies**
-
-Cookies are small data files that are stored on your device when you visit a website. We use cookies to enhance your browsing experience and provide personalized content. You can choose to disable cookies through your browser settings; however, please be aware that some features of our website may not function properly if cookies are disabled.
 
 ## **Data Security**
 
 We take data security seriously and implement appropriate measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. Despite our best efforts, no method of data transmission over the internet or electronic storage is completely secure, and we cannot guarantee the absolute security of your information.
 
 ## **Bypassing Analytics** 
-
-Sure, here's the information formatted in Markdown syntax:
 
 **Blocking Google Analytics with Browser Extensions**
 
@@ -71,7 +66,7 @@ Please note that we do not endorse or provide support for specific browser exten
 
 We reserve the right to update or modify this Privacy Policy at any time, and any changes will be posted on this page. Your continued use of our website after any modifications indicates your acceptance of the updated Privacy Policy.
 
-By using our website, you consent to the terms outlined in this Privacy Policy. If you have any questions or concerns about our privacy practices, please contact us at [contact email].
+By using our website, you consent to the terms outlined in this Privacy Policy. If you have any questions or concerns about our privacy practices, please contact us at [michael@michaelkennedy.dev].
 
 
 Last updated: [Date]
