@@ -1,10 +1,8 @@
 import Image from "next/image";
-import { Nav } from "../components/navigation/navbar/navbar";
 
 export default function Home() {
   return (
-    <> 
-      <Nav/>
+    <main role="main"> 
       <div className="container mx-auto px-4">
         <h1>Hello word</h1>
         <p>This is a content to make our page longer</p>
@@ -13,6 +11,6 @@ export default function Home() {
           Lorem Ipsum is simply dummy text ...
         </p>
       </div>
-    </>
+    </main>
   );
 }
