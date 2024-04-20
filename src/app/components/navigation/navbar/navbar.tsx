@@ -1,8 +1,20 @@
+'use client'
+
 import React from "react";
+import { usePathname } from 'next/navigation'
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button} from "@nextui-org/react";
 import { Logo } from "./logo";
 
+const nav_items = [
+  {name: "Home", url: "/"},
+  {name: "Reviews", url: "/reviews"},
+  {name: "Resources", url: "/resources"},
+  {name: "About", url: "/about"},
+  {name: "Contact", url: "/contact"}
+]
+
 export const Nav = () => {
+  const pathname = usePathname();
   return (
     <Navbar isBordered>
       <NavbarBrand>
@@ -10,22 +22,14 @@ export const Nav = () => {
         <p className="font-bold text-inherit">Bellingham Rental Reviews</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem isActive>
-          <Link href="/" aria-current="page">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
+            {nav_items.map(x =>
+                <NavbarItem key={x.name} isActive={pathname == x.url}>
+                    <Link href={x.url} color="foreground">
+                        {x.name}
+                    </Link>
+                </NavbarItem>
+)}
+        </NavbarContent>
     </Navbar>
   );
 }
