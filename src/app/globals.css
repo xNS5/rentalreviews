@@ -42,6 +42,10 @@ body {
   color: white;
 }
 
+.navbar-item-link:hover {
+  color: #1757A6;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { Nav } from "./components/navigation/navbar/navbar";
+import { Nav } from "../components/navigation/navbar/navbar";
 
 export default function Home() {
   return (
-    <main role="main"> 
+    <> 
       <Nav/>
       <div className="container mx-auto px-4">
         <h1>Hello word</h1>
@@ -13,6 +13,6 @@ export default function Home() {
           Lorem Ipsum is simply dummy text ...
         </p>
       </div>
-    </main>
+    </>
   );
 }
