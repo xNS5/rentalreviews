@@ -24,19 +24,23 @@ const nav_items = [
   { name: "Contact", url: "/contact" },
 ];
 
-export const Nav = () => {
+const isActivePath = (path: string) => {
   const pathname = usePathname();
+  return path == pathname;
+}
 
+export const Nav: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currIndex, setCurrIndex] = useState(0);
 
   return (
     <Navbar maxWidth="full" isBordered onMenuOpenChange={setIsMenuOpen}>
-      <a href="/">
-        <NavbarBrand>
-          <Logo />
+      <NavbarBrand>
+        <Logo />
+        <a href="/">
           <p className="font-bold text-inherit">Bellingham Rental Reviews</p>
-        </NavbarBrand>
-      </a>
+        </a>
+      </NavbarBrand>
 
       {/* NavMenu Toggle */}
       <NavbarContent className="md:hidden" justify="end">
@@ -51,12 +55,13 @@ export const Nav = () => {
           <NavbarItem
             className="navbar-item"
             key={i}
-            isActive={item.url == pathname}
+            isActive={isActivePath(item.url)}
           >
             <Link
               className="navbar-item-link w-full"
               href={item.url}
               color="foreground"
+              onClick={() => {setCurrIndex(i); console.log("PING!")}}
             >
               {item.name}
             </Link>
@@ -70,7 +75,7 @@ export const Nav = () => {
           <NavbarMenuItem
             className="navbar-item"
             key={i}
-            isActive={item.url == pathname}
+            isActive={isActivePath(item.url)}
           >
             <Link
               className="navbar-item-link w-full"
