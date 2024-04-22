@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Nav } from "./components/navigation/navbar/navbar";
+import { db } from "./firebase";
+import { collection, getDocs } from "firebase/firestore";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Bellingham Rental Reviews",
-  description: "Bellingham Rental Reviews",
-};
+const getDoc = async (path: string) => {
+
+  const collectionRef = collection(db, path)
+  const querySnapshot = await getDocs(collectionRef)
+  const data = querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+  return data;
+}
+
+export const metadata: Metadata = {...(async () => await getDoc("metadata"))};
 
 export default function RootLayout({
   children,
