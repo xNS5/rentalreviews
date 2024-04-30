@@ -40,7 +40,7 @@ export async function getConfig() {
     if (querySnapshot.empty) {
       return [];
     }
-    return querySnapshot.docs.map((doc) => doc.data());
+    return querySnapshot.docs.map((doc) => JSON.parse(JSON.stringify(doc.data())));
   } catch (error) {
     console.error("Error geting data:", error);
   }
