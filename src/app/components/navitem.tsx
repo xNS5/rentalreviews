@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import type { navbarItem, navbarObject } from "./navbartypes";
+import { FaCaretDown } from "react-icons/fa";
 
 export const NavItem = (
   { name, type, url, children }: navbarItem,
@@ -19,12 +20,14 @@ export const NavItem = (
     console.log(name);
     return (
       <>
-        <div className="relative" onMouseOut={toggleIsOpen}>
-          <button className="hover:text-blue-900" onMouseOver={toggleIsOpen}>
-            {name}
+        <div className="relative">
+          <button className="hover:text-blue-900 flex" onClick={toggleIsOpen}>
+          {name}
+          <FaCaretDown/>
           </button>
+
           <div
-            className={`absolute top-8 z-30 w-[250px] min-h-[300px] flex flex-col py-4 bg-white shadow-sm rounded-md ${transClass}`}
+            className={`absolute top-8 z-30 w-[250px] min-h-[300px] flex flex-col border border-slate-400 py-4 bg-white shadow-lg rounded-md ${transClass}`}
           >
             {children.map((item: navbarItem) => (
               <Link
