@@ -33,19 +33,6 @@ function getDB() {
   return db;
 }
 
-export async function getConfig() {
-  try {
-    const collectionRef = collection(getDB(), "config");
-    const querySnapshot: QuerySnapshot = await getDocs(collectionRef);
-    if (querySnapshot.empty) {
-      return [];
-    }
-    return querySnapshot.docs.map((doc) => JSON.parse(JSON.stringify(doc.data())));
-  } catch (error) {
-    console.error("Error geting data:", error);
-  }
-}
-
 export async function getCollection(collection_name: string) {
   try {
     const collectionRef = collection(getDB(), collection_name);

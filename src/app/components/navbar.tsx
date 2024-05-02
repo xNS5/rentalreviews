@@ -1,16 +1,13 @@
 "use client";
+
 import Link from "next/link";
 import React, { useEffect, useState, FC } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { usePathname as getPathname } from "next/navigation";
 import { Logo } from "./navigation/navbar/logo";
-import { getConfig } from "@/app/db/firebase";
+import { getNavbarConfig } from "../utilities/config-provider";
 import { NavItem } from "./navitem";
-import type { navbarItem, navbarObject} from "./navbartypes";
-
-function getActiveClassName(pathname: string, url: string){
-  return pathname === url ? "underline font-bold text-black" : ""
-}
+import type { navbarItem, navbarObject } from "./navbartypes";
 
 const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -18,33 +15,26 @@ const Navbar = () => {
   const pathname = getPathname();
 
   useEffect(() => {
-    const setNavItems = async () => {
-      const config = await getConfig();
-      const navbarLinks = config?.find(
-        (x: navbarObject) => x.name === "nav"
-      ).list;
-      console.log(navbarLinks);
-      setNavbarLinks(navbarLinks ?? []);
-    };
-    setNavItems();
+    const config = getNavbarConfig();
+    setNavbarLinks(config.list);
   }, []);
 
-
   return (
-    <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 border-gray-500 bg-white">
+    <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm  bg-white">
       <div>
         <Logo title="Bellingham Rental Reviews" />
       </div>
       <ul className="hidden md:flex">
-        {navbarLinks &&
-          navbarLinks.map((link: navbarItem) => (
-            <li
-              key={link.name}
-              className="nav-links px-4 cursor-pointer capitalize font-medium text-gray-600 hover:text-blue-900"
-            >
-              <NavItem {...link} classname={getActiveClassName(pathname, link.url)} />
-            </li>
-          ))}
+        {navbarLinks.map((link: navbarItem) => (
+          <li
+            key={link.name}
+            className="nav-links px-4 cursor-pointer capitalize font-medium text-gray-600 hover:text-blue-900"
+          >
+            <NavItem
+              {...link}
+            />
+          </li>
+        ))}
       </ul>
 
       <div
@@ -56,23 +46,22 @@ const Navbar = () => {
 
       {isNavOpen && (
         <ul className="flex flex-col justify-center items-center absolute top-0 left-0 w-full h-screen bg-white">
-          {navbarLinks &&
-            navbarLinks.map(({ name, url }) => (
-              <li
-                key={name}
-                className="px-4 cursor-pointer capitalize py-6 text-4xl"
+          {navbarLinks.map(({ name, url }) => (
+            <li
+              key={name}
+              className="px-4 cursor-pointer capitalize py-6 text-4xl"
+            >
+              <Link
+                className={
+                  pathname === url ? "underline font-bold text-black" : ""
+                }
+                onClick={() => setNavOpen(!isNavOpen)}
+                href={url ?? ""}
               >
-                <Link
-                  className={
-                    pathname === url ? "underline font-bold text-black" : ""
-                  }
-                  onClick={() => setNavOpen(!isNavOpen)}
-                  href={url ?? ""}
-                >
-                  {name}
-                </Link>
-              </li>
-            ))}
+                {name}
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
     </nav>

@@ -3,12 +3,18 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import type { navbarItem, navbarObject } from "./navbartypes";
 import { FaCaretDown } from "react-icons/fa";
+import { usePathname as getPathname } from "next/navigation";
+
+
+function getActiveClassName(pathname: string, url: string) {
+  return pathname === url ? "underline font-bold text-slate-600" : "";
+}
 
 export const NavItem = (
-  { name, type, url, children }: navbarItem,
-  classname: string
+  { name, type, url, children }: navbarItem
 ) => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = getPathname();
 
   const toggleIsOpen = () => {
     setIsOpen(!isOpen);
@@ -21,7 +27,7 @@ export const NavItem = (
     return (
       <>
         <div className="relative">
-          <button className="hover:text-blue-900 flex" onClick={toggleIsOpen}>
+          <button className="hover:text-blue-600 flex" onClick={toggleIsOpen}>
           {name}
           <FaCaretDown/>
           </button>
@@ -33,7 +39,7 @@ export const NavItem = (
               <Link
                 key={item.name}
                 className={
-                  "hover:bg-zinc-300 hover:text-black px-4 py-1 " + classname
+                  "hover:bg-zinc-300 hover:text-black px-4 py-1 "
                 }
                 href={item?.url || ""}
                 onClick={toggleIsOpen}
@@ -49,7 +55,7 @@ export const NavItem = (
   }
 
   return (
-    <Link className={classname} href={url ?? ""}>
+    <Link className={getActiveClassName(pathname, url)} href={url ?? ""}>
       {name}
     </Link>
   );
