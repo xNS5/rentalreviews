@@ -1,10 +1,9 @@
 "use client";
-
 import Link from "next/link";
 import React, { useEffect, useState, FC } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { usePathname as getPathname } from "next/navigation";
-import { Logo } from "./navigation/navbar/logo";
+import { Logo } from "./logo";
 import { getNavbarConfig } from "../utilities/config-provider";
 import { NavItem } from "./navitem";
 import type { navbarItem, navbarObject } from "./navbartypes";

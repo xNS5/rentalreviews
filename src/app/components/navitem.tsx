@@ -6,15 +6,15 @@ import { FaCaretDown } from "react-icons/fa";
 import { usePathname as getPathname } from "next/navigation";
 
 
-function getActiveClassName(pathname: string, url: string) {
-  return pathname === url ? "underline font-bold text-slate-600" : "";
+function getActiveClassName(url: string) {
+  const pathname = getPathname();
+  return pathname === url ? "underline font-bold text-black" : "";
 }
 
 export const NavItem = (
   { name, type, url, children }: navbarItem
 ) => {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = getPathname();
 
   const toggleIsOpen = () => {
     setIsOpen(!isOpen);
@@ -28,14 +28,66 @@ export const NavItem = (
       <>
         <div className="relative">
           <button className="hover:text-blue-600 flex" onClick={toggleIsOpen}>
-          {name}
-          <FaCaretDown/>
+            {name}
+            <FaCaretDown />
           </button>
 
           <div
             className={`absolute top-8 z-30 w-[250px] min-h-[300px] flex flex-col border border-slate-400 py-4 bg-white shadow-lg rounded-md ${transClass}`}
           >
-            {children.map((item: navbarItem) => (
+            <Dropdown>
+              <NavbarItem>
+                <DropdownTrigger>
+                  <Button
+                    disableRipple
+                    className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                    radius="sm"
+                    variant="light"
+                  >
+                    Features
+                  </Button>
+                </DropdownTrigger>
+              </NavbarItem>
+              <DropdownMenu
+                aria-label="ACME features"
+                className="w-[340px]"
+                itemClasses={{
+                  base: "gap-4",
+                }}
+              >
+                <DropdownItem
+                  key="autoscaling"
+                  description="ACME scales apps to meet user demand, automagically, based on load."
+                >
+                  Autoscaling
+                </DropdownItem>
+                <DropdownItem
+                  key="usage_metrics"
+                  description="Real-time metrics to debug issues. Slow query added? We’ll show you exactly where."
+                >
+                  Usage Metrics
+                </DropdownItem>
+                <DropdownItem
+                  key="production_ready"
+                  description="ACME runs on ACME, join us and others serving requests at web scale."
+                >
+                  Production Ready
+                </DropdownItem>
+                <DropdownItem
+                  key="99_uptime"
+                  description="Applications stay on the grid with high availability and high uptime guarantees."
+                >
+                  +99% Uptime
+                </DropdownItem>
+                <DropdownItem
+                  key="supreme_support"
+                  description="Overcome any challenge with a supporting team ready to respond."
+                >
+                  +Supreme Support
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            {/* {children.map((item: navbarItem) => (
               <Link
                 key={item.name}
                 className={
@@ -46,7 +98,7 @@ export const NavItem = (
               >
                 {item.name}
               </Link>
-            ))}
+            ))} */}
           </div>
         </div>
         {/* {isOpen ? <div onMou={toggleIsOpen}></div> : <></>} */}
@@ -55,7 +107,7 @@ export const NavItem = (
   }
 
   return (
-    <Link className={getActiveClassName(pathname, url)} href={url ?? ""}>
+    <Link className={getActiveClassName(url)} href={url ?? ""}>
       {name}
     </Link>
   );

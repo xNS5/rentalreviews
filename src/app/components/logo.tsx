@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import svg from "../../../static/building-icon.svg";
+import svg from "@/app/static/building-icon.svg";
 
 interface logo{
   title: string
