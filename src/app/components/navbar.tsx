@@ -5,6 +5,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { usePathname as getPathname } from "next/navigation";
 import { Logo } from "./logo";
 import { getNavbarConfig } from "../utilities/config-provider";
+import { NavDropdownMenu } from "./dropdown";
 import { NavItem } from "./navitem";
 import type { navbarItem, navbarObject } from "./navbartypes";
 
@@ -29,9 +30,8 @@ const Navbar = () => {
             key={link.name}
             className="nav-links px-4 cursor-pointer capitalize font-medium text-gray-600 hover:text-blue-900"
           >
-            <NavItem
-              {...link}
-            />
+            {link.type == "link" ? <NavItem {...link}/> : <NavDropdownMenu {...link}/>}
+            
           </li>
         ))}
       </ul>

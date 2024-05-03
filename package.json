@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.2.10",
+    "@headlessui/react": "^1.7.19",
     "firebase": "^10.11.0",
     "firebase-admin": "^12.1.0",
     "framer-motion": "^11.0.28",
