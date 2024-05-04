@@ -12,8 +12,8 @@ export const NavItem = (
   link: navbarItem
 ) => {
   return (
-    <Link onClick={link.onClick ?? undefined} className={`${getActiveClassName(link.url)} ${link.className ?? ""}`} href={link.url ?? ""} target={link.target ?? ""}>
-      <button>
+    <Link onClick={link.onClick ?? undefined} className={` ${link.className ?? ""}`} href={link.url ?? ""} target={link.target ?? ""}>
+      <button className={`${getActiveClassName(link.url)}`}>
         {link.name}
       </button>
     </Link>
