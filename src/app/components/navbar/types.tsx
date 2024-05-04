@@ -2,6 +2,7 @@
 
 export type navbarObject = {
     name: string;
+    className: string | undefined,
     nav_list: [];
   };
 
@@ -10,5 +11,7 @@ export type navbarItem = {
     url: string,
     type: string,
     target: string,
-    children: []
+    children: [],
+    className: string | undefined,
+    onClick: () => void | undefined
   }

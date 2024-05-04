@@ -1,9 +1,7 @@
 "use client";
 import Link from "next/link";
-import type { navbarItem } from "./navbartypes";
-
+import type { navbarItem } from "./types";
 import { usePathname as getPathname } from "next/navigation";
-
 
 function getActiveClassName(url: string) {
   const pathname = getPathname();
@@ -11,11 +9,13 @@ function getActiveClassName(url: string) {
 }
 
 export const NavItem = (
-  { name, type, url, children }: navbarItem
+  link: navbarItem
 ) => {
   return (
-    <Link className={getActiveClassName(url)} href={url ?? ""}>
-      {name}
+    <Link onClick={link.onClick ?? undefined} className={`${getActiveClassName(link.url)} ${link.className ?? ""}`} href={link.url ?? ""} target={link.target ?? ""}>
+      <button>
+        {link.name}
+      </button>
     </Link>
   );
 };
