@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+
 import React, { useEffect, useState, FC } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { usePathname as getPathname } from "next/navigation";
@@ -8,7 +8,7 @@ import { getNavbarConfig } from "../../utilities/config-provider";
 import { NavDropdownMenu } from "./dropdown";
 import { Accordion } from "./accordion";
 import { NavItem } from "./nav-item";
-import type { navbarItem, navbarObject } from "./types";
+import type { navbarItem } from "./types";
 
 export const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -22,9 +22,11 @@ export const Navbar = () => {
 
   return (
     <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white focus-visible:ring-2 focus-visible:ring-white/75">
-      <div>
-        <Logo title="Bellingham Rental Reviews" />
-      </div>
+      <a href="/">
+        <button>
+          <Logo title="Bellingham Rental Reviews" />
+        </button>
+      </a>
       <ul className="hidden md:flex">
         {navbarLinks.map((link: navbarItem) => (
           <li
@@ -37,24 +39,17 @@ export const Navbar = () => {
         ))}
       </ul>
 
-      <div
-        onClick={() => setNavOpen(!isNavOpen)}
-        className="cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
-      >
-        {isNavOpen ? <FaTimes size={30} /> : <FaBars size={30} />}
-      </div>
+      <button className="focus-visible:ring-2 focus-visible:ring-white/75 cursor-pointer pr-4 z-10 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)} >
+        {isNavOpen ? <FaTimes size={30} aria-label="close" /> : <FaBars size={30} aria-label="close" />}
+      </button>
 
       {isNavOpen && (
         <ul className="flex flex-col justify-center items-center absolute top-0 left-0 w-full h-screen bg-white focus-visible:ring-2 focus-visible:ring-white/75">
-          {navbarLinks.map((link: navbarItem) => (
-            <li
-              key={link.name}
-              className="px-4 cursor-pointer capitalize py-6 text-4xl hover:text-blue-900"
-              onClick={() => link.type === "link" ? setNavOpen(!isNavOpen) : undefined}
-            >
-              {link.type === "link" ? <NavItem {...link} onClick={() => setNavOpen(!isNavOpen)} /> : <Accordion {...link} onClick={() => setNavOpen(!isNavOpen)} />}
-            </li>
-          ))}
+          <li>
+            {navbarLinks.map((link: navbarItem) => (
+              link.type === "link" ? <NavItem {...link} onClick={() => setNavOpen(!isNavOpen)} className="px-4 cursor-pointer capitalize py-6 text-4xl hover:text-blue-900" /> : <Accordion {...link} onClick={() => setNavOpen(!isNavOpen)} className="px-4 cursor-pointer capitalize py-6 text-4xl hover:text-blue-900" />
+            ))}
+          </li>
         </ul>
       )}
     </nav>
