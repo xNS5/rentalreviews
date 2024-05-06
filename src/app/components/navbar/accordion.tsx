@@ -8,16 +8,14 @@ export const Accordion = (link: navbarItem) => {
         <Disclosure>
             {({ open }) => (
                 <>
-                    <Disclosure.Button className="inline-flex w-full justify-center rounded-md font-medium font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-                        <button className={link.className ?? ""}>
+                    <Disclosure.Button className={`${link.className ?? "" } inline-flex w-full justify-center rounded focus-visible:ring-2 focus-visible:ring-white/75`}>
                             {link.name}
-                        </button>
                         <FaCaretDown
-                            className={`mt-7 -ml-3 h-8 w-8 text-black ${open ? 'rotate-180 transform' : ''}`}
+                            className={`mt-1 -ml-1 h-8 w-8 text-black ${open ? 'rotate-180 transform' : ''}`}
                             aria-hidden="true"
                         />
                     </Disclosure.Button>
-                    <Disclosure.Panel as="div" className="text-black grid grid-cols-1 m-2 justify-center">
+                    <Disclosure.Panel as="div" className="text-black grid grid-cols-1 justify-center">
                         {link.children.map((child: navbarItem) => {
                             return (<NavItem {...child} className="text-black text-2xl p-2 hover:bg-blue-600 hover:text-white text-center rounded" />)
                         })}

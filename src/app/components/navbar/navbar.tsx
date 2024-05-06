@@ -22,10 +22,8 @@ export const Navbar = () => {
 
   return (
     <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white focus-visible:ring-2 focus-visible:ring-white/75">
-      <a href="/">
-        <button>
-          <Logo title="Bellingham Rental Reviews" />
-        </button>
+      <a href="/" className="rounded">
+        <Logo title="Bellingham Rental Reviews" />
       </a>
       <ul className="hidden md:flex">
         {navbarLinks.map((link: navbarItem) => (
@@ -33,23 +31,47 @@ export const Navbar = () => {
             key={link.name}
             className="nav-links px-4 cursor-pointer capitalize rounded font-medium text-gray-600 hover:text-blue-900"
           >
-            {link.type == "link" ? <NavItem {...link} /> : <NavDropdownMenu {...link} />}
-
+            {link.type == "link" ? (
+              <NavItem {...link} />
+            ) : (
+              <NavDropdownMenu {...link} />
+            )}
           </li>
         ))}
       </ul>
 
-      <button className="focus-visible:ring-2 focus-visible:ring-white/75 cursor-pointer pr-4 z-10 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)} >
-        {isNavOpen ? <FaTimes size={30} aria-label="close" /> : <FaBars size={30} aria-label="close" />}
+      <button
+        className="focus-visible:ring-2 focus-visible:ring-white/75 cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
+        onClick={() => setNavOpen(!isNavOpen)}
+      >
+        {isNavOpen ? (
+          <FaTimes size={30} aria-label="close" />
+        ) : (
+          <FaBars size={30} aria-label="close" />
+        )}
       </button>
 
       {isNavOpen && (
-        <ul className="flex flex-col justify-center items-center absolute top-0 left-0 w-full h-screen bg-white focus-visible:ring-2 focus-visible:ring-white/75">
-          <li>
-            {navbarLinks.map((link: navbarItem) => (
-              link.type === "link" ? <NavItem {...link} onClick={() => setNavOpen(!isNavOpen)} className="px-4 cursor-pointer capitalize py-6 text-4xl hover:text-blue-900" /> : <Accordion {...link} onClick={() => setNavOpen(!isNavOpen)} className="px-4 cursor-pointer capitalize py-6 text-4xl hover:text-blue-900" />
-            ))}
-          </li>
+        <ul className="flex flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white focus-visible:ring-2 focus-visible:ring-white/75">
+          {navbarLinks.map((link: navbarItem) => (
+            <li
+            className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
+            >
+              {link.type === "link" ? (
+                <NavItem
+                  {...link}
+                  onClick={() => setNavOpen(!isNavOpen)}
+                  
+                />
+              ) : (
+                <Accordion
+                  {...link}
+                  onClick={() => setNavOpen(!isNavOpen)}
+                /*   className="px-4 cursor-pointer capitalize py-2 text-4xl hover:text-blue-900" */
+                />
+              )}
+            </li>
+          ))}
         </ul>
       )}
     </nav>
