@@ -13,7 +13,6 @@ import type { navbarItem } from "./types";
 export const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
   const [navbarLinks, setNavbarLinks] = useState([]);
-  const pathname = getPathname();
 
   useEffect(() => {
     const config = getNavbarConfig();
