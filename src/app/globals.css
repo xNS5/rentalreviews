@@ -8,15 +8,15 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -24,27 +24,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
-
-.navbar {
-  display: inline-flex;
-}
-
-.logo-svg{
-  width: 50px;
-  height: auto;
-  fill: red;
-}
-
-.navbar-title{
-  font-size: xx-large;
-  padding: 5vh 0 5vh 0;
-  color: white;
-}
-
-.navbar-item-link:hover {
-  color: #1757A6;
-}
+} */
 
 @layer utilities {
   .text-balance {

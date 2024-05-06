@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
+import { use } from "react";
 import { Inter } from "next/font/google";
-import { Nav } from "./components/navigation/navbar/navbar";
+import { Navbar } from "./components/navbar/navbar";
+import { getMetadata } from "./utilities/config-provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Bellingham Rental Reviews",
-  description: "Bellingham Rental Reviews",
-};
+export const metadata: Metadata = getMetadata()
 
 export default function RootLayout({
   children,
@@ -17,11 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div role="navigation">
-          <Nav />
-        </div>
-        {children}
+      <body className="bg-white">
+        <header>
+          <Navbar />
+        </header>
+        <main role="main">{children}</main>
       </body>
     </html>
   );
