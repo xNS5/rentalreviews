@@ -1,18 +1,34 @@
-[
+{
+  "1": [
     {
-        "type": "link",
-        "icon": "",
-        "url": "",
-        "target": ""
-    }, 
+      "type": "link",
+      "title": "Github",
+      "icon": "",
+      "alt": "",
+      "url": "",
+      "target": ""
+    },
     {
-        "type": "link",
-        "icon": "",
-        "url": "",
-        "target": ""
-    }, 
+      "type": "link",
+      "title":"",
+      "icon": "",
+      "alt": "",
+      "url": "",
+      "target": ""
+    }
+  ],
+  "2": [
     {
         "type": "text",
-        "text": "Michael Kennedy © 2023-2024"
-    } 
-]
+        "text": "Michael Kennedy © 2024-2025"
+    }
+  ],
+  "3": [
+    {
+        "type": "link",
+        "text": "Privacy Policy",
+        "url": "/privacy-policy",
+        "target": "_blank"
+    }
+  ]
+}
