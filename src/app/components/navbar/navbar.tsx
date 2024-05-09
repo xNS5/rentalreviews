@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, FC } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { usePathname as getPathname } from "next/navigation";
 import { Logo } from "./nav-logo";
 import { getNavbarConfig } from "../../utilities/config-provider";
 import { NavDropdownMenu } from "./dropdown";
