@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useEffect, useState, FC } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
 import { Logo } from "./nav-logo";
 import { getNavbarConfig } from "../../utilities/config-provider";
 import { NavDropdownMenu } from "./dropdown";
 import { Accordion } from "./accordion";
 import { NavItem } from "./nav-item";
+import { CloseOutlined, MenuOutlined } from "@ant-design/icons"; 
+import Icon from "../icons/icon";
 import type { navbarItem } from "./types";
+
 
 export const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -24,9 +26,9 @@ export const Navbar = () => {
         <Logo title="Bellingham Rental Reviews" />
       </a>
       <ul className="hidden md:flex">
-        {navbarLinks.map((link: navbarItem) => (
+        {navbarLinks.map((link: navbarItem, i: number) => (
           <li
-            key={link.name}
+            key={i}
             className="nav-links px-4 cursor-pointer capitalize rounded font-medium text-gray-600 hover:text-blue-900"
           >
             {link.type == "link" ? (
@@ -43,23 +45,24 @@ export const Navbar = () => {
         onClick={() => setNavOpen(!isNavOpen)}
       >
         {isNavOpen ? (
-          <FaTimes size={30} aria-label="close" />
+          <CloseOutlined/>
         ) : (
-          <FaBars size={30} aria-label="close" />
+          <MenuOutlined/>
         )}
       </button>
 
       {isNavOpen && (
         <ul className="flex flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white focus-visible:ring-2 focus-visible:ring-white/75">
-          {navbarLinks.map((link: navbarItem) => (
+          {navbarLinks.map((link: navbarItem, i: number) => (
             <li
-            className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
+              key={i}
+              className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
             >
               {link.type === "link" ? (
                 <NavItem
                   {...link}
                   onClick={() => setNavOpen(!isNavOpen)}
-                  
+
                 />
               ) : (
                 <Accordion

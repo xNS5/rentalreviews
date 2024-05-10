@@ -3,7 +3,7 @@
     {
       "type": "link",
       "title": "Github",
-      "icon": "FaGithub",
+      "icon": "GithubOutlined",
       "alt": "",
       "url": "https://github.com/xNS5/rentalreviews/",
       "target": "_blank"

@@ -2,8 +2,9 @@
 
 import { Menu, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
-import { FaCaretDown } from "react-icons/fa";
 import type { navbarItem } from "./types";
+import { DownOutlined } from "@ant-design/icons";
+import Icon from "../icons/icon";
 
 export const NavDropdownMenu = (link: navbarItem) => {
   return (
@@ -14,10 +15,8 @@ export const NavDropdownMenu = (link: navbarItem) => {
             <div>
               <Menu.Button className="inline-flex w-full justify-center rounded-md font-medium font-medium focus-visible:ring-2 focus-visible:ring-white/75">
                 {link.name}
-                <FaCaretDown
-                  className={`ml-1 mt-0.5 h-5 w-5 text-black ${open ? 'rotate-180 transform' : ''}`}
-                  aria-hidden="true"
-                />
+                <Icon type="fas-chevron-down" className={`mt-0.5 h-5 w-5 text-black ${open ? 'rotate-180 transform mr-1' : 'ml-1'}`}/>
+                {/* <DownOutlined  aria-hidden="true"/> */}
               </Menu.Button>
             </div>
             <Transition
@@ -33,19 +32,20 @@ export const NavDropdownMenu = (link: navbarItem) => {
                 {link?.children.map((child: navbarItem) => {
                   return (
                     <Menu.Item
-                    as="a"
-                    key={child.url}
-                    href={child.url}
-                    target={child.target}>
-                    {({ active }) => (
-                      <button
-                        className={`${active ? "bg-blue-600 text-white" : "text-gray-900"
-                          } group flex w-full rounded-md py-3 px-2 text-left`}
-                      >
-                        {child.name}
-                      </button>
-                    )}
-                  </Menu.Item>
+                      as="a"
+                      key={child.url}
+                      href={child.url}
+                      target={child.target}
+                    >
+                      {({ active }) => (
+                        <button
+                          className={`${active ? "bg-blue-600 text-white" : "text-gray-900"
+                            } group flex w-full rounded-md py-3 px-2 text-left`}
+                        >
+                          {child.name}
+                        </button>
+                      )}
+                    </Menu.Item>
                   );
                 })}
               </Menu.Items>
