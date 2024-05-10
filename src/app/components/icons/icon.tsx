@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { IconName, IconPrefix, findIconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -12,7 +12,9 @@ library.add(fas, fab);
 
 type IconProps = {
     type: string,
-    className?: string
+    className?: string,
+    ariahidden?: boolean,
+    accessibilityProps?: {}
 }
 
 const getIcon = (type: string, delimiter: string) => {
@@ -30,7 +32,7 @@ const Icon = (props: IconProps) => {
             return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")} />;
         }
         return (
-            <FontAwesomeIcon icon={DynamicIcon} className={props?.className} />
+            <FontAwesomeIcon icon={DynamicIcon} className={`rounded ${props?.className}`} aria-hidden={props.ariahidden} {...props.accessibilityProps}/>
         )
     }
 }

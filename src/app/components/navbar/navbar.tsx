@@ -6,9 +6,8 @@ import { getNavbarConfig } from "../../utilities/config-provider";
 import { NavDropdownMenu } from "./dropdown";
 import { Accordion } from "./accordion";
 import { NavItem } from "./nav-item";
-import { CloseOutlined, MenuOutlined } from "@ant-design/icons"; 
-import Icon from "../icons/icon";
-import type { navbarItem } from "./types";
+import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
+import type { NavbarItem } from "./navbartypes";
 
 
 export const Navbar = () => {
@@ -21,39 +20,47 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white focus-visible:ring-2 focus-visible:ring-white/75">
-      <a href="/" className="rounded">
+    <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white focusable">
+      <a href="/" className="focusable rounded">
         <Logo title="Bellingham Rental Reviews" />
       </a>
       <ul className="hidden md:flex">
-        {navbarLinks.map((link: navbarItem, i: number) => (
-          <li
-            key={i}
-            className="nav-links px-4 cursor-pointer capitalize rounded font-medium text-gray-600 hover:text-blue-900"
-          >
+        {navbarLinks.map((link: NavbarItem, i: number) => (
+          <>
             {link.type == "link" ? (
-              <NavItem {...link} />
+              <li
+                key={i}
+                tabIndex={0}
+                className="px-4 cursor-pointer capitalize rounded font-medium text-gray-600 hover:text-blue-900"
+              >
+                <NavItem {...link} />
+              </li>
             ) : (
-              <NavDropdownMenu {...link} />
+              <li
+                key={i}
+                className="px-2 cursor-pointer capitalize rounded font-medium text-gray-600 hover:text-blue-900"
+              >
+                <NavDropdownMenu {...link} />
+              </li>
             )}
-          </li>
+          </>
         ))}
       </ul>
 
       <button
-        className="focus-visible:ring-2 focus-visible:ring-white/75 cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
+        className="focusable cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
         {isNavOpen ? (
-          <CloseOutlined/>
+          <CloseOutlined />
         ) : (
-          <MenuOutlined/>
+          <MenuOutlined />
         )}
       </button>
 
       {isNavOpen && (
-        <ul className="flex flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white focus-visible:ring-2 focus-visible:ring-white/75">
-          {navbarLinks.map((link: navbarItem, i: number) => (
+        <ul className="flex flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
+          {navbarLinks.map((link: NavbarItem, i: number) => (
             <li
               key={i}
               className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"

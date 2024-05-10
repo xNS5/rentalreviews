@@ -8,6 +8,11 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+.focusable:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.75); /* white color with 75% opacity */
+  }
+
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
