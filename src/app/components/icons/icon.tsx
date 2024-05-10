@@ -3,7 +3,10 @@ import { IconName, IconPrefix, findIconDefinition } from '@fortawesome/fontaweso
 
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { library, config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css'
+
+config.autoAddCss = false
 
 library.add(fas, fab);
 
@@ -14,20 +17,22 @@ type IconProps = {
 
 const getIcon = (type: string, delimiter: string) => {
     const index: number = type.indexOf("-");
-    const nameArr: string[] = [type.slice(0, index), type.slice(index + delimiter.length)];;
+    const nameArr: string[] = [type.slice(0, index), type.slice(index + delimiter.length)];
     const temp = findIconDefinition({ prefix: nameArr[0] as IconPrefix, iconName: nameArr[1] as IconName });
     return temp;
 }
 
 const Icon = (props: IconProps) => {
-    const DynamicIcon = getIcon(props.type, "-");
-    if (DynamicIcon == null) {
-        console.log(DynamicIcon);
-        return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")}/>;
+    if (props !== undefined) {
+        const DynamicIcon = getIcon(props.type, "-");
+        if (DynamicIcon == null) {
+            console.log(DynamicIcon);
+            return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")} />;
+        }
+        return (
+            <FontAwesomeIcon icon={DynamicIcon} className={props?.className} />
+        )
     }
-    return (
-        <FontAwesomeIcon icon={DynamicIcon} className={props?.className} />
-    )
 }
 
 export default Icon;
