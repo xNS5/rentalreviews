@@ -15,12 +15,12 @@ export const Footer = () => {
     }, []);
 
     return (
-        <footer className="grid grid-rows-3 gap-4">
-            <div>
+        <footer className="grid grid-rows-2 gap-4 content-start mb-0">
+            <div className="flex inline-flex items-center justify-center">
                 {footerItems && footerItems[0].map((item: FooterItem) => {
                     return (
                         <a key={item.title} href={item.url} target={item.target}>
-                            <Icon type={`${item.icon}`} />
+                            <Icon type={`${item.icon}`} className="w-10 h-auto"/>
                         </a>
                     )
                 })}
