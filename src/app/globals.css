@@ -8,6 +8,23 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+.focusable:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+}
+
+.navbar-item {
+  cursor: pointer;
+  text-transform: capitalize;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.navbar-item:hover {
+  color: #1E40AF;
+}
+
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
