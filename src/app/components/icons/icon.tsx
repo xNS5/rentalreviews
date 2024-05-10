@@ -13,8 +13,9 @@ library.add(fas, fab);
 type IconProps = {
     type: string,
     className?: string,
-    ariahidden?: boolean,
-    accessibilityProps?: {}
+    ariahidden?: boolean | true,
+    accessibilityProps?: {},
+    tabIndex?: number | -1
 }
 
 const getIcon = (type: string, delimiter: string) => {
@@ -32,7 +33,7 @@ const Icon = (props: IconProps) => {
             return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")} />;
         }
         return (
-            <FontAwesomeIcon icon={DynamicIcon} className={`rounded ${props?.className}`} aria-hidden={props.ariahidden} {...props.accessibilityProps}/>
+            <FontAwesomeIcon icon={DynamicIcon} className={`rounded ${props?.className}`} aria-hidden={props.ariahidden} tabIndex={props.tabIndex}/>
         )
     }
 }

@@ -23,13 +23,13 @@ export const Footer = () => {
                                 return <span className={"rounded"} key={itemIndex} tabIndex={0}>{item.text}</span>;
                             }
                             return (
-                                <a key={item.title} href={item.url} target={item.target} tabIndex={0}>
+                                <a key={item.title} href={item.url} target={item.target}>
                                     {item.icon && item.icon.length > 0 ? (
-                                        <Icon type={item.icon} className="w-10 h-auto px-3" aria-hidden={true} />
+                                        <Icon type={item.icon} className="w-10 h-auto px-3" aria-hidden={true} tabIndex={0}/>
                                     ) : (
-                                        <div tabIndex={0} className="hover:text-blue-900">
+                                        <span className="hover:text-blue-900 rounded" tabIndex={0}>
                                             {item.text}
-                                        </div>
+                                        </span>
                                     )}
                                 </a>
                             );

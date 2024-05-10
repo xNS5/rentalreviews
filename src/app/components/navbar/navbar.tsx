@@ -21,31 +21,20 @@ export const Navbar = () => {
 
   return (
     <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white focusable">
-      <a href="/" className="focusable rounded">
+      <a href="/" className="focusable rounded" tabIndex={0} role="link">
         <Logo title="Bellingham Rental Reviews" />
       </a>
-      <ul className="hidden md:flex">
-        {navbarLinks.map((link: NavbarItem, i: number) => (
-          <>
+      <div className="hidden md:flex">
+        {navbarLinks.map((link: NavbarItem) => (
+          <div className="px-3">
             {link.type == "link" ? (
-              <li
-                key={i}
-                tabIndex={0}
-                className="px-4 cursor-pointer capitalize rounded font-medium text-gray-600 hover:text-blue-900"
-              >
-                <NavItem {...link} />
-              </li>
+              <NavItem {...link} />
             ) : (
-              <li
-                key={i}
-                className="px-2 cursor-pointer capitalize rounded font-medium text-gray-600 hover:text-blue-900"
-              >
-                <NavDropdownMenu {...link} />
-              </li>
+              <NavDropdownMenu {...link} />
             )}
-          </>
+          </div>
         ))}
-      </ul>
+      </div>
 
       <button
         className="focusable cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
@@ -64,6 +53,7 @@ export const Navbar = () => {
             <li
               key={i}
               className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
+              role="link"
             >
               {link.type === "link" ? (
                 <NavItem
@@ -75,7 +65,6 @@ export const Navbar = () => {
                 <Accordion
                   {...link}
                   onClick={() => setNavOpen(!isNavOpen)}
-                /*   className="px-4 cursor-pointer capitalize py-2 text-4xl hover:text-blue-900" */
                 />
               )}
             </li>

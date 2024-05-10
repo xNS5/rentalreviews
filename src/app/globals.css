@@ -9,8 +9,20 @@
 }
 
 .focusable:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.75); /* white color with 75% opacity */
-  }
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+}
+
+.navbar-item {
+  cursor: pointer;
+  text-transform: capitalize;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.navbar-item:hover {
+  color: #1E40AF;
+}
 
 
 /* @media (prefers-color-scheme: dark) {

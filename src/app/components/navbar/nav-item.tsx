@@ -12,8 +12,8 @@ export const NavItem = (
   link: NavbarItem
 ) => {
   return (
-    <Link tabIndex={0} onClick={link.onClick ?? undefined} className={`focusable ${getActiveClassName(link.url)} ${link.className ?? ""} rounded `} href={link.url ?? ""} target={link.target ?? ""} replace>
-      {link.name}
+    <Link onClick={link.onClick ?? undefined} className={`focusable ${getActiveClassName(link.url)} ${link.className ?? ""} rounded `} href={link.url ?? ""} target={link.target ?? ""} replace>
+      <span tabIndex={0}>{link.name}</span>
     </Link>
   );
 };
