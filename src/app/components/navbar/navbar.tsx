@@ -6,7 +6,6 @@ import { getNavbarConfig } from "../../utilities/config-provider";
 import { NavDropdownMenu } from "./dropdown";
 import { Accordion } from "./accordion";
 import { NavItem } from "./nav-item";
-import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import type { NavbarItem } from "./navbartypes";
 
 
