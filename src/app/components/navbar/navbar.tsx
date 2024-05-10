@@ -6,6 +6,7 @@ import { getNavbarConfig } from "../../utilities/config-provider";
 import { NavDropdownMenu } from "./dropdown";
 import { Accordion } from "./accordion";
 import { NavItem } from "./nav-item";
+import Icon from "../icons/icon";
 import type { NavbarItem } from "./navbartypes";
 
 
@@ -39,11 +40,7 @@ export const Navbar = () => {
         className="focusable cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
-        {isNavOpen ? (
-          <CloseOutlined />
-        ) : (
-          <MenuOutlined />
-        )}
+        <Icon type={isNavOpen ? "fas-x" : "fas-bars"} />
       </button>
 
       {isNavOpen && (
