@@ -9,7 +9,6 @@ import { NavItem } from "./nav-item";
 import Icon from "../icons/icon";
 import type { NavbarItem } from "./navbartypes";
 
-
 export const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
   const [navbarLinks, setNavbarLinks] = useState([]);
@@ -24,17 +23,17 @@ export const Navbar = () => {
       <a href="/" className="focusable rounded" tabIndex={0} role="link">
         <Logo title="Bellingham Rental Reviews" />
       </a>
-      <div className="hidden md:flex">
-        {navbarLinks.map((link: NavbarItem) => (
-          <div className="px-3">
+      <ul className="hidden md:flex">
+        {navbarLinks.map((link: NavbarItem, i: number) => (
+          <li key={i}>
             {link.type == "link" ? (
               <NavItem {...link} />
             ) : (
               <NavDropdownMenu {...link} />
             )}
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <button
         className="focusable cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
@@ -50,18 +49,12 @@ export const Navbar = () => {
               key={i}
               className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
               role="link"
+              onClick={() => setNavOpen(!isNavOpen)}
             >
               {link.type === "link" ? (
-                <NavItem
-                  {...link}
-                  onClick={() => setNavOpen(!isNavOpen)}
-
-                />
+                <NavItem {...link} />
               ) : (
-                <Accordion
-                  {...link}
-                  onClick={() => setNavOpen(!isNavOpen)}
-                />
+                <Accordion {...link} />
               )}
             </li>
           ))}

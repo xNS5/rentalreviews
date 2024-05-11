@@ -11,7 +11,7 @@ export const NavDropdownMenu = (link: NavbarItem) => {
       <Menu>
         {({ open }) => (
           <>
-            <Menu.Button className="inline-flex w-full justify-center rounded-md font-medium font-medium">
+            <Menu.Button className="inline-flex w-full justify-center rounded-md">
               {link.name}
               <Icon type="fas-chevron-down" className={`mt-1.5 h-3 w-3 ml-1 text-black ${open ? 'rotate-180 transform' : ''}`} ariahidden={true} />
             </Menu.Button>
