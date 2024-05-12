@@ -23,7 +23,7 @@ export const Navbar = () => {
       <a href="/" className="focusable rounded" tabIndex={0} role="link">
         <Logo title="Bellingham Rental Reviews" />
       </a>
-      <ul className="hidden md:flex">
+      <ol className="hidden md:flex">
         {navbarLinks.map((link: NavbarItem, i: number) => (
           <li key={i} className="focusable">
             {link.type == "link" ? (
@@ -33,7 +33,7 @@ export const Navbar = () => {
             )}
           </li>
         ))}
-      </ul>
+      </ol>
 
       <button
         className="focusable cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
