@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { getFooter } from "@/app/utilities/config-provider";
+import { getConfig } from "@/app/utilities/config-provider";
 import Icon from "../icons/icon";
 import type { FooterItem } from "./footertypes";
 import Link from "next/link";
@@ -10,8 +10,7 @@ export const Footer = () => {
     const [footerItems, setFooterItems] = useState<any>(null);
 
     useEffect(() => {
-        const data = getFooter();
-        setFooterItems(data);
+        getConfig("footer").then(data => setFooterItems(data));
     }, []);
 
     return (

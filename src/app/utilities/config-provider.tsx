@@ -1,26 +1,12 @@
-import nav from "@/app/static/config/nav.json";
-import metadata from "@/app/static/config/metadata.json";
-import footer from "@/app/static/config/footer.json";
+"use server"
 
-export async function getConfigForPage(filePath: string, ) {
-    const res = await fetch(`/pages/${filePath}.json`);
-    if(!res.ok){
-        throw new Error(`Failed to get data for: ${filePath}`)
-    }
-    return res.json();
-}
+import { promises as fs } from "fs";
 
-export function getFooter(){
-    const footerJSON = JSON.parse(JSON.stringify(footer));
-    return footerJSON;
-}
-
-export function getMetadata(){
-    const metadataJson = JSON.parse(JSON.stringify(metadata));
-    return metadataJson;
-}
-
-export function getNavbarConfig() {
-    const navJson = JSON.parse(JSON.stringify(nav));
-    return navJson;
+export async function getConfig(filePath: string) {
+  const file = await fs.readFile(
+    process.cwd() + `/src/static/config/${filePath}.json`,
+    "utf-8"
+  );
+  const data = JSON.parse(file);
+  return data;
 }

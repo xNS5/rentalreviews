@@ -1,7 +1,4 @@
-"use client"
-
-import { getConfigForPage } from "./utilities/config-provider";
-import { useEffect, useState } from "react";
+import { getConfig } from "./utilities/config-provider";
 
 type Home = {
   name: string,
@@ -16,20 +13,16 @@ type Home = {
   ]
 }
 
-export default function Home() {
-  const [data, setData] = useState<Home>()
-
-  useEffect(() => {
-    getConfigForPage("home").then(data => setData(data));
-  }, [])
+export default async function Home() {
+  const data: Home = await getConfig("home");
 
   return (
     <div className="container mx-auto px-4">
-      {data && (<div>
-        <h1 className="text-2xl text-center py-4">{data?.title}</h1>
-        <div className="w-full h-screen bg-green-300"></div>
+      <div className="py-5">
+      <h1 className="text-center text-3xl">{data.title}</h1>
+      <h2 className="text-center text-l">{data.description}</h2>
+      </div>
 
-      </div>)}
     </div>
   );
 }

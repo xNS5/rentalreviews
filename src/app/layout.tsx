@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Navbar } from "./components/navbar/navbar";
-import { getMetadata } from "./utilities/config-provider";
+import { getConfig } from "./utilities/config-provider";
 import { Footer } from "./components/footer/footer";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = getMetadata();
+export const metadata: Metadata = (async () => await getConfig("metadata"));
 
 export default function RootLayout({
   children,

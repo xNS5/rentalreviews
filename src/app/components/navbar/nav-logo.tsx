@@ -1,22 +1,16 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import svg from "@/app/static/building-icon.svg";
 
-interface logo{
-  title: string
-}
-
-export const Logo: React.FC<logo> = ({ title }) => (
+export const Logo = ({ title }: any) => (
   <div className="inline-flex">
     <Image
-      src={svg}
+      src={"/images/building-icon.svg"}
       alt="Apartment logo"
       width={30}
+      height={30}
       className="object-contain filter brightness-0"
     />
-    <h1 className="font-bold text-lg px-2">
-    {title}
-    </h1>
+    <h1 className="font-bold text-lg px-2">{title}</h1>
   </div>
 );

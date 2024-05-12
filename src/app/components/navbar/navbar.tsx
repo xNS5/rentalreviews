@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, FC } from "react";
 import { Logo } from "./nav-logo";
-import { getNavbarConfig } from "../../utilities/config-provider";
+import { getConfig } from "../../utilities/config-provider";
 import { NavDropdownMenu } from "./dropdown";
 import { Accordion } from "./accordion";
 import { NavItem } from "./nav-item";
@@ -11,11 +11,10 @@ import type { NavbarItem } from "./navbartypes";
 
 export const Navbar = () => {
   const [isNavOpen, setNavOpen] = useState(false);
-  const [navbarLinks, setNavbarLinks] = useState([]);
+  const [navbarLinks, setNavbarLinks] = useState<NavbarItem[]>();
 
   useEffect(() => {
-    const config = getNavbarConfig();
-    setNavbarLinks(config.list);
+    getConfig("nav").then(data => setNavbarLinks(data.list));
   }, []);
 
   return (
@@ -24,7 +23,7 @@ export const Navbar = () => {
         <Logo title="Bellingham Rental Reviews" />
       </a>
       <ol className="hidden md:flex">
-        {navbarLinks.map((link: NavbarItem, i: number) => (
+        {navbarLinks?.map((link: NavbarItem, i: number) => (
           <li key={i} className="focusable">
             {link.type == "link" ? (
               <NavItem {...link} />
@@ -44,7 +43,7 @@ export const Navbar = () => {
 
       {isNavOpen && (
         <ul className="flex flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
-          {navbarLinks.map((link: NavbarItem, i: number) => (
+          {navbarLinks?.map((link: NavbarItem, i: number) => (
             <li
               key={i}
               className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
