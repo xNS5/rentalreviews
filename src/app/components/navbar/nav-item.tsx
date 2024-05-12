@@ -11,14 +11,15 @@ function getActiveClassName(url: string) {
 export const NavItem = (link: NavbarItem) => {
   return (
     <Link
-      className={`focusable ${getActiveClassName(link.url)} ${
+      className={`${getActiveClassName(link.url)} ${
         link.className ?? ""
       } rounded px-3`}
       href={link.url ?? ""}
       target={link.target ?? ""}
+      tabIndex={0}
       replace
     >
-      <button>{link.name}</button>
+      {link.name}
     </Link>
   );
 };

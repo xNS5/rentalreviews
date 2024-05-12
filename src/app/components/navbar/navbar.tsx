@@ -25,7 +25,7 @@ export const Navbar = () => {
       </a>
       <ul className="hidden md:flex">
         {navbarLinks.map((link: NavbarItem, i: number) => (
-          <li key={i}>
+          <li key={i} className="focusable">
             {link.type == "link" ? (
               <NavItem {...link} />
             ) : (
