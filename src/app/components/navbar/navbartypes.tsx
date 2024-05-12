@@ -11,7 +11,6 @@ export type NavbarItem = {
     url: string,
     type?: string,
     target?: string,
-    children?: [],
+    children?: [] | string,
     className?: string
-    onClick?: () => void
   }

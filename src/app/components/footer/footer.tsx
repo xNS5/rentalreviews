@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getFooter } from "@/app/utilities/config-provider";
 import Icon from "../icons/icon";
 import type { FooterItem } from "./footertypes";
+import Link from "next/link";
 
 export const Footer = () => {
     const [footerItems, setFooterItems] = useState<any>(null);
@@ -23,15 +24,15 @@ export const Footer = () => {
                                 return <span className={"rounded"} key={itemIndex} tabIndex={0}>{item.text}</span>;
                             }
                             return (
-                                <a key={item.title} href={item.url} target={item.target}>
+                                <Link key={itemIndex} href={item?.url ?? ""} target={item.target}>
                                     {item.icon && item.icon.length > 0 ? (
-                                        <Icon type={item.icon} className="w-10 h-auto px-3" aria-hidden={true} tabIndex={0}/>
+                                        <Icon type={item.icon} className="w-10 h-auto px-3" aria-hidden={true}/>
                                     ) : (
-                                        <span className="hover:text-blue-900 rounded" tabIndex={0}>
+                                        <span className="hover:text-blue-900 rounded">
                                             {item.text}
                                         </span>
                                     )}
-                                </a>
+                                </Link>
                             );
                         })}
                     </div>

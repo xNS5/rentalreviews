@@ -8,12 +8,18 @@ function getActiveClassName(url: string) {
   return pathname === url ? "underline font-bold text-black" : "";
 }
 
-export const NavItem = (
-  link: NavbarItem
-) => {
+export const NavItem = (link: NavbarItem) => {
   return (
-    <Link onClick={link.onClick ?? undefined} className={`focusable ${getActiveClassName(link.url)} ${link.className ?? ""} rounded `} href={link.url ?? ""} target={link.target ?? ""} replace>
-      <span tabIndex={0}>{link.name}</span>
+    <Link
+      className={`${getActiveClassName(link.url)} ${
+        link.className ?? ""
+      } rounded px-3`}
+      href={link.url ?? ""}
+      target={link.target ?? ""}
+      tabIndex={0}
+      replace
+    >
+      {link.name}
     </Link>
   );
 };
