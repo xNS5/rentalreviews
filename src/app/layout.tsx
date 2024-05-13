@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Navbar } from "./components/navbar/navbar";
-import { getConfig } from "./utilities/config-provider";
+import { getRemoteConfig } from "./utilities/config-provider";
 import { Footer } from "./components/footer/footer";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = (async () => await getConfig("metadata"));
+export const metadata: Metadata | Promise<Metadata> = new Promise(
+  async (resolve, reject) => {
+    const config = await getRemoteConfig();
+    resolve(config.metadata);
+  }
+);
 
 export default function RootLayout({
   children,

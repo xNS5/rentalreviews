@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { getConfig } from "@/app/utilities/config-provider";
+import { getRemoteConfig } from "@/app/utilities/config-provider";
 import Icon from "../icons/icon";
 import type { FooterItem } from "./footertypes";
 import Link from "next/link";
@@ -10,7 +10,7 @@ export const Footer = () => {
     const [footerItems, setFooterItems] = useState<any>(null);
 
     useEffect(() => {
-        getConfig("footer").then(data => setFooterItems(data));
+        getRemoteConfig().then(data => setFooterItems(data.footer));
     }, []);
 
     return (

@@ -1,9 +1,9 @@
-"use client";
 import React from "react";
 import Image from "next/image";
+import { ReactNode } from "react";
 
-export const Logo = ({ title }: any) => (
-  <div className="inline-flex">
+const Logo = ({ children }: { children: ReactNode }) => (
+  <div className="inline-flex" tabIndex={0}>
     <Image
       src={"/images/building-icon.svg"}
       alt="Apartment logo"
@@ -11,6 +11,8 @@ export const Logo = ({ title }: any) => (
       height={30}
       className="object-contain filter brightness-0"
     />
-    <h1 className="font-bold text-lg px-2">{title}</h1>
+    {children}
   </div>
 );
+
+export default Logo;

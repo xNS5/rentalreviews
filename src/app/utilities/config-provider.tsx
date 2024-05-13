@@ -10,3 +10,10 @@ export async function getConfig(filePath: string) {
   const data = JSON.parse(file);
   return data;
 }
+
+
+export async function getRemoteConfig(){
+  const data = await fetch("https://raw.githubusercontent.com/xNS5/rentalreviewsconfig/main/src/config/config.json")
+  const json = await data.json();
+  return json;
+}
