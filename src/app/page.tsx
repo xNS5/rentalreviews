@@ -1,8 +1,8 @@
-import { getConfig } from "./utilities/config-provider";
+import { getRemoteConfig } from "./utilities/config-provider";
 import type { Config, Text } from "./configtype";
 
 export default async function Home() {
-  const data: Config = await getConfig("home");
+  const data: Config = await getRemoteConfig("home");
 
   return (
     <div className="container mx-auto px-4">
