@@ -1,22 +1,16 @@
-"use client"
+"use server"
 
-import { useEffect, useState } from "react";
 import { getRemoteConfig } from "@/app/utilities/config-provider";
 import Icon from "../icons/icon";
 import type { FooterItem } from "./footertypes";
 import Link from "next/link";
+import type { Config } from "@/app/configtype";
 
-export const Footer = () => {
-    const [footerItems, setFooterItems] = useState<any>(null);
-
-    useEffect(() => {
-        getRemoteConfig().then(data => setFooterItems(data.footer));
-    }, []);
-
+export const Footer = ({footer}: Config) => {
     return (
-        <footer className="grid grid-rows-3 gap-2 mb-0">
-            {footerItems &&
-                footerItems.map((row: FooterItem[], rowIndex: number) => (
+        <footer className="grid grid-rows-3 gap-2 mb-0 ">
+            {footer &&
+                footer?.map((row: FooterItem[], rowIndex: number) => (
                     <div key={rowIndex} className="flex inline-flex items-center justify-center focus-visible:ring-2 focus-visible:ring-white/75">
                         {row.map((item: FooterItem, itemIndex: number) => {
                             if (item.type === "text") {

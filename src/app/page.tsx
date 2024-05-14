@@ -1,5 +1,6 @@
 import { getRemoteConfig } from "./utilities/config-provider";
-import type { Config, Text } from "./configtype";
+import Text from "./components/text/text";
+import type { Config, Text as TextType } from "./configtype";
 
 export default async function Home() {
   const data: Config = await getRemoteConfig("home");
@@ -7,8 +8,12 @@ export default async function Home() {
   return (
     <div className="container mx-auto px-4">
       <section className="py-5">
-        <h1 className="text-center text-3xl">{data.title}</h1>
-        <h2 className="text-center text-l">{data.description}</h2>
+        {data.content?.map((elem: TextType, i: number) =>
+          <div key={i}>
+            <h1 className="text-center text-3xl py-5">{elem.title}</h1>
+            <Text {...elem} />
+          </div>
+        )}
       </section>
     </div>
   );

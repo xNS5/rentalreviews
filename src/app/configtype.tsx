@@ -7,8 +7,14 @@ export type Config = {
   } | any
 };
 
-export type Text = {
+export type TextList = {
   title: string;
   format: string;
-  text: string;
+  content: Text[]
 };
+
+export type Text = {
+  title: string,
+  type: string,
+  text: string
+}

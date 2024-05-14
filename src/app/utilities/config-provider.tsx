@@ -25,7 +25,7 @@ export async function getConfig(filePath: string) {
 
 export async function getRemoteConfig(configName: string){
   const value = config[configName] ?? "config.json";
-  const data = await fetch(`https://raw.githubusercontent.com/xNS5/rentalreviewsconfig/main/src/config/${value}`, { cache: "force-cache"})
+  const data = await fetch(`https://raw.githubusercontent.com/xNS5/rentalreviewsconfig/development/src/config/${value}`, { cache: "force-cache"});
   const json = await data.json();
   return json;
 }

@@ -24,6 +24,37 @@
   color: #1E40AF;
 }
 
+ol {
+  list-style: none;
+}
+
+ol>li {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+}
+
+ol[type="1"] {
+  list-style: decimal;
+  padding-left: 2rem;
+}
+
+ol[type="a"] {
+  list-style: lower-alpha;
+  padding-left: 2rem;
+}
+
+ol[type="A"] {
+  list-style: upper-alpha;
+  padding-left: 2rem;
+}
+
+a {
+  border-radius: 0.25rem;
+}
+
+a:hover {
+  color: rgb(30 58 138);
+}
+
 
 /* @media (prefers-color-scheme: dark) {
   :root {
