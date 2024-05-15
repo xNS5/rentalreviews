@@ -13,7 +13,7 @@ export const NavDropdownMenu = (link: NavbarItem) => {
           <>
             <Menu.Button className="inline-flex w-full justify-center rounded-md">
               {link.name}
-              <Icon type="fas-chevron-down" className={`mt-1.5 h-3 w-3 ml-1 text-black ${open ? 'rotate-180 transform' : ''}`} ariahidden={true} />
+              <Icon type="fas-chevron-down" className={`mt-2 h-3 w-3 ml-1 text-black ${open ? 'rotate-180 transform' : ''}`} ariahidden={true} />
             </Menu.Button>
             <Transition
               as={Fragment}
@@ -36,7 +36,7 @@ export const NavDropdownMenu = (link: NavbarItem) => {
                       {({ active }) => (
                         <span
                           className={`${active ? "bg-blue-600 text-white" : "text-gray-900"
-                            } group flex w-full rounded-md py-3 px-2 text-left text-base`}
+                            } group flex w-full rounded-md py-3 px-2 text-center text-base md:text-lg`}
                         >
                           {child.name}
                         </span>

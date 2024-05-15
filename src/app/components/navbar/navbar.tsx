@@ -24,9 +24,9 @@ const Navbar = ({ nav, metadata }: Config) => {
       </a>
       <ol className="hidden md:flex">
         {nav?.map((link: NavbarItem, i: number) => (
-          <li key={i} className="focusable">
+          <li key={i} className="focusable md:text-xl">
             {link.type == "link" ? (
-              <NavItem {...link} />
+              <NavItem {...link}/>
             ) : (
               <NavDropdownMenu {...link} />
             )}

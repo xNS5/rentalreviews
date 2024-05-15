@@ -13,7 +13,7 @@ export type TextList = {
   content: Text[]
 };
 
-export type Text = {
+export interface Text extends React.HTMLProps<HTMLDivElement> {
   title: string,
   type: string,
   text: string

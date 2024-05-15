@@ -11,6 +11,6 @@ export type NavbarItem = {
     url: string,
     type?: string,
     target?: string,
-    children?: [] | string,
+    children?: any | any[],
     className?: string
   }
