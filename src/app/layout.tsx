@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import Navbar from "./components/navbar/navbar";
 import { getRemoteConfig } from "./utilities/config-provider";
 import { Footer } from "./components/footer/footer";
@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import { cn } from "@/lib/utils"
 import "./globals.css";
 
-const inter = Inter({ 
+const inter = FontSans({ 
   subsets: ["latin"], variable: "--font-sans" 
 });
 
@@ -30,7 +30,7 @@ export default async function RootLayout({
         <header>
           <Navbar {...config} />
         </header>
-        <main role="main">{children}</main>
+        <main role="main" className={`${inter.variable}`}>{children}</main>
         <Footer {...config} />
       </body>
     </html>

@@ -1,3 +1,5 @@
+"use server"
+
 import { initializeApp } from "firebase/app";
 import {
   getFirestore,
@@ -6,13 +8,17 @@ import {
   getDocs,
   QuerySnapshot,
   getDoc,
+  DocumentData,
+  QueryDocumentSnapshot,
+  query,
 } from "firebase/firestore";
-import { DocumentSnapshot } from "firebase-admin/firestore";
+import { converter } from "./firebase-converter";
 
 let app: any;
 let db: any;
 
 const firebaseConfig = () => {
+
   const configObj = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -33,14 +39,16 @@ function getDB() {
   return db;
 }
 
-export async function getCollection(collection_name: string) {
+export async function getCollection<T extends DocumentData>(collection_name: string, startAt?: number, endAt?: number){
   try {
-    const collectionRef = collection(getDB(), collection_name);
+    const collectionRef = collection(getDB(), collection_name).withConverter(converter<T>());
+    let startAtVal = startAt ?? 0;
+    let endAtVal = endAt ?? 1000;
     const querySnapshot: QuerySnapshot = await getDocs(collectionRef);
     if (querySnapshot.empty) {
-      return [];
+      return [] as unknown as T;
     }
-    return querySnapshot.docs.map((doc) => doc.data());
+    return querySnapshot.docs.map((doc) => doc.data()) as unknown as T; 
   } catch (error) {
     console.error("Error geting data:", error);
   }

@@ -1,27 +1,31 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+import { DocumentData } from "firebase/firestore"
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+export interface Company extends DocumentData {
+  name: string,
+  avg_rating: number,
+  review_count: number,
+  type: "company" | "property",
+  [key: string]: any | any[]
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Company>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "name",
+    header: "Name",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "company_type",
+    header: "Type",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
+    accessorKey: "adjusted_avg_rating",
+    header: "Rating",
+  },
+  {
+    accessorKey: "adjusted_review_count",
+    header: "Review Count",
   },
 ]
