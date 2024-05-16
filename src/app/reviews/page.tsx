@@ -1,12 +1,23 @@
-import Image from "next/image";
+import { Payment, columns } from "../components/table/columns"
+import { DataTable } from "../components/table/data-table"
+ 
+async function getData(): Promise<Payment[]> {
+  return [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+  ]
+}
 
-export default function Home() {
+export default async function Home() {
+  const data = await getData()
+ 
   return (
-    <div className="container mx-auto px-4">
-      <h1>Hello word</h1>
-      <p>This is a content to make our page longer</p>
-      <div className="w-full h-screen bg-green-300"></div>
-      <p>Lorem Ipsum is simply dummy text ...</p>
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }
