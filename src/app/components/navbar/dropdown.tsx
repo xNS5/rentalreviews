@@ -24,7 +24,7 @@ export const NavDropdownMenu = (link: NavbarItem) => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="fixed -translate-x-1/2 mt-2 w-70 border border-solid border-slate-300 origin-top-right rounded-md bg-white shadow-lg" aria-orientation="vertical" >
+              <Menu.Items className="fixed -translate-x-1/2 mt-2 w-70 border border-solid border-slate-300 origin-top-right rounded-md bg-white shadow-lg z-10" aria-orientation="vertical" >
                 {link.children?.map((child: NavbarItem) => {
                   return (
                     <Menu.Item
