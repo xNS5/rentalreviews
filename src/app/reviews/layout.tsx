@@ -1,9 +1,14 @@
+import { Suspense } from "react";
+import { Spinner } from "../components/spinner/spinner";
+
 export default function ReviewLayout({
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>) {
     return (
-        <div>{children}</div>
+        <Suspense fallback={<Spinner/>}>
+          <div>{children}</div>
+      </Suspense> 
     );
   }
