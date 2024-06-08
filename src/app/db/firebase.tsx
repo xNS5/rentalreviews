@@ -11,8 +11,13 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   query,
+  startAt as fbStartAt,
+  endAt as fbEndAt,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import { converter } from "./firebase-converter";
+import { unstable_cache as cache } from "next/cache";
 
 let app: any;
 let db: any;
@@ -39,12 +44,13 @@ function getDB() {
   return db;
 }
 
-export async function getCollection<T extends DocumentData>(collection_name: string, startAt?: number, endAt?: number){
+const getCollectionImpl = async <T extends DocumentData>(collection_name: string, startAt?: number, endAt?: number) => {
   try {
     const collectionRef = collection(getDB(), collection_name).withConverter(converter<T>());
     let startAtVal = startAt ?? 0;
     let endAtVal = endAt ?? 1000;
-    const querySnapshot: QuerySnapshot = await getDocs(collectionRef);
+    const queryHandler = query(collectionRef, orderBy("name"), fbStartAt(startAtVal), limit(endAtVal - startAtVal))
+    const querySnapshot: QuerySnapshot = await getDocs(queryHandler)
     if (querySnapshot.empty) {
       return [] as unknown as T;
     }
@@ -54,10 +60,7 @@ export async function getCollection<T extends DocumentData>(collection_name: str
   }
 }
 
-export async function getDocument(
-  collection_name: string,
-  document_name: string
-) {
+const getDocumentImpl = async ( collection_name: string, document_name: string) => {
   try {
     const collectionRef = collection(getDB(), collection_name);
     const querySnapshot: QuerySnapshot = await getDocs(collectionRef);
@@ -74,3 +77,21 @@ export async function getDocument(
     console.error("Error geting data:", error);
   }
 }
+
+export const getCollection = cache(
+  /* fetch function */ getCollectionImpl,
+  /* unique key     */ ["getCollectionImpl"],
+  /* options        */ {
+    tags: ["getCollectionImpl"],
+    revalidate: 60 * 60 * 24 /* same as fetch.revalidate */
+  }
+)
+
+export const getDocument = cache(
+  /* fetch function */ getDocumentImpl,
+  /* unique key     */ ["getDocumentImpl"],
+  /* options        */ {
+    tags: ["getDocumentImpl"],
+    revalidate: 60 * 60 * 24 /* same as fetch.revalidate */
+  }
+)

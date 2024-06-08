@@ -1,13 +1,13 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Column, ColumnDef } from "@tanstack/react-table"
+import { ColumnDef } from "@tanstack/react-table"
 import { DocumentData } from "firebase/firestore"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 
 export interface Company extends DocumentData {
   name: string,
-  avg_rating: number,
+  average_rating: number,
   review_count: number,
   type: "company" | "property",
   [key: string]: any | any[]
@@ -36,11 +36,15 @@ export const columns: ColumnDef<Company>[] = [
     header: ({column}) => getSortButton(column, "Type")
   },
   {
-    accessorKey: "adjusted_avg_rating",
+    accessorKey: "average_rating",
     header: ({column}) => getSortButton(column, "Rating")
   },
   {
-    accessorKey: "adjusted_review_count",
-    header: ({column}) => getSortButton(column, "Review Count")
+    accessorKey: "adjusted_average_rating",
+    header: ({column}) => getSortButton(column, "Adjusted Rating")
+  },
+  {
+    accessorKey: "review_count",
+    header: ({column}) => getSortButton(column, "Reviews")
   },
 ]

@@ -1,15 +1,19 @@
-import { columns, Company } from "../components/table/columns"
-import { DataTable } from "../components/table/data-table"
+import { Suspense } from "react";
+import { Spinner } from "../components/spinner/spinner";
+import { DataTable } from "../components/table/data-table";
 import { getCollection } from "../db/firebase";
+import { Company } from "./columns";
+import { columns } from "./columns";
 
 export default async function Reviews() {
-  const companies: Company[] | undefined = await getCollection<Company[]>("summary_companies", 0, 10);
-  const properties: Company[] | undefined = await getCollection<Company[]>("summary_properties",  0, 10);
-  const data = [...(companies ?? []), ...(properties ?? [])];
+  const articles: Company[] | undefined = await getCollection<Company[]>("articles", 0, 25);
+  const data = [...(articles ?? [])];
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
+      <Suspense fallback={<Spinner/>}>
+        <DataTable columns={columns} data={data} />
+      </Suspense>
     </div>
   );
 }
