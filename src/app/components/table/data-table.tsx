@@ -8,7 +8,9 @@ import {
   SortingState,
   getSortedRowModel,
   getPaginationRowModel,
-  PaginationState
+  PaginationState,
+  ColumnFiltersState,
+  getFilteredRowModel
 } from "@tanstack/react-table"
 
 import {
@@ -22,6 +24,7 @@ import {
 
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -35,6 +38,9 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+    []
+  )
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: DEFAULT_PAGINATION_VALUE,
@@ -48,14 +54,27 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     state: {
       sorting,
-      pagination
+      pagination,
+      columnFilters
     }
   })
 
   return (
     <div className="rounded-md border">
+      <div className="flex items-center py-4 px-4 justify-end">
+        <Input
+          placeholder="Search"
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
