@@ -37,10 +37,9 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
   onRowSelectProps?: {
-    fn: (a: any) => void,
-    url: string,
-    target: string,
-    slugProp: string
+    fn?: (a: any) => void,
+    url?: string,
+    target?: string
   },
   row?: Row<TData>
 }
@@ -58,7 +57,7 @@ export function DataTable<TData, TValue>({
   })
 
   const onRowSelectHandler = (row: Row<TData>) => {
-    if(onRowSelectProps){
+    if(onRowSelectProps?.fn !== undefined){
       onRowSelectProps.fn(row)
     }
   }
