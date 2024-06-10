@@ -1,19 +1,31 @@
-import { Suspense } from "react";
-import { Spinner } from "../components/spinner/spinner";
+"use client"
+
 import { DataTable } from "../components/table/data-table";
-import { getCollection } from "../db/firebase";
 import { Company } from "./columns";
 import { columns } from "./columns";
+import { useRouter } from "next/navigation";
 
-export async function ReviewsTableWrapper() {
-  const articles: Company[] | undefined = await getCollection<Company[]>("articles", 0, 25);
-  const data = [...(articles ?? [])];
+interface Props {
+  data: Company[]
+}
+
+export function ReviewsTableWrapper({ data }: Props) {
+  const router = useRouter();
+
+
+  const onClickHandler = (row: any) => {
+    const { slug } = row.original;
+    router.push(`/reviews/${slug}`);
+  }
+
+  const onClickProps = {
+    url: "",
+    slugProp: "slug",
+    target: "_blank",
+    fn: onClickHandler
+  }
 
   return (
-    <div className="container mx-auto py-10">
-      <Suspense fallback={<Spinner/>}>
-       <DataTable columns={columns} data={data} />
-    </Suspense>
-    </div>
+    <DataTable columns={columns} data={data} onRowSelectProps={onClickProps} />
   );
 }
