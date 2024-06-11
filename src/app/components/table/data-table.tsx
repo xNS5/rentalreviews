@@ -29,7 +29,7 @@ import {
 import { useState } from 'react';
 import { Input } from "@/components/ui/input"
 
-import styles from "./data.table.module.css"
+import styles from "./data-table.module.css"
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -119,6 +119,7 @@ export function DataTable<TData, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 onClick={() => onRowSelectHandler(row)}
+                className={styles.data_table_row}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

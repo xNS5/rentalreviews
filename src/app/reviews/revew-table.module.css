@@ -1,0 +1,16 @@
+.name_cell, .copy_cell{
+    background-color: white;
+    color: black;
+}
+
+.name_cell:hover{
+    background-color: inherit;
+}
+
+.copy_cell:hover{
+    background-color: inherit;
+}
+
+.table_button{
+    font-weight: normal;
+}

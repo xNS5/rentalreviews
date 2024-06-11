@@ -1,9 +1,8 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { DocumentData } from "firebase/firestore"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import Icon from "../components/icons/icon"
 
 export interface Company extends DocumentData {
   name: string,
@@ -29,7 +28,7 @@ function getSortButton(column: any, name: string) {
 export const columns: ColumnDef<Company>[] = [
   {
     accessorKey: "name",
-    header: ({column}) => getSortButton(column, "Name")
+    header: ({column}) => getSortButton(column, "Name"),
   },
   {
     accessorKey: "company_type",

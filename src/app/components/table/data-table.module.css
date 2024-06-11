@@ -21,11 +21,12 @@
 }
 
 
-.data-table-row{
-    border: 3px solid rgba(255, 255, 255, 1) !important;
+.data_table_row{
+    border: 1px solid black;
 }
 
 .data_table_row:hover{
     border: 2px solid darkslategray !important;
+    background-color: unset;
     /* box-shadow: 2px 2px 2px 2px lightgray; */
 }
