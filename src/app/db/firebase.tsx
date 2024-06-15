@@ -5,6 +5,7 @@ import {
   getFirestore,
   collection,
   doc,
+  where,
   getDocs,
   QuerySnapshot,
   getDoc,
@@ -60,21 +61,21 @@ const getCollectionImpl = async <T extends DocumentData>(collection_name: string
   }
 }
 
-const getDocumentImpl = async ( collection_name: string, document_name: string) => {
+  const getDocumentImpl = async <T extends DocumentData>( collection_name: string, query_props: {query_key: string, query_value: string | number})=> {
   try {
-    const collectionRef = collection(getDB(), collection_name);
-    const querySnapshot: QuerySnapshot = await getDocs(collectionRef);
-    if (querySnapshot.empty) {
-      return {};
+    const collectionRef = collection(getDB(), collection_name).withConverter(converter<T>());
+    const queryHandler = query(collectionRef, where(query_props.query_key, "==", query_props.query_value))
+    const querySnapshot = await getDocs(queryHandler);
+    
+    if(querySnapshot.empty){
+      throw new Error("Query returned no data");
     }
-    querySnapshot.forEach((doc) => {
-      if (doc.id === document_name) {
-        return doc.data();
-      }
-    });
-    return null;
+
+    const doc = querySnapshot.docs[0];
+    return doc.data() as unknown as T;
   } catch (error) {
     console.error("Error geting data:", error);
+    return undefined;
   }
 }
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/button/button";
 import { DataTable } from "../components/table/data-table";
 import { Company } from "./columns";
 import { columns } from "./columns";
@@ -21,27 +21,27 @@ export function ReviewsTableWrapper({ data }: Props) {
     router.push(`/reviews/${slug}`);
   }
 
-  // Setting custom actions for elements in the cell
-  /* ${visible ? "visible" : "invisible"} */
-
   columns[0].cell = ({ cell, row }) => {
     const [visible, setVisible] = useState(false)
-    return (<span
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      className={`w-full m-4`}>
-      {cell.getValue() as string}
-      <Button
-        onClick={() => onNameClickHandler({ row, cell })}
-        className={`${visible ? "visible bg-blue text-white rounded" : "invisible"}`}
-      >
-        Open
-        <Icon type="fas-link" />
-      </Button>
-    </span>)
+    return (
+        <span
+        className={`flex h-max w-full`}
+        onMouseOver={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+        >
+          {cell.getValue() as string}
+          <Button
+            onClickFn={() => onNameClickHandler({ row, cell })}
+            className={`${visible ? "visible" : "invisible"} rounded mx-1`}
+          >
+            Open
+            <Icon type="fas-link" />
+          </Button>
+        </span>
+    )
   }
 
   return (
-    <DataTable columns={columns} data={data} /* onRowSelectProps={{ fn: onClickHandler}} */ />
+    <DataTable columns={columns} data={data}/>
   );
 }
