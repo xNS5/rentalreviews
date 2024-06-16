@@ -1,8 +1,0 @@
-.article{
-    margin-top: 1em;
-    padding: 2px;
-}
-
-.article > section > heading > h2 {
-    font-weight: bold;
-}

@@ -9,7 +9,6 @@ import { Company } from "../columns";
 
 
 export default async function Page({params}: any) {
-
     const slug_regex_test = new RegExp('[^0-9a-z-]')
     const {slug} = params;
 
@@ -22,6 +21,5 @@ export default async function Page({params}: any) {
     return(
     <Suspense fallback={<Spinner/>}>
         <Review {...(article ? article : {}) as Company}/>
-
     </Suspense>)
 }
