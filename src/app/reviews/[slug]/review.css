@@ -1,9 +1,9 @@
-.summary-article{
+.review-summary{
     font-size: medium !important;
     margin: 0 1em 0 1em;
 }
 
-.summary-article > section > heading > h2 {
+.review-summary > section > heading > h2 {
     font-size: larger;
     font-weight: bold;
     margin: 1em 0 0.5em 0;
@@ -12,6 +12,6 @@
     text-underline-offset: 0.5rem;
 }
 
-.summary-article > section > p {
+.review-summary > section > p {
     margin: 1em 0 0.5em 0;
 }

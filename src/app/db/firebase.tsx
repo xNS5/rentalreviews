@@ -83,7 +83,7 @@ export const getCollection = cache(
   /* fetch function */ getCollectionImpl,
   /* unique key     */ ["getCollectionImpl"],
   /* options        */ {
-    tags: ["getCollectionImpl"],
+    tags: ["getDocumentImpl"],
     revalidate: 60 * 60 * 24 /* same as fetch.revalidate */
   }
 )
