@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Company } from "../columns";
 import parse from 'html-react-parser';
 import "./review.css"
-import { Button } from "@/app/components/button/button";
+import { Button } from "@/components/button/button";
 
 export function Review(data: Company) {
     const router = useRouter();

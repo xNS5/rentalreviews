@@ -1,7 +1,7 @@
 import { Inter as FontSans } from "next/font/google";
-import Navbar from "./components/navbar/navbar";
+import Navbar from "@/components/navbar/navbar";
 import { getRemoteConfig } from "./utilities/config-provider";
-import { Footer } from "./components/footer/footer";
+import { Footer } from "@/components/footer/footer";
 import { Config } from "./utilities/configtype";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils"

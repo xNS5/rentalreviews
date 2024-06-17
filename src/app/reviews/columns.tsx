@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/shadcn/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { DocumentData } from "firebase/firestore"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import Icon from "../components/icons/icon"
+import Icon from "@/components/icons/icon"
 
 export interface Company extends DocumentData {
   name: string,

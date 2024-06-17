@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Spinner } from "../components/spinner/spinner";
+import { Spinner } from "@/components/spinner/spinner";
 
 export default function ReviewGridLayout({
     children,

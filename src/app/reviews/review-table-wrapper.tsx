@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from "react";
-import { Button } from "../components/button/button";
-import { DataTable } from "../components/table/data-table";
+import { Button } from "@/components/button/button";
+import { DataTable } from "@/components/table/data-table";
 import { Company } from "./columns";
 import { columns } from "./columns";
 import { useRouter } from "next/navigation";
-import Icon from "../components/icons/icon";
+import Icon from "@/components/icons/icon";
 import styles from "./review-table.module.css"
 
 interface Props {

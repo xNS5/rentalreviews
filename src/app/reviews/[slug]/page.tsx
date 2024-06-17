@@ -2,7 +2,7 @@
 
 import { notFound } from "next/navigation";
 import { Review } from "./review";
-import { Spinner } from "@/app/components/spinner/spinner";
+import { Spinner } from "@/components/spinner/spinner";
 import { Suspense } from "react";
 import { getDocument } from "@/app/db/firebase";
 import { Company } from "../columns";

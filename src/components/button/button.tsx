@@ -1,4 +1,4 @@
-import { Button as ShadButton } from "@/components/ui/button"
+import { Button as ShadButton } from "@/components/shadcn/button"
 
 
 type ButtonProps = {

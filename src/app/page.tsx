@@ -1,5 +1,5 @@
 import { getRemoteConfig } from "./utilities/config-provider";
-import Text from "./components/text/text";
+import Text from "@/components/text/text";
 import type { Config, Text as TextType } from "./utilities/configtype";
 
 export default async function Home() {

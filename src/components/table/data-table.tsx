@@ -23,11 +23,11 @@ import {
   TableHeader,
   TableRow,
 
-} from "@/components/ui/table"
+} from "@/components/shadcn/table"
 
 
 import { useState } from 'react';
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/shadcn/input"
 
 import styles from "./data-table.module.css"
 

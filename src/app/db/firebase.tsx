@@ -81,18 +81,18 @@ const getCollectionImpl = async <T extends DocumentData>(collection_name: string
 
 export const getCollection = cache(
   /* fetch function */ getCollectionImpl,
-  /* unique key     */ ["getCollectionImpl"],
+  /* unique key     */ ["firestoreDocuments"],
   /* options        */ {
-    tags: ["getDocumentImpl"],
-    revalidate: 60 * 60 * 24 /* same as fetch.revalidate */
+    tags: ["firestoreDocuments"],
+    revalidate: 604800 /* 1 week in seconds*/
   }
 )
 
 export const getDocument = cache(
   /* fetch function */ getDocumentImpl,
-  /* unique key     */ ["getDocumentImpl"],
+  /* unique key     */ ["firestoreDocuments"],
   /* options        */ {
-    tags: ["getDocumentImpl"],
-    revalidate: 60 * 60 * 24 /* same as fetch.revalidate */
+    tags: ["firestoreDocuments"],
+    revalidate: 604800 /* 1 week in seconds */
   }
 )
