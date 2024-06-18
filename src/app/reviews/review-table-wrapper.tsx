@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/button/button";
 import { DataTable } from "@/components/table/data-table";
@@ -16,32 +17,30 @@ interface Props {
 export function ReviewsTableWrapper({ data }: Props) {
   const router = useRouter();
 
-  const onNameClickHandler = ({ row, cell }: any) => {
-    const { slug } = row.original;
-    router.push(`/reviews/${slug}`);
-  }
 
   columns[0].cell = ({ cell, row }) => {
     const [visible, setVisible] = useState(false)
     return (
-        <span
-        className={`flex h-max w-full`}
+      <span
+        className={`flex h-max items-center`}
         onMouseOver={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
+      >
+        {cell.getValue() as string}
+        <Link
+          href={`/reviews/${row.original.slug}`}
+          className={`${visible ? "visible" : "invisible"} rounded mx-1 bg-blue-500 h-8 w-auto text-white`}
         >
-          {cell.getValue() as string}
-          <Button
-            onClickFn={() => onNameClickHandler({ row, cell })}
-            className={`${visible ? "visible" : "invisible"} rounded mx-1`}
-          >
+          <button>
             Open
-            <Icon type="fas-link" />
-          </Button>
-        </span>
+            <Icon type="fas-arrow-right" />
+          </button>
+        </Link>
+      </span>
     )
   }
 
   return (
-    <DataTable columns={columns} data={data}/>
+    <DataTable columns={columns} data={data} />
   );
 }
