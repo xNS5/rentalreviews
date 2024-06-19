@@ -9,6 +9,10 @@ export interface Company extends DocumentData {
   average_rating: number,
   review_count: number,
   type: "company" | "property",
+  summary: {
+    disclaimer?: string,
+    text: string
+  }
   [key: string]: any | any[]
 }
 
