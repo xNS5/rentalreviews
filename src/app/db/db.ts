@@ -1,0 +1,1 @@
+import { getCollection, getDocument } from "./firebase";
