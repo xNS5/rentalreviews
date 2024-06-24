@@ -21,5 +21,5 @@ export async function GET(request: NextRequest) {
 
   const data = await handler(null, null);
   
-  return NextResponse.json({ msg: {collection: data} })
+  return NextResponse.json({collection: data});
 }
