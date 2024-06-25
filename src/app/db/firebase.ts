@@ -32,7 +32,7 @@ const firebaseConfig = () => {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   };
 
-  return configObj; 
+  return configObj;
 }
 
 function getDB() {
@@ -53,19 +53,19 @@ const getCollectionImpl = async <T extends DocumentData>(collection_name: string
     if (querySnapshot.empty) {
       return [] as unknown as T;
     }
-    return querySnapshot.docs.map((doc) => doc.data()) as unknown as T; 
+    return querySnapshot.docs.map((doc) => doc.data()) as unknown as T;
   } catch (error) {
     console.error("Error geting data:", error);
   }
 }
 
-  const getDocumentImpl = async <T extends DocumentData>( collection_name: string, query_props: {query_key: string, query_value: string | number})=> {
+const getDocumentImpl = async <T extends DocumentData>(collection_name: string, query_props: { query_key: string, query_value: string | number }) => {
   try {
     const collectionRef = collection(getDB(), collection_name).withConverter(converter<T>());
     const queryHandler = query(collectionRef, where(query_props.query_key, "==", query_props.query_value))
     const querySnapshot = await getDocs(queryHandler);
-    
-    if(querySnapshot.empty){
+
+    if (querySnapshot.empty) {
       throw new Error("Query returned no data");
     }
 
@@ -79,7 +79,7 @@ const getCollectionImpl = async <T extends DocumentData>(collection_name: string
 
 export const getCollection = cache(
   /* fetch function */ getCollectionImpl,
-  /* unique key     */ ["firestoreCollection"],
+  /* unique key     */["firestoreCollection"],
   /* options        */ {
     tags: ["firestoreCollection"],
     revalidate: 86400 /* 1 week in seconds*/
@@ -88,7 +88,7 @@ export const getCollection = cache(
 
 export const getDocument = cache(
   /* fetch function */ getDocumentImpl,
-  /* unique key     */ ["firestoreDocuments"],
+  /* unique key     */["firestoreDocuments"],
   /* options        */ {
     tags: ["firestoreDocuments"],
     revalidate: 86400 /* 1 week in seconds */

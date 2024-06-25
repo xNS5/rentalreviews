@@ -24,7 +24,7 @@ const getDocumentImpl = async <T>(collection: string, document_id: string) => {
         await client.connect();
         const db = client.db("rentalreviews");
         const collection_data = db.collection(collection);
-        const data = await collection_data.findOne({ _id: document_id})
+        const data = await collection_data.findOne({ _id: document_id as unknown as ObjectId})
         return data as unknown as T;
     } catch(err){
         console.error("Error getting data: ", err);
