@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
-import handler from '@/app/db/mongo';
+import { getCollection } from '@/app/db/db';
 
 function getResponse(message: string, code: number){
   return NextResponse.json({message: message}, {status: code})
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     return getResponse("Collection cannot be null", 400);
   }
 
-  const data = await handler(null, null);
+  const data = await getCollection(collection);
   
   return NextResponse.json({collection: data});
 }
