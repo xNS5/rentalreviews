@@ -5,7 +5,7 @@ function getClient(){
     return new MongoClient(`mongodb://${process.env.NEXT_PUBLIC_MONGODB_USER}:${process.env.NEXT_PUBLIC_MONGODB_PASSWORD}@${process.env.NEXT_PUBLIC_MONGODB_URL}`);
 }
 
-const getCollectionImpl = async <T>(collection: string) => {
+export const getCollection = async <T>(collection: string) => {
     const client = getClient();
     try{
         await client.connect();
@@ -18,7 +18,7 @@ const getCollectionImpl = async <T>(collection: string) => {
     }
 }
 
-const getDocumentImpl = async <T>(collection: string, document_id: string) => {
+export const getDocument = async <T>(collection: string, document_id: string) => {
     const client = getClient();
     try{
         await client.connect();
@@ -30,22 +30,3 @@ const getDocumentImpl = async <T>(collection: string, document_id: string) => {
         console.error("Error getting data: ", err);
     }
 }
-
-
-export const getCollection = cache(
-/* fetch function */ getCollectionImpl,
-  /* unique key     */ ["mongoCollection"],
-  /* options        */ {
-    tags: ["mongoCollection"],
-    revalidate: 86400 /* 1 week in seconds*/
-  }
-)
-
-export const getDocument = cache(
-    /* fetch function */ getDocumentImpl,
-    /* unique key     */ ["mongoDocuments"],
-    /* options        */ {
-      tags: ["mongoDocuments"],
-      revalidate: 86400 /* 1 week in seconds */
-    }
-  )

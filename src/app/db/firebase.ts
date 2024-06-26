@@ -15,14 +15,11 @@ import {
   orderBy,
   limit,
 } from "firebase/firestore";
-import { converter } from "./firebase-converter";
-import { unstable_cache as cache } from "next/cache";
-
-let app: any;
-let db: any;
+import type { Firestore, Query } from "firebase/firestore";
+import type { FirebaseApp } from "firebase/app";
+import type { RequestType } from "./requesttype";
 
 const firebaseConfig = () => {
-
   const configObj = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -31,66 +28,40 @@ const firebaseConfig = () => {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   };
-
   return configObj;
 }
 
-function getDB() {
-  if (db == undefined) {
-    app = initializeApp(firebaseConfig());
-    db = getFirestore(app);
-  }
-  return db;
-}
+const app: FirebaseApp = initializeApp(firebaseConfig());
+const db: Firestore = getFirestore(app);
 
-const getCollectionImpl = async <T extends DocumentData>(collection_name: string, startAt?: number, endAt?: number) => {
+export const getCollection = async <T>(props: RequestType): Promise<T | undefined>=> {
   try {
-    const collectionRef = collection(getDB(), collection_name).withConverter(converter<T>());
-    let startAtVal = startAt ?? 0;
-    let endAtVal = endAt ?? 1000;
-    const queryHandler = query(collectionRef, orderBy("name"), fbStartAt(startAtVal), limit(endAtVal - startAtVal))
-    const querySnapshot: QuerySnapshot = await getDocs(queryHandler)
-    if (querySnapshot.empty) {
-      return [] as unknown as T;
+    const {collection_name} = props;
+    const collectionRef = collection(db, collection_name);
+    const queryRef = query(collectionRef);
+    const docSnapshot = await getDocs(queryRef);
+    if(docSnapshot.empty){
+
     }
-    return querySnapshot.docs.map((doc) => doc.data()) as unknown as T;
+    return docSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()})) as T;
   } catch (error) {
     console.error("Error geting data:", error);
   }
 }
 
-const getDocumentImpl = async <T extends DocumentData>(collection_name: string, query_props: { query_key: string, query_value: string | number }) => {
+export const getDocument = async <T>(props: RequestType) => {
   try {
-    const collectionRef = collection(getDB(), collection_name).withConverter(converter<T>());
-    const queryHandler = query(collectionRef, where(query_props.query_key, "==", query_props.query_value))
-    const querySnapshot = await getDocs(queryHandler);
-
-    if (querySnapshot.empty) {
-      throw new Error("Query returned no data");
+    const {collection_name} = props;
+    const {id} = props.query_props;
+    const docRef = doc(db, collection_name, `${id}`);
+    const docSnapshot = await getDoc(docRef);
+    if(!docSnapshot.exists()){
+      return {} as T;
     }
-
-    const doc = querySnapshot.docs[0];
-    return doc.data() as unknown as T;
+    return docSnapshot.data() as T;
   } catch (error) {
-    console.error("Error geting data:", error);
+    console.error("Error geting data:", error); 
+
     return undefined;
   }
 }
-
-export const getCollection = cache(
-  /* fetch function */ getCollectionImpl,
-  /* unique key     */["firestoreCollection"],
-  /* options        */ {
-    tags: ["firestoreCollection"],
-    revalidate: 86400 /* 1 week in seconds*/
-  }
-)
-
-export const getDocument = cache(
-  /* fetch function */ getDocumentImpl,
-  /* unique key     */["firestoreDocuments"],
-  /* options        */ {
-    tags: ["firestoreDocuments"],
-    revalidate: 86400 /* 1 week in seconds */
-  }
-)
