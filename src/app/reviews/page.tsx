@@ -7,7 +7,11 @@ import { Suspense } from "react";
 import { Spinner } from "@/components/spinner/spinner";
 
 export default async function Reviews() {
-  const data: Company[] | undefined = await getCollection<Company>("companies");
+  const res =  await fetch("/api/collection?collection=companies");
+  let data: Company[] = [];
+  if(res.ok){
+    data = await res.json();
+  }
 
   return (
     <div className="container mx-auto py-10">
