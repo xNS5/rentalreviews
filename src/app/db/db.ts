@@ -1,10 +1,10 @@
 import { getCollection as firestoreGetCollection, getDocument  as firestoreGetDocument} from "./firebase";
 import { getCollection as mongoGetCollection, getDocument as mongoGetDocument } from "./mongo";
-import { CACHE_TTL } from "@/lib/utils";
 import type { RequestType } from "./requesttype";
 
 
 const isLocal = process.env.NEXT_PUBLIC_DB_ENV == "local";
+const CACHE_TTL = process.env.NEXT_PUBLIC_CACHE_TTL;
 
 export const getCollection = async<T>(collection: string): Promise<T[] | undefined> => {
     let collection_arr: T[] | undefined  = global.collectionCache.get(collection) ?? undefined;
