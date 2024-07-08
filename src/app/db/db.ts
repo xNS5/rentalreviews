@@ -3,30 +3,47 @@ import { getCollection as mongoGetCollection, getDocument as mongoGetDocument } 
 import type { RequestType } from "./requesttype";
 
 
-const isLocal = process.env.NEXT_PUBLIC_DB_ENV == "local";
+const isLocal: boolean = process.env.NEXT_PUBLIC_DB_ENV == "local";
+const CACHE_TTL: string = process.env.NEXT_PUBLIC_CACHE_TTL ?? "3600000"; // 1 hour if .env value isn't there. 
 
-export const getCollection = async<T>(collection: string): Promise<T[] | undefined> => {
-    if(isLocal){
-        const collection_arr: T[] | undefined = await mongoGetCollection<T[]>(collection);
-        return collection_arr;
-    } else {
-        const collection_arr: T[] | undefined = await firestoreGetCollection<T[]>({collection_name: collection} as RequestType)
-        return collection_arr;
-    }
+type TProps<T> = {
+    [k: string]: string | number
 }
 
-export const getDocument = async<T>(collection: string, document_id: string): Promise<T | {}> => {
-    if(isLocal){
-        const document: T | undefined = await mongoGetDocument<T>(collection, document_id);
-        if(document === undefined){
-            return {};
+export const getCollection = async<T extends TProps<T>>(collection: string): Promise<T[] | undefined> => {
+    let collection_arr: T[] | undefined  = global.collectionCache.get(collection) ?? undefined;
+
+    if(collection_arr === undefined){
+        if(isLocal){
+            collection_arr = await mongoGetCollection<T[]>(collection) ?? undefined;
+        } else {
+            collection_arr = await firestoreGetCollection<T[]>({collection_name: collection} as RequestType) ?? undefined;
         }
-        return document;
-    } else {
-        const document: T | undefined = await firestoreGetDocument<T>({collection_name: collection, query_props: {id: document_id} } as RequestType);
-        if(document === undefined){
-            return {};
-        }
-        return document;
+        global.collectionCache.set(collection, collection_arr, CACHE_TTL);
     }
+    return collection_arr;
+}
+
+export const getDocument = async<T extends TProps<T>>(collection: string, document_id: string): Promise<T | undefined> => {
+    let document: T | undefined = global.documentCache.get(`${collection}/${document_id}`) ?? undefined;
+    
+    if(document === undefined){
+        const collection_arr: T[] | undefined = global.collectionCache.get(collection) ?? undefined;
+        if(collection_arr !== undefined){
+            if(isLocal){
+                document = collection_arr.find((doc: T) => doc._id == document_id); 
+            } else {
+                document = collection_arr.find((doc: T) => doc.id == document_id); 
+            }
+        } else {
+            if(isLocal){
+                document = await mongoGetDocument<T>(collection, document_id) ?? undefined;
+            } else {
+                document = await firestoreGetDocument<T>({collection_name: collection, query_props: {id: document_id} } as RequestType) ?? undefined ;
+            }
+        }
+        global.documentCache.set(`${collection}/${document_id}`, document, `${CACHE_TTL}`);
+    }
+    return document;
+
 }

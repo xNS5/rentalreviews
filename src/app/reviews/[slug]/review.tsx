@@ -6,9 +6,6 @@ import parse from 'html-react-parser';
 import "./review.css"
 
 export function Review(data: Company) {
-
-    console.log(data);
-
     return (
         <article className="container mx-auto py-10 review-summary">
             <h1 className="text-3xl text-center font-bold">{data.name}</h1>
@@ -16,12 +13,12 @@ export function Review(data: Company) {
                 <ol className="flex items-center space-x-4">
                     <li><span className="font-bold">Average Rating: </span>{data.average_rating}/5</li>
                     <li><span className="font-bold">Review Count: </span>{data.review_count}</li>
-                    <li><span className="font-bold">Adjusted Rating: </span> {data.adjusted_average_rating}/5</li>
-                    <li><span className="font-bold">Adjusted Review Count: </span>{data.adjusted_review_count}</li>
-                    <li><Link href={`/reviews/${data.slug}/data`}><button className={`rounded mx-1 bg-blue-500 h-8 w-auto text-white`}>Raw Data</button></Link></li>
+                    <li className={`${data.review_count == data.adjusted_review_count ? "hidden" : "visible"}`}><span className="font-bold">Adjusted Rating: </span> {data.adjusted_average_rating}/5</li>
+                    <li className={`${data.review_count == data.adjusted_review_count ? "hidden" : "visible"}`}><span className="font-bold">Adjusted Review Count: </span>{data.adjusted_review_count}</li>
+                    <li><Link href={`/reviews/${data.slug}/data`}><button className={`rounded mx-1 bg-blue-500 h-8 px-2 w-auto text-white`}>Raw Data</button></Link></li>
                 </ol>
             </div>
-            {parse(data.text)}
+            {parse(data.article.text)}
         </article >
     )
 }

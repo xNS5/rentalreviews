@@ -29,7 +29,6 @@ const Icon = (props: IconProps) => {
     if (props !== undefined) {
         const DynamicIcon = getIcon(props.type, "-");
         if (DynamicIcon == null) {
-            console.log(DynamicIcon);
             return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")} />;
         }
         return (

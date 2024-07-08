@@ -2,8 +2,8 @@
 
 import { notFound } from "next/navigation";
 import type { Company } from "../../columns";
-import { getDocument } from "@/app/db/firebase";
-import {RawData} from "./raw-data";
+import { Data } from "./data";
+import { getCompanyData } from "../page";
 
 
 export default async function ReviewData({ params: { slug } }: any) {
@@ -11,8 +11,13 @@ export default async function ReviewData({ params: { slug } }: any) {
     if (slug == undefined || slug_regex_test.test(slug)) {
         notFound();
     }
-    const raw_data: Company | undefined = await getDocument<Company>("articles", { query_key: "slug", query_value: slug });
-    const jsonBlob = new Blob([JSON.stringify(raw_data, null, 2)], { type: 'application/json' });
+    const data: Company = await getCompanyData(slug);
 
-    return (<>{JSON.stringify(raw_data, null, 2)}</>)
+    return (
+    <div     
+        className="py-4 px-8">
+        <Data {...data}/>
+        
+    </div>
+    )
 }

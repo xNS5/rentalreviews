@@ -25,9 +25,11 @@
     "mongo": "^0.1.0",
     "mongodb": "^6.7.0",
     "next": "^14.2.3",
+    "node-cache": "^5.1.2",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "view-json-react": "^1.1.1"
   },
   "devDependencies": {
     "@types/loadable__component": "^5.13.9",
