@@ -25,10 +25,10 @@ export const getCollection = async<T extends TProps<T>>(collection: string): Pro
 }
 
 export const getDocument = async<T extends TProps<T>>(collection: string, document_id: string): Promise<T | undefined> => {
-    const collection_arr: T[] | undefined = global.collectionCache.get(collection) ?? undefined;
     let document: T | undefined = global.documentCache.get(`${collection}/${document_id}`) ?? undefined;
-
+    
     if(document === undefined){
+        const collection_arr: T[] | undefined = global.collectionCache.get(collection) ?? undefined;
         if(collection_arr !== undefined){
             if(isLocal){
                 document = collection_arr.find((doc: T) => doc._id == document_id); 

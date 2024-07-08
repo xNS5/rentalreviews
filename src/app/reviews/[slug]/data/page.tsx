@@ -2,7 +2,6 @@
 
 import { notFound } from "next/navigation";
 import type { Company } from "../../columns";
-import { getDocument } from "@/app/db/db";
 import { Data } from "./data";
 import { getCompanyData } from "../page";
 
@@ -12,7 +11,13 @@ export default async function ReviewData({ params: { slug } }: any) {
     if (slug == undefined || slug_regex_test.test(slug)) {
         notFound();
     }
-    const data: Company | undefined = await getCompanyData(slug);
+    const data: Company = await getCompanyData(slug);
 
-    return <Data {...data as Company}/>
+    return (
+    <div     
+        className="py-4 px-8">
+        <Data {...data}/>
+        
+    </div>
+    )
 }

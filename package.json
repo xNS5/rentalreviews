@@ -14,7 +14,6 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.19",
-    "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-table": "^8.17.3",
     "class-variance-authority": "^0.7.0",
@@ -29,7 +28,8 @@
     "node-cache": "^5.1.2",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "view-json-react": "^1.1.1"
   },
   "devDependencies": {
     "@types/loadable__component": "^5.13.9",
