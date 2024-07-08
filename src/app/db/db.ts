@@ -4,7 +4,7 @@ import type { RequestType } from "./requesttype";
 
 
 const isLocal: boolean = process.env.NEXT_PUBLIC_DB_ENV == "local";
-const CACHE_TTL: string = process.env.NEXT_PUBLIC_CACHE_TTL ?? "3600000";
+const CACHE_TTL: string = process.env.NEXT_PUBLIC_CACHE_TTL ?? "3600000"; // 1 hour if .env value isn't there. 
 
 type TProps<T> = {
     [k: string]: string | number
@@ -29,7 +29,7 @@ export const getDocument = async<T extends TProps<T>>(collection: string, docume
     let document: T | undefined = global.documentCache.get(`${collection}/${document_id}`) ?? undefined;
 
     if(document === undefined){
-        if(collection_arr){
+        if(collection_arr !== undefined){
             if(isLocal){
                 document = collection_arr.find((doc: T) => doc._id == document_id); 
             } else {
