@@ -11,7 +11,7 @@ const jsonViewerStyle: React.CSSProperties = {
     color: 'black',
     padding: "1em",
     border: "1px solid black",
-    borderRadius: 4
+    borderRadius: 4,
 
 }
 
