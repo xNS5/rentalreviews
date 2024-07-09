@@ -7,7 +7,7 @@ import { Accordion } from "./accordion";
 import { NavItem } from "./nav-item";
 import Icon from "../icons/icon";
 import type { NavbarItem } from "./navbartypes";
-import type { Config } from "@/app/configtype";
+import type { Config } from "@/lib/configtype";
 
 const Navbar = ({ nav, metadata }: Config) => {
   const [isNavOpen, setNavOpen] = useState(false);

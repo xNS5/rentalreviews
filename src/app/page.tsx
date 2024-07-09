@@ -1,6 +1,6 @@
-import { getRemoteConfig } from "./utilities/config-provider";
+import { getRemoteConfig } from "../lib/config-provider";
 import Text from "@/components/text/text";
-import type { Config, Text as TextType } from "./utilities/configtype";
+import type { Config, Text as TextType } from "../lib/configtype";
 
 export default async function Home() {
   const data: Config = await getRemoteConfig("home");

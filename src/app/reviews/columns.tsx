@@ -32,11 +32,14 @@ function getSortButton(column: any, name: string) {
 export const columns: ColumnDef<Company>[] = [
   {
     accessorKey: "name",
-    header: ({column}) => getSortButton(column, "Name"),
+    header: ({column}) => getSortButton(column, "Name")
   },
   {
     accessorKey: "company_type",
-    header: ({column}) => getSortButton(column, "Type")
+    header: ({column}) => getSortButton(column, "Type"),
+    meta: {
+      filterVariant: 'select'
+    }
   },
   {
     accessorKey: "average_rating",

@@ -1,5 +1,3 @@
-"use server"
-
 import { promises as fs } from "fs";
 
 const config: {[key: string]: string} = {
@@ -12,7 +10,6 @@ const config: {[key: string]: string} = {
 }
 
 const development: boolean =  !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
-
 
 // Currently not in use, but it would be usefil to keep this function. 
 export async function getConfig(filePath: string) {

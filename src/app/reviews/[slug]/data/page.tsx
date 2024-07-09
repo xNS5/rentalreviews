@@ -17,7 +17,6 @@ export default async function ReviewData({ params: { slug } }: any) {
     <div     
         className="py-4 px-8">
         <Data {...data}/>
-        
     </div>
     )
 }

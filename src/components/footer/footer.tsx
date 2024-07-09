@@ -1,10 +1,9 @@
 "use server"
 
-import { getRemoteConfig } from "@/app/utilities/config-provider";
 import Icon from "../icons/icon";
 import type { FooterItem } from "./footertypes";
 import Link from "next/link";
-import type { Config } from "@/app/utilities/configtype";
+import type { Config } from "@/lib/configtype";
 
 export const Footer = ({footer}: Config) => {
     return (

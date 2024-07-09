@@ -7,7 +7,6 @@ import { DataTable } from "@/components/table/data-table";
 import { Company } from "./columns";
 import { columns } from "./columns";
 import Icon from "@/components/icons/icon";
-import styles from "./review-table.module.css"
 
 interface Props {
   data: Company[]

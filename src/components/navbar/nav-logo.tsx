@@ -1,8 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { ReactNode } from "react";
 
-const Logo = ({ children }: { children: ReactNode }) => (
+const Logo = ({ children }: Readonly<{
+  children: React.ReactNode;
+}> ) => (
   <div className="inline-flex" tabIndex={0}>
     <Image
       src={"/images/building-icon.svg"}
