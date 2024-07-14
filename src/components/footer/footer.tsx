@@ -23,7 +23,7 @@ export const FooterComp = ({footer}: Config) => {
                             return (
                                 <Link key={itemIndex} href={item?.url ?? ""} target={item.target}>
                                     {item.icon && item.icon.length > 0 ? (
-                                        <Icon type={item.icon} className="w-10 h-auto px-3" aria-hidden={true}/>
+                                        <Icon type={item.icon} className="px-3" aria-hidden={true}/>
                                     ) : (
                                         <span className="hover:text-blue-900 rounded">
                                             {item.text}

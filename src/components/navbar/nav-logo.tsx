@@ -4,7 +4,7 @@ import Image from "next/image";
 const Logo = ({ children }: Readonly<{
   children: React.ReactNode;
 }> ) => (
-  <div className="inline-flex" tabIndex={0}>
+  <div className="inline-flex">
     <Image
       src={"/images/building-icon.svg"}
       alt="Apartment logo"
