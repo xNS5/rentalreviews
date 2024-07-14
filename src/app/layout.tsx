@@ -1,7 +1,7 @@
 import { Inter as FontSans } from "next/font/google";
-import Navbar from "@/components/navbar/navbar";
-import { getRemoteConfig } from "../lib/config-provider";
-import { Footer } from "@/components/footer/footer";
+import { Navbar } from "./navbar";
+import { getDocument } from "./db/db";
+import { Footer } from "./footer";
 import { Config } from "../lib/configtype";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils"
@@ -13,25 +13,24 @@ const inter = FontSans({
 
 export const metadata: Metadata | Promise<Metadata> = new Promise(
   async (resolve, reject) => {
-    const config = await getRemoteConfig("config");
-    resolve(config.metadata);
+    const config: Metadata | undefined = await getDocument("config", "metadata");
+    resolve(config ?? {} as Metadata);
   }
 );
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const config: Config = await getRemoteConfig("config");
   return (
     <html lang="en">
       <body className={cn("bg-white h-screen")}>
         <header>
-          <Navbar {...config} />
+          <Navbar/>
         </header>
         <main role="main" className={`${inter.variable}`}>{children}</main>
-        <Footer {...config} />
+        <Footer/>
       </body>
     </html>
   );

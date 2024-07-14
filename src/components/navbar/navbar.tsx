@@ -9,18 +9,18 @@ import Icon from "../icons/icon";
 import type { NavbarItem } from "./navbartypes";
 import type { Config } from "@/lib/configtype";
 
-const Navbar = ({ nav, metadata }: Config) => {
+export const NavbarComp = ({ nav, metadata }: Config) => {
   const [isNavOpen, setNavOpen] = useState(false);
 
   return (
     <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white focusable">
       <a href="/" className="focusable rounded" role="link">
-        <Logo>
+        {/* <Logo>
           <div className="px-2">
             <h1 className="md:text-2xl sm:text-xl">{metadata.title}</h1>
             <h2 className="hidden sm:block md:text-sm sm:text-xs">{metadata.description}</h2>
           </div>
-        </Logo>
+        </Logo> */}
       </a>
       <ol className="hidden md:flex">
         {nav?.map((link: NavbarItem, i: number) => (
@@ -62,5 +62,3 @@ const Navbar = ({ nav, metadata }: Config) => {
     </nav>
   );
 };
-
-export default Navbar;
