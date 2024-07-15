@@ -3,6 +3,13 @@ const nextConfig = {
     reactStrictMode: false,
     experimental: {
         instrumentationHook: true
+    },
+    images: {
+        remotePatterns: [
+            {
+                hostname: "**.githubusercontent.com",
+            }
+        ]
     }
 };
 

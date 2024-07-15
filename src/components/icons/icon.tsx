@@ -25,7 +25,7 @@ const getIcon = (type: string, delimiter: string) => {
     return temp;
 }
 
-const Icon = (props: IconProps) => {
+export default function Icon(props: IconProps){
     if (props !== undefined) {
         const DynamicIcon = getIcon(props.type, "-");
         if (DynamicIcon == null) {
@@ -36,5 +36,3 @@ const Icon = (props: IconProps) => {
         )
     }
 }
-
-export default Icon;

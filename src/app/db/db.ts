@@ -21,7 +21,7 @@ export const getCollection = async<T extends TProps<T>>(collection: string): Pro
         }
         global.collectionCache.set(collection, collection_arr, CACHE_TTL);
     }
-    return collection_arr;
+    return collection_arr as T[];
 }
 
 export const getDocument = async<T extends TProps<T>>(collection: string, document_id: string): Promise<T | undefined> => {
@@ -44,6 +44,6 @@ export const getDocument = async<T extends TProps<T>>(collection: string, docume
         }
         global.documentCache.set(`${collection}/${document_id}`, document, `${CACHE_TTL}`);
     }
-    return document;
+    return document as T;
 
 }

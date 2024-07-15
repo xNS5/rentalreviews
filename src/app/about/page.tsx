@@ -1,14 +1,30 @@
 import Image from "next/image";
+import { getDocument } from "../db/db";
+import parse from 'html-react-parser';
+import type { About, AboutContent } from "./about-type";
 
-export default function Home() {
+
+export default async function About() {
+  const aboutData: About | undefined = await getDocument<About>("config", "about");
   return (
     <div className="container mx-auto px-4">
-    <h1>Hello word</h1>
-    <p>This is a content to make our page longer</p>
-    <div className="w-full h-screen bg-green-300"></div>
-    <p>
-      Lorem Ipsum is simply dummy text ...
-    </p>
-  </div>
+      {aboutData &&
+        <>
+          <h1>{aboutData.description}</h1>
+          {aboutData.content.map((data: AboutContent, key: number) => {
+            return (<section key={key}>
+              <Image
+                src={`${data.avatar.url}`}
+                alt=""
+                height={100}
+                width={100}
+                loading="lazy"
+              />
+              {parse(data.text)}
+            </section>)
+          })}
+        </>
+      }
+    </div>
   );
 }
