@@ -1,4 +1,4 @@
-import { Button } from "@/components/shadcn/button"
+import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { DocumentData } from "firebase/firestore"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"

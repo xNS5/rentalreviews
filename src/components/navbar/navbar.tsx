@@ -2,20 +2,21 @@
 
 import { useState } from "react";
 import { NavDropdownMenu } from "./dropdown";
-import { Accordion } from "./accordion";
+import { Disclosure } from "./disclosure";
 import { NavItem } from "./nav-item";
 import Icon from "../icons/icon";
 import type { NavbarItem } from "./navbartypes";
 import type { Config } from "@/lib/configtype";
+import Accordion from "../accordion/accordion";
 
-export const NavbarComp = ({ nav }: Config) => {
+export const Navbar = ({ nav }: Config) => {
   const [isNavOpen, setNavOpen] = useState(false);
 
   return (
     <>
       <ol className="hidden md:flex">
         {nav?.map((link: NavbarItem, i: number) => (
-          <li key={i} className="focusable md:text-xl">
+          <li key={i} className="focusable md:text-lg">
             {link.type == "link" ? (
               <NavItem {...link} />
             ) : (
@@ -26,10 +27,10 @@ export const NavbarComp = ({ nav }: Config) => {
       </ol>
 
       <button
-        className="focusable cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
+        className="focusable cursor-pointer pr-4 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
-        <Icon type={isNavOpen ? "fas-x" : "fas-bars"} />
+        <Icon type={isNavOpen ? "fas-x" : "fas-bars"} className="w-4" />
       </button>
 
       {isNavOpen && (
@@ -39,12 +40,15 @@ export const NavbarComp = ({ nav }: Config) => {
               key={i}
               className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
               role="link"
-              onClick={() => setNavOpen(!isNavOpen)}
             >
               {link.type === "link" ? (
                 <NavItem {...link} />
               ) : (
-                <Accordion {...link} />
+                <Accordion triggerText={link.name} className={{ comp: "no-underline" }}>
+                  {
+                    link.children?.map((child: NavbarItem, i: number) => (<NavItem key={i} {...child} className="text-black text-2xl p-2 hover:bg-blue-600 hover:text-white text-center rounded" />)
+                    )}
+                </Accordion>
               )}
             </li>
           ))}

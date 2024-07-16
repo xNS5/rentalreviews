@@ -1,20 +1,20 @@
 import { ReactNode } from "react";
-import { Button } from "../shadcn/button"
+import { Button } from "../ui/button"
 import {
     Tooltip as TooltipComp,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "../shadcn/tooltip"
+} from "../ui/tooltip"
 
 export default function Tooltip(props: any) {
-    const {tooltipText, children} = props;
+    const {tooltipText, children, className} = props;
 
     return (
         <TooltipProvider>
             <TooltipComp>
                 <TooltipTrigger asChild>
-                    <Button variant="outline">{children}</Button>
+                    <Button variant="ghost" className={`rounded ${className}`}>{children}</Button>
                 </TooltipTrigger>
                 <TooltipContent>
                     <p>{tooltipText}</p>

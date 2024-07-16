@@ -1,4 +1,4 @@
-import { Button as ShadButton } from "@/components/shadcn/button"
+import { Button as ShadButton } from "@/components/ui/button"
 
 
 type ButtonProps = {
@@ -14,7 +14,7 @@ const defaultProps = {
 export const Button = ({onClickFn, className, children}: ButtonProps) => {
     return (<ShadButton 
     onClick={() => onClickFn()}
-    className={className}>
+    className={`bg-inherit hover:bg-inherit ${className}`}>
         {children}
     </ShadButton>)
 }

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/button/button";
 import { DataTable } from "@/components/table/data-table";
 import { Company } from "./columns";
 import { columns } from "./columns";

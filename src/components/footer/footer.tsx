@@ -9,7 +9,7 @@ function getConfigEntries<T extends Config>(obj: Record<string, T>): [number, T]
     return Object.entries(obj).map(([key, value]) => [parseInt(key, 10), value] as [number, T]);
   }
 
-export const FooterComp = ({footer}: Config) => {
+export const Footer = ({footer}: Config) => {
     const entries = getConfigEntries<FooterItem[]>(footer);
     return (
         <footer className="grid grid-rows-3 gap-2 mb-0 ">

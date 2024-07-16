@@ -1,10 +1,10 @@
 "use server"
 
-import { FooterComp } from "@/components/footer/footer";
+import { Footer } from "@/components/footer/footer";
 import { getDocument } from "./db/db"
 import { Config } from "@/lib/configtype";
 
-export async function Footer(){
+export async function FooterWrapper(){
     const footerData = await getDocument<Config>("config", "footer");
-    return <FooterComp {...footerData}/>
+    return <Footer {...footerData}/>
 }

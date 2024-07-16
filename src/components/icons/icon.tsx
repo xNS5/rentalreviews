@@ -32,7 +32,7 @@ export default function Icon(props: IconProps){
             return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")} />;
         }
         return (
-            <FontAwesomeIcon icon={DynamicIcon} className={`rounded ${props?.className}`} aria-hidden={props.ariahidden} tabIndex={props.tabIndex}/>
+            <FontAwesomeIcon icon={DynamicIcon} style={{height: "inherit"}} className={`rounded my-2 ${props?.className}`} aria-hidden={props.ariahidden} tabIndex={props.tabIndex}/>
         )
     }
 }

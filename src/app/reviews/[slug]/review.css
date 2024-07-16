@@ -14,3 +14,21 @@
 .review-summary > section > p {
     margin: 1em 0 0.5em 0;
 }
+
+#review-data-list {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+@media screen and (max-width: 576px) {
+    #review-data-list {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    #review-data-list {
+        display: none;
+    }
+}

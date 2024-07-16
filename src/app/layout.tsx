@@ -1,7 +1,7 @@
 import { Inter as FontSans } from "next/font/google";
-import { Navbar } from "./navbar";
+import { NavbarWrapper } from "./navbar-wrapper";
 import { getDocument } from "./db/db";
-import { Footer } from "./footer";
+import { FooterWrapper } from "./footer-wrapper";
 import { Config } from "../lib/configtype";
 import { cn } from "@/lib/utils"
 import "./globals.css";
@@ -37,16 +37,16 @@ export default async function RootLayout({
             <Logo>
               <a href="/" className="focusable rounded" role="link">
                 <div className="px-2">
-                  <h1 className="md:text-2xl sm:text-xl">{title as string}</h1>
-                  <h2 className="hidden sm:block md:text-sm sm:text-xs">{description as string}</h2>
+                  <h1 className="sm:text-lg">{title as string}</h1>
+                  <h2 className="lg:text-md sm:text-sm">{description as string}</h2>
                 </div>
               </a>
             </Logo>
-            <Navbar />
+            <NavbarWrapper />
           </nav>
         </header>
         <main role="main" className={`${inter.variable}`}>{children}</main>
-        <Footer />
+        <FooterWrapper />
       </body>
     </html>
   );
