@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-// import { NavDropdownMenu } from "./dropdown";
 import { NavItem } from "./nav-item";
 import DropdownMenu from "../navigation-menu/navigation-menu";
 import Icon from "../icons/icon";
@@ -14,7 +13,7 @@ export const Navbar = ({ nav }: Config) => {
 
   return (
     <>
-      <ol className="hidden md:flex">
+      <ol className="hidden md:flex flex-row justify-center items-center">
         {nav?.map((link: NavbarItem, i: number) => (
           <li key={i} className="focusable md:text-lg">
             {link.type == "link" ? (

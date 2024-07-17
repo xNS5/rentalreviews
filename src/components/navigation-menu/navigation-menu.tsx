@@ -16,7 +16,7 @@ export default function NavigationMenu({ link }: Readonly<{
         <NavigationMenuComponent>
             <NavigationMenuList>
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger className={`focusable hover:bg-white m-0 p-0 h-1 w-auto text-[length:inherit] font-normal rounded px-3`}>{link.name}</NavigationMenuTrigger>
+                <NavigationMenuTrigger className={`focusable hover:bg-white focus:bg-white p-2 w-fit text-[length:inherit] font-normal rounded px-3`}>{link.name}</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ol className="w-max">
                             {link?.children.map((child: NavbarItem, i: number) => (
