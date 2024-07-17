@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { NavDropdownMenu } from "./dropdown";
-import { Disclosure } from "./disclosure";
+// import { NavDropdownMenu } from "./dropdown";
 import { NavItem } from "./nav-item";
+import DropdownMenu from "../navigation-menu/navigation-menu";
 import Icon from "../icons/icon";
 import type { NavbarItem } from "./navbartypes";
 import type { Config } from "@/lib/configtype";
@@ -20,7 +20,7 @@ export const Navbar = ({ nav }: Config) => {
             {link.type == "link" ? (
               <NavItem {...link} />
             ) : (
-              <NavDropdownMenu {...link} />
+              <DropdownMenu link={link} />
             )}
           </li>
         ))}

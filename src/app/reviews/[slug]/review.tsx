@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/icons/icon";
 import Tooltip from "@/components/tooltip/tooltip";
-import { Disclosure } from "@headlessui/react";
 import { Company } from "../columns";
 import parse from 'html-react-parser';
 import "./review.css"
