@@ -81,7 +81,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md border">
-      <div className="flex items-center py-4 px-4 justify-end">
+      <div className="flex items-center p-4 justify-end">
         <label className="flex text-lg items-center">
           Search
           <Input
@@ -121,7 +121,7 @@ export function DataTable<TData, TValue>({
                 onClick={() => onRowSelectHandler(row)}
                 className={styles.data_table_row}
               >
-                {row.getVisibleCells().map((cell) => (
+                {row.getVisibleCells().map((cell, i: number) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

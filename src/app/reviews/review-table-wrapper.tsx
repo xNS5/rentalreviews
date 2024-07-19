@@ -10,7 +10,7 @@ import Icon from "@/components/icons/icon";
 interface Props {
   data: Company[]
 }
-
+// ${visible ? "visible" : "invisible"} 
 export function ReviewsTableWrapper({ data }: Props) {
 
   columns[0].cell = ({ cell, row }) => {
@@ -24,11 +24,11 @@ export function ReviewsTableWrapper({ data }: Props) {
         {cell.getValue() as string}
         <Link
           href={`/reviews/${row.original.slug}`}
-          className={`${visible ? "visible" : "invisible"} rounded mx-1 bg-blue-500 hover:bg-blue-900 h-8 w-auto text-white content-center`}
+          className={`${visible ? "visible" : "invisible"} rounded mx-1 bg-blue-500 hover:bg-blue-900 text-white`}
         >
-          <button className="px-1">
+          <button className="px-1 mx-1 flex items-center justify-center ">
             Read
-            <Icon type="fas-arrow-right" className="px-1" />
+            <Icon type="fas-arrow-right" className={` px-2 h-4 w-4 color-black`} />
           </button>
         </Link>
       </span>
