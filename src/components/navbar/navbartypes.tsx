@@ -3,7 +3,7 @@
 export type NavbarObject = {
     name: string;
     className?: string,
-    nav_list?: [];
+    nav_list?: NavbarItem[];
   };
 
 export type NavbarItem = {
@@ -11,6 +11,13 @@ export type NavbarItem = {
     url: string,
     type?: string,
     target?: string,
-    children?: any | any[],
+    children?: NavbarChildren[],
     className?: string
   }
+
+type NavbarChildren = {
+  name: string,
+  target: string,
+  type: string,
+  url: string
+}

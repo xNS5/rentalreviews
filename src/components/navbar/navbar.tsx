@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { NavItem } from "./nav-item";
-import DropdownMenu from "../navigation-menu/navigation-menu";
+import {NavigationMenu} from "../navigation-menu/navigation-menu";
 import Icon from "../icons/icon";
 import type { NavbarItem } from "./navbartypes";
 import type { Config } from "@/lib/configtype";
@@ -19,7 +19,7 @@ export const Navbar = ({ nav }: Config) => {
             {link.type == "link" ? (
               <NavItem {...link} />
             ) : (
-              <DropdownMenu link={link} />
+              <NavigationMenu link={link} />
             )}
           </li>
         ))}
