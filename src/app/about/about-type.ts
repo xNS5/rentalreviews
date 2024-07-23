@@ -18,7 +18,7 @@ export type AboutContent = {
     text: string
 }
 
-type Link = {
+export type Link = {
     name: string,
     url: string,
     type: string,

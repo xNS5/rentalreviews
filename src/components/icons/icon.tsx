@@ -27,7 +27,11 @@ const getIcon = (type: string, delimiter: string) => {
 
 export default function Icon(props: IconProps){
     if (props !== undefined) {
+        // if(props.type === "fab-limailto:michael@michaelkennedy.devnkedin-square"){
+        //     return <FontAwesomeIcon icon={"fa-brands fa-linkedin"} />
+        // }
         const DynamicIcon = getIcon(props.type, "-");
+       
         if (DynamicIcon == null) {
             return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")} />;
         }
