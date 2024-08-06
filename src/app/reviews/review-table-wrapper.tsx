@@ -3,16 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { DataTable } from "@/components/table/data-table";
-import { Company } from "./columns";
-import { columns } from "./columns";
+import { Company, columns } from "./columns";
 import Icon from "@/components/icons/icon";
 
-interface Props {
+export function ReviewsTableWrapper({ data }: Readonly<{
   data: Company[]
-}
-// ${visible ? "visible" : "invisible"} 
-export function ReviewsTableWrapper({ data }: Props) {
-
+}>) {
   columns[0].cell = ({ cell, row }) => {
     const [visible, setVisible] = useState(false)
     return (

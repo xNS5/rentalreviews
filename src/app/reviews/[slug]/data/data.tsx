@@ -16,7 +16,9 @@ const jsonViewerStyle: React.CSSProperties = {
 }
 
 
-export function Data(data: Company) {
+export function Data({data} : Readonly<{
+    data: Company
+}>) {
     return (
         <JsonViewer
             style={jsonViewerStyle}
