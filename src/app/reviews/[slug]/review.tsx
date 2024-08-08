@@ -6,9 +6,8 @@ import Icon from "@/components/icons/icon";
 import Tooltip from "@/components/tooltip/tooltip";
 import { Company } from "../columns";
 import parse from 'html-react-parser';
-import "./review.css"
-import { Button } from "@/components/button/button";
 import Accordion from "@/components/accordion/accordion";
+import "./review.css"
 
 export function Review(data: Company) {
     const [isExpanded, setExpanded] = useState(false);

@@ -7,7 +7,7 @@ const isLocal: boolean = process.env.NEXT_PUBLIC_DB_ENV == "local";
 const CACHE_TTL: string = process.env.NEXT_PUBLIC_CACHE_TTL ?? "3600000"; // 1 hour if .env value isn't there. 
 
 type TProps<T> = {
-    [k: string]: string | number
+    [k: string]: string | number | T | T[keyof T]
 }
 
 export const getCollection = async<T extends TProps<T>>(collection: string): Promise<T[] | undefined> => {

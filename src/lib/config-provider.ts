@@ -10,10 +10,9 @@ const config: {[key: string]: string} = {
   "resources": "resources.json"
 }
 
-const development: boolean =  !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+export const development: boolean =  !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
-
-export async function getRemoteConfig(configName: string){
+async function getRemoteConfig(configName: string){
   const value = config[configName] ?? "config.json";
   const data = await fetch(`https://raw.githubusercontent.com/xNS5/rentalreviewsconfig/${development ? "development" : "master"}/src/config/${value}`);
   const json = await data.json();
