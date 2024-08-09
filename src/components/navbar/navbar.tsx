@@ -12,7 +12,7 @@ import { usePathname as getPathname } from "next/navigation";
 
 function getActiveClassName(url: string) {
   const pathname = getPathname();
-  return pathname === url || (pathname.includes(url) && pathname.length == url.length)? "underline font-bold text-black" : "";
+  return pathname === url || (pathname.includes(url) && pathname.length == url.length)? "underline decoration-2 font-bold text-black" : "";
 }
 
 export const Navbar = ({ nav }: Config) => {
@@ -36,7 +36,7 @@ export const Navbar = ({ nav }: Config) => {
         className="focusable cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
-        <Icon type={isNavOpen ? "fas-x" : "fas-bars"} className="w-4" />
+        <Icon type={isNavOpen ? "fas-x" : "fas-bars"} className="w-8" />
       </button>
 
       {isNavOpen && (
@@ -44,15 +44,16 @@ export const Navbar = ({ nav }: Config) => {
           {nav?.map((link: NavbarItem, i: number) => (
             <li
               key={i}
-              className="px-4 cursor-pointer capitalize py-5 text-4xl hover:text-blue-900"
+              className="py-4 cursor-pointer capitalize  text-4xl hover:text-blue-900"
               role="link"
             >
               {link.type === "link" ? (
                 <NavItem link={link} />
               ) : (
-                <Accordion triggerText={link.name} className={{ comp: "no-underline" }}>
+                <Accordion triggerText={link.name} className={{ trigger: "text-4xl" }}>
                   {
-                    link.children?.map((child: NavbarItem, i: number) => (<NavItem key={i} link={child} className="text-black text-2xl p-2 hover:bg-blue-600 hover:text-white text-center rounded" />)
+                    link.children?.map((child: NavbarItem, i: number) => 
+                      (<NavItem key={i} link={child} className="text-black hover:bg-blue-600 hover:text-white text-center rounded" />)
                     )}
                 </Accordion>
               )}
