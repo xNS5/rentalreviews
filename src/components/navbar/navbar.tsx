@@ -33,7 +33,7 @@ export const Navbar = ({ nav }: Config) => {
       </ol>
 
       <button
-        className="focusable cursor-pointer pr-4 text-gray-500 md:hidden"
+        className="focusable cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
         <Icon type={isNavOpen ? "fas-x" : "fas-bars"} className="w-4" />
