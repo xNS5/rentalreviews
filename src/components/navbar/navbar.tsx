@@ -4,9 +4,16 @@ import { useState } from "react";
 import { NavItem } from "./nav-item";
 import {NavigationMenu} from "../navigation-menu/navigation-menu";
 import Icon from "../icons/icon";
+import Accordion from "../accordion/accordion";
 import type { NavbarItem } from "./navbartypes";
 import type { Config } from "@/lib/configtype";
-import Accordion from "../accordion/accordion";
+import { usePathname as getPathname } from "next/navigation";
+
+
+function getActiveClassName(url: string) {
+  const pathname = getPathname();
+  return pathname === url || (pathname.includes(url) && pathname.length == url.length)? "underline font-bold text-black" : "";
+}
 
 export const Navbar = ({ nav }: Config) => {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -17,9 +24,9 @@ export const Navbar = ({ nav }: Config) => {
         {nav?.map((link: NavbarItem, i: number) => (
           <li key={i} className="focusable md:text-lg">
             {link.type == "link" ? (
-              <NavItem {...link} />
+              <NavItem link={link} className={`${getActiveClassName(link.url)}`}/>
             ) : (
-              <NavigationMenu link={link} />
+              <NavigationMenu link={link} className={`${getActiveClassName(link.url)}`}/>
             )}
           </li>
         ))}
@@ -41,11 +48,11 @@ export const Navbar = ({ nav }: Config) => {
               role="link"
             >
               {link.type === "link" ? (
-                <NavItem {...link} />
+                <NavItem link={link} />
               ) : (
                 <Accordion triggerText={link.name} className={{ comp: "no-underline" }}>
                   {
-                    link.children?.map((child: NavbarItem, i: number) => (<NavItem key={i} {...child} className="text-black text-2xl p-2 hover:bg-blue-600 hover:text-white text-center rounded" />)
+                    link.children?.map((child: NavbarItem, i: number) => (<NavItem key={i} link={child} className="text-black text-2xl p-2 hover:bg-blue-600 hover:text-white text-center rounded" />)
                     )}
                 </Accordion>
               )}

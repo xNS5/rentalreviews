@@ -5,8 +5,9 @@ import React, { Fragment } from "react";
 import Icon from "../icons/icon";
 import { NavbarItem } from "../navbar/navbartypes";
 
-export const NavigationMenu = ({link}: Readonly<{
-    link: NavbarItem;
+export const NavigationMenu = ({link, className}: Readonly<{
+    link: NavbarItem,
+    className?: string
 }>) => {
   return (
     <div className="w-fit">

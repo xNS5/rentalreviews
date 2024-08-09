@@ -1,19 +1,15 @@
-"use client";
 import Link from "next/link";
 import type { NavbarItem } from "./navbartypes";
-import { usePathname as getPathname } from "next/navigation";
 
-function getActiveClassName(url: string) {
-  const pathname = getPathname();
-  return pathname === url ? "underline font-bold text-black" : "";
-}
-
-export const NavItem = (link: NavbarItem) => {
+export function NavItem({link, className}: Readonly<{
+  link: NavbarItem,
+  className?: string
+}>){
   return (
     <Link
-      className={`${getActiveClassName(link.url)} ${
+      className={`${
         link.className ?? ""
-      } rounded px-3`}
+      } ${className} rounded px-3`}
       href={link.url ?? ""}
       target={link.target ?? ""}
       tabIndex={0}
