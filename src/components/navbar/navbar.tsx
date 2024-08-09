@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavItem } from "./nav-item";
 import {NavigationMenu} from "../navigation-menu/navigation-menu";
 import Icon from "../icons/icon";
 import Accordion from "../accordion/accordion";
 import type { NavbarItem } from "./navbartypes";
 import type { Config } from "@/lib/configtype";
-import { usePathname as getPathname } from "next/navigation";
+import { usePathname as getPathname, usePathname, useRouter } from "next/navigation";
 
 
 function getActiveClassName(url: string) {
@@ -16,7 +16,15 @@ function getActiveClassName(url: string) {
 }
 
 export const Navbar = ({ nav }: Config) => {
+  const pathname = usePathname();
   const [isNavOpen, setNavOpen] = useState(false);
+
+  
+  useEffect(() => {
+    if (isNavOpen) {
+      setNavOpen(!isNavOpen);
+    }
+  }, [pathname]); 
 
   return (
     <>
@@ -48,7 +56,7 @@ export const Navbar = ({ nav }: Config) => {
               role="link"
             >
               {link.type === "link" ? (
-                <NavItem link={link} className={`${getActiveClassName(link.url)}`} onClickHandler={() => setNavOpen(!isNavOpen)}/>
+                <NavItem link={link} className={`${getActiveClassName(link.url)}`}/>
               ) : (
                 <Accordion triggerText={link.name} className={{ trigger: "text-4xl justify-center", content: "flex flex-col" }}>
                   {

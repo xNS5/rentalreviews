@@ -1,8 +1,8 @@
 "use server"
 
 import Icon from "../icons/icon";
-import type { FooterItem } from "./footertypes";
 import Link from "next/link";
+import type { FooterItem } from "./footertypes";
 import type { Config } from "@/lib/configtype";
 
 function getConfigEntries<T extends Config>(obj: Record<string, T>): [number, T][] {
@@ -11,17 +11,18 @@ function getConfigEntries<T extends Config>(obj: Record<string, T>): [number, T]
 
 export const Footer = ({footer}: Config) => {
     const entries = getConfigEntries<FooterItem[]>(footer);
+
     return (
-        <footer className="grid grid-rows-3 gap-2 mb-0 ">
+        <footer className="grid auto-rows-max">
             {footer &&
-                entries.map((elem: [number, FooterItem[]]) => (
-                    <div key={elem[0]} className="flex inline-flex items-center justify-center focus-visible:ring-2 focus-visible:ring-white/75">
-                        {elem[1].map((item: FooterItem, itemIndex: number) => {
+                entries.map((elem: [number, FooterItem[]], i: number) => (
+                    <div key={i} className="my-1 flex inline-flex items-center justify-center focus-visible:ring-2 focus-visible:ring-white/75">
+                        {elem[1].map((item: FooterItem, j: number) => {
                             if (item.type === "text") {
-                                return <span className={"rounded"} key={itemIndex} tabIndex={0}>{item.text}</span>;
+                                return <span className={"rounded"} key={j} tabIndex={0}>{item.text}</span>;
                             }
                             return (
-                                <Link key={itemIndex} href={item?.url ?? ""} target={item.target}>
+                                <Link key={j} href={item?.url ?? ""} target={item.target} className={"mx-1"}>
                                     {item.icon && item.icon.length > 0 ? (
                                         <Icon type={item.icon} className="!w-10 !h-10 px-3" aria-hidden={true}/>
                                     ) : (
