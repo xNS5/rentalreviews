@@ -22,7 +22,7 @@ export const Navbar = ({ nav }: Config) => {
     <>
       <ol className="hidden md:flex flex-row justify-center items-center">
         {nav?.map((link: NavbarItem, i: number) => (
-          <li key={i} className="focusable md:text-lg">
+          <li key={i} className="focusable md:text-lg mx-2">
             {link.type == "link" ? (
               <NavItem link={link} className={`${getActiveClassName(link.url)}`}/>
             ) : (
@@ -40,7 +40,7 @@ export const Navbar = ({ nav }: Config) => {
       </button>
 
       {isNavOpen && (
-        <ul className="flex flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
+        <ul className="flex z-10 flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
           {nav?.map((link: NavbarItem, i: number) => (
             <li
               key={i}
@@ -48,12 +48,12 @@ export const Navbar = ({ nav }: Config) => {
               role="link"
             >
               {link.type === "link" ? (
-                <NavItem link={link} />
+                <NavItem link={link} className={`${getActiveClassName(link.url)}`} onClickHandler={() => setNavOpen(!isNavOpen)}/>
               ) : (
-                <Accordion triggerText={link.name} className={{ trigger: "text-4xl" }}>
+                <Accordion triggerText={link.name} className={{ trigger: "text-4xl justify-center", content: "flex flex-col" }}>
                   {
                     link.children?.map((child: NavbarItem, i: number) => 
-                      (<NavItem key={i} link={child} className="text-black hover:bg-blue-600 hover:text-white text-center rounded" />)
+                      (<NavItem key={i} link={child} className="p-3 text-black text-xl hover:bg-blue-600 hover:text-white text-center rounded" />)
                     )}
                 </Accordion>
               )}
