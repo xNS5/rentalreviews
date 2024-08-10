@@ -1,5 +1,5 @@
-import { getCollection as firestoreGetCollection, getDocument  as firestoreGetDocument} from "./firebase";
-import { getCollection as mongoGetCollection, getDocument as mongoGetDocument } from "./mongo";
+import { firestoreGetCollection, firestoreGetDocument} from "./firebase";
+import { mongoGetCollection, mongoGetDocument } from "./mongo";
 import type { RequestType } from "./requesttype";
 
 

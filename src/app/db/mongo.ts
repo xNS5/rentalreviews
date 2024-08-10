@@ -5,7 +5,7 @@ function getClient(){
     return new MongoClient(`mongodb://${process.env.NEXT_PUBLIC_MONGODB_USER}:${process.env.NEXT_PUBLIC_MONGODB_PASSWORD}@${process.env.NEXT_PUBLIC_MONGODB_URL}`);
 }
 
-export const getCollection = async <T>(collection: string) => {
+export const mongoGetCollection = async <T>(collection: string) => {
     const client = getClient();
     try{
         await client.connect();
@@ -18,7 +18,7 @@ export const getCollection = async <T>(collection: string) => {
     }
 }
 
-export const getDocument = async <T>(collection: string, document_id: string) => {
+export const mongoGetDocument = async <T>(collection: string, document_id: string) => {
     const client = getClient();
     try{
         await client.connect();

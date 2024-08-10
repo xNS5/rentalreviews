@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { NavItem } from "./nav-item";
-import {NavigationMenu} from "../navigation-menu/navigation-menu";
+import { NavigationMenu } from "../navigation-menu/navigation-menu";
 import Icon from "../icons/icon";
 import Accordion from "../accordion/accordion";
 import type { NavbarItem } from "./navbartypes";
@@ -12,19 +12,18 @@ import { usePathname as getPathname, usePathname, useRouter } from "next/navigat
 
 function getActiveClassName(url: string) {
   const pathname = getPathname();
-  return pathname === url || (pathname.includes(url) && pathname.length == url.length)? "underline decoration-2 font-bold text-black" : "";
+  return pathname === url || (pathname.includes(url) && url.length > 1) ? "underline decoration-2 font-bold text-black" : "";
 }
 
 export const Navbar = ({ nav }: Config) => {
   const pathname = usePathname();
   const [isNavOpen, setNavOpen] = useState(false);
 
-  
   useEffect(() => {
     if (isNavOpen) {
       setNavOpen(!isNavOpen);
     }
-  }, [pathname]); 
+  }, [pathname]);
 
   return (
     <>

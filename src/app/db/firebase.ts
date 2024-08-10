@@ -34,7 +34,7 @@ const firebaseConfig = () => {
 const app: FirebaseApp = initializeApp(firebaseConfig());
 const db: Firestore = getFirestore(app);
 
-export const getCollection = async <T>(props: RequestType): Promise<T | undefined>=> {
+export const firestoreGetCollection = async <T>(props: RequestType): Promise<T | undefined>=> {
   try {
     const {collection_name} = props;
     const collectionRef = collection(db, collection_name);
@@ -49,7 +49,7 @@ export const getCollection = async <T>(props: RequestType): Promise<T | undefine
   }
 }
 
-export const getDocument = async <T>(props: RequestType) => {
+export const firestoreGetDocument = async <T>(props: RequestType) => {
   try {
     const {collection_name} = props;
     const {id} = props.query_props;

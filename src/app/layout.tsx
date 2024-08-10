@@ -1,12 +1,12 @@
 import { Inter as FontSans } from "next/font/google";
-import { NavbarWrapper } from "./navbar-wrapper";
 import { getDocument } from "./db/db";
-import { FooterWrapper } from "./footer-wrapper";
 import { Config } from "../lib/configtype";
 import { cn } from "@/lib/utils"
 import "./globals.css";
 import Logo from "@/components/navbar/nav-logo";
 import type { Metadata } from "next";
+import { Navbar } from "@/components/navbar/navbar";
+import { Footer } from "@/components/footer/footer";
 
 const inter = FontSans({
   subsets: ["latin"], variable: "--font-sans"
@@ -29,6 +29,8 @@ export default async function RootLayout({
 }>) {
   await setMetadata();
   const {title, description} = metadata;
+  const navbarConfig = await getDocument("config", "navigation");
+  const footerData = await getDocument<Config>("config", "footer");
   return (
     <html lang="en">
       <body className={cn("bg-white h-screen")}>
@@ -42,11 +44,11 @@ export default async function RootLayout({
                 </div>
               </a>
             </Logo>
-            <NavbarWrapper />
+            <Navbar nav={navbarConfig?.nav}/>
           </nav>
         </header>
         <main role="main" className={`${inter.variable}`}>{children}</main>
-        <FooterWrapper />
+      <Footer footer={footerData?.footer}/>
       </body>
     </html>
   );
