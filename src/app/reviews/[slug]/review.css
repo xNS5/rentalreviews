@@ -2,6 +2,7 @@
     font-size: medium !important;
 }
 
+/* Sub-Section heading */
 .review-summary > section > h2 {
     font-size: larger;
     font-weight: bold;

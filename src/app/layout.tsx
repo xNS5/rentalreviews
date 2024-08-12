@@ -2,11 +2,11 @@ import { Inter as FontSans } from "next/font/google";
 import { getDocument } from "./db/db";
 import { Config } from "../lib/configtype";
 import { cn } from "@/lib/utils"
-import "./globals.css";
-import Logo from "@/components/navbar/nav-logo";
-import type { Metadata } from "next";
+import Logo from "@/components/logo/logo";
 import { Navbar } from "@/components/navbar/navbar";
 import { Footer } from "@/components/footer/footer";
+import type { Metadata } from "next";
+import "./globals.css";
 
 const inter = FontSans({
   subsets: ["latin"], variable: "--font-sans"
@@ -35,9 +35,9 @@ export default async function RootLayout({
     <html lang="en">
       <body className={cn("bg-white h-screen")}>
         <header>
-          <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white focusable">
+          <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white">
             <Logo>
-              <a href="/" className="focusable rounded" role="link">
+              <a href="/" className="rounded" role="link">
                 <div className="px-2">
                   <h1 className="sm:text-lg">{title as string}</h1>
                   <h2 className="lg:text-md sm:text-sm">{description as string}</h2>

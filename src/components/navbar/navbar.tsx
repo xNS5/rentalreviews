@@ -29,7 +29,7 @@ export const Navbar = ({ nav }: Config) => {
     <>
       <ol className="hidden md:flex flex-row justify-center items-center">
         {nav?.map((link: NavbarItem, i: number) => (
-          <li key={i} className="focusable md:text-lg mx-2">
+          <li key={i} className="md:text-lg mx-2">
             {link.type == "link" ? (
               <NavItem link={link} className={`${getActiveClassName(link.url)}`}/>
             ) : (
@@ -40,7 +40,7 @@ export const Navbar = ({ nav }: Config) => {
       </ol>
 
       <button
-        className="focusable cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
+        className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
         <Icon type={isNavOpen ? "fas-x" : "fas-bars"} className="w-8" />

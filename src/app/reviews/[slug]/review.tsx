@@ -1,6 +1,3 @@
-"use client"
-
-import { useState } from "react";
 import Link from "next/link";
 import Icon from "@/components/icons/icon";
 import Tooltip from "@/components/tooltip/tooltip";
@@ -10,12 +7,11 @@ import Accordion from "@/components/accordion/accordion";
 import "./review.css"
 
 export function Review(data: Company) {
-    const [isExpanded, setExpanded] = useState(false);
     return (
         <article className="container mx-auto py-10 review-summary">
             <h1 className="text-3xl text-center font-bold">{data.name}</h1>
             <div id="review-data-list" className="flex items-center justify-center pt-4">
-                <ol className="hidden md:flex items-center space-x-4 text-l">
+                <ol className="hidden md:flex items-center md:space-x-4 text-l">
                     <li className="sm:text-base"><span className="font-bold">Review Count:</span><span className="m-1">{data.review_count}</span></li>
                     <li><span className="font-bold">Average Rating: </span><span className="m-1">{data.average_rating}/5</span></li>
                     {data.review_count != data.adjusted_review_count &&
@@ -48,9 +44,9 @@ export function Review(data: Company) {
             </div>
 
             <div id="data-accordion" className="flex md:hidden w-full flex-col items-center">
-                <Accordion triggerText={"Data"}>
-                    <ol className="max-w-md space-y-1 text-gray-500 list-none list-inside dark:text-gray-400">
-                        <li className="sm:text-base"><span className="font-bold">Review Count:</span><span className="m-1">{data.review_count}</span></li>
+                <Accordion triggerText={"Data"} className={{trigger: "font-semibold inline-flex justify-center", comp: "border border-gray-400 border-1 rounded p-5 w-full"}}>
+                    <ol className="max-w-md space-y-1 text-gray-500 list-none list-inside dark:text-gray-400 sm:text-lg !text-black">
+                        <li><span className="font-bold">Review Count:</span><span className="m-1">{data.review_count}</span></li>
                         <li><span className="font-bold">Average Rating: </span><span className="m-1">{data.average_rating}/5</span></li>
                         {data.review_count != data.adjusted_review_count &&
                             <>
@@ -73,7 +69,7 @@ export function Review(data: Company) {
 
                             </>
                         }
-                        <li><Link href={`/reviews/${data.slug}/data`} className="rounded mx-1 bg-blue-500 h-8 px-2 w-auto text-white">{/* <button className={`rounded mx-1 bg-blue-500 h-8 px-2 w-auto text-white`}>Raw Data</button> */} Raw Data</Link></li>
+                        <li><Link href={`/reviews/${data.slug}/data`} className="block h-8 w-auto text-center rounded mx-1 bg-blue-500 px-2 text-white">Raw Data</Link></li>
                     </ol>
                 </Accordion>
             </div>
