@@ -1,5 +1,3 @@
-"use server"
-
 import { Company } from "./columns";
 import { getCollection } from "../db/db";
 import { ReviewsTableWrapper } from "./review-table-wrapper";

@@ -11,7 +11,7 @@ export function Review(data: Company) {
         <article className="container mx-auto py-10 review-summary">
             <h1 className="text-3xl text-center font-bold">{data.name}</h1>
             <div id="review-data-list" className="flex items-center justify-center pt-4">
-                <ol className="hidden md:flex items-center md:space-x-4 text-l">
+                <ol className="hidden text-sm lg:text-lg md:flex items-center md:space-x-4 text-lg">
                     <li className="sm:text-base"><span className="font-bold">Review Count:</span><span className="m-1">{data.review_count}</span></li>
                     <li><span className="font-bold">Average Rating: </span><span className="m-1">{data.average_rating}/5</span></li>
                     {data.review_count != data.adjusted_review_count &&
@@ -35,7 +35,7 @@ export function Review(data: Company) {
 
                         </>
                     }
-                    <li><Link href={`/reviews/${data.slug}/data`} className="rounded mx-1 bg-blue-500 h-8 px-2 w-auto text-white">{/* <button className={`rounded mx-1 bg-blue-500 h-8 px-2 w-auto text-white`}>Raw Data</button> */} Raw Data</Link></li>
+                    <li><Link href={`/reviews/${data.slug}/data`} className="rounded block content-center mx-3 bg-blue-500 h-8 px-2 w-auto text-white">Raw Data</Link></li>
                 </ol>
             </div>
             {/* Divider element */}

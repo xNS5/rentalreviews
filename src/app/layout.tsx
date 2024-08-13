@@ -1,4 +1,6 @@
 import { Inter as FontSans } from "next/font/google";
+import { Suspense } from "react";
+import { Spinner } from "@/components/spinner/spinner";
 import { getDocument } from "./db/db";
 import { Config } from "../lib/configtype";
 import { cn } from "@/lib/utils"
@@ -28,7 +30,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   await setMetadata();
-  const {title, description} = metadata;
+  const { title, description } = metadata;
   const navbarConfig = await getDocument("config", "navigation");
   const footerData = await getDocument<Config>("config", "footer");
   return (
@@ -44,11 +46,15 @@ export default async function RootLayout({
                 </div>
               </a>
             </Logo>
-            <Navbar nav={navbarConfig?.nav}/>
+            <Navbar nav={navbarConfig?.nav} />
           </nav>
         </header>
-        <main role="main" className={`${inter.variable}`}>{children}</main>
-      <Footer footer={footerData?.footer}/>
+        <Suspense fallback={<Spinner />}>
+          <main role="main" className={`${inter.variable}`}>
+            {children}
+          </main>
+        </Suspense>
+        <Footer footer={footerData?.footer} />
       </body>
     </html>
   );

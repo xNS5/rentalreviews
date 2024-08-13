@@ -20,7 +20,7 @@ export default function Accordion({ triggerText = "", children, className }: Rea
     return (
         <AccordionComp type="single" collapsible className={`w-full ${className?.comp ?? ""}`}>
             <AccordionItem value={triggerText} className={`w-full ${className?.item ?? ""}`}>
-                <AccordionTrigger className={`flex w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
+                <AccordionTrigger className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
                 <AccordionContent className={`${className?.content ?? ""}`}>
                     {children}
                 </AccordionContent>
