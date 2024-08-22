@@ -1,5 +1,6 @@
 "use server"
 
+import { development } from "@/lib/config-provider";
 import { notFound } from "next/navigation";
 import { Review } from "./review";
 import { Spinner } from "@/components/spinner/spinner";
@@ -12,6 +13,14 @@ export async function getCompanyData(slug: string): Promise<Company> {
     const article: Company | undefined = await getDocument<Company>("articles", slug);
     const review: Company | undefined = await getDocument<Company>("reviews", slug);
     const company: Company | undefined = await getDocument<Company>("companies", slug);
+
+    if(article && development){
+        delete article["_id"];
+    }
+
+    if(review && development){
+        delete review["_id"];
+    }
 
     return {
         article: { ...(article ?? {}) },

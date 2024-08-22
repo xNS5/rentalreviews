@@ -1,8 +1,8 @@
 import Link from "next/link";
-import type { NavbarItem } from "./navbartypes";
+import type { Link as LinkType } from "@/lib/link";
 
 export function NavItem({ link, className, onClickHandler = () => {}}: Readonly<{
-  link: NavbarItem,
+  link: LinkType,
   className?: string,
   onClickHandler?: any
 }>) {
