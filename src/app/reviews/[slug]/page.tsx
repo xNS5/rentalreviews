@@ -14,12 +14,12 @@ export async function getCompanyData(slug: string): Promise<Company> {
     const review: Company | undefined = await getDocument<Company>("reviews", slug);
     const company: Company | undefined = await getDocument<Company>("companies", slug);
 
-    if(article && development){
-        delete article["_id"];
+    if(article){
+        delete article[development? "_id": "id"];
     }
 
-    if(review && development){
-        delete review["_id"];
+    if(review){
+        delete review[development? "_id": "id"];
     }
 
     return {
