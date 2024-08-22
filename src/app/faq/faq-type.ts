@@ -1,8 +1,4 @@
-type FaqQuestion = {
-    question: string,
-    answer: string
-}
-
+import type { Link } from "@/lib/link"
 
 export type FaqType = {
     _id: string,
@@ -10,3 +6,11 @@ export type FaqType = {
     description: string,
     questions: FaqQuestion[]
 }
+
+type FaqQuestion = {
+    question: string,
+    answer: string,
+    expanded?: boolean,
+    links?: Link[]
+}
+ 

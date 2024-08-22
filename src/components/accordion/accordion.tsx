@@ -12,13 +12,14 @@ type AccordionClass = {
     content?: string
 }
 
-export default function Accordion({ triggerText = "", children, className }: Readonly<{
+export default function Accordion({ triggerText = "", children, className, defaultValue = ""}: Readonly<{
     triggerText: string;
     className?: AccordionClass,
-    children: React.ReactNode;
+    children: React.ReactNode,
+    defaultValue?: string,
 }>) {
     return (
-        <AccordionComp type="single" collapsible className={`w-full ${className?.comp ?? ""}`}>
+        <AccordionComp type="single" defaultValue={defaultValue} collapsible className={`w-full ${className?.comp ?? ""}`}>
             <AccordionItem value={triggerText} className={`w-full ${className?.item ?? ""}`}>
                 <AccordionTrigger className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
                 <AccordionContent className={`${className?.content ?? ""}`}>

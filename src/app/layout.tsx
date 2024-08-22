@@ -31,7 +31,7 @@ export default async function RootLayout({
 }>) {
   await setMetadata();
   const { title, description } = metadata;
-  const navbarConfig = await getDocument("config", "navigation");
+  const navbarConfig = await getDocument<Config>("config", "navigation");
   const footerData = await getDocument<Config>("config", "footer");
   return (
     <html lang="en">
