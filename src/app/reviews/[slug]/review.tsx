@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Icon from "@/components/icons/icon";
 import Tooltip from "@/components/tooltip/tooltip";
+import Article from "@/components/article/article";
 import { Company } from "../columns";
 import Text from "@/components/text/text";
 import Accordion from "@/components/accordion/accordion";
@@ -8,7 +9,7 @@ import "./review.css"
 
 export function Review(data: Company) {
     return (
-        <article className="container mx-auto py-10 review-summary">
+        <Article className="container mx-auto py-10 review-summary">
             <h1 className="text-3xl text-center font-bold">{data.name}</h1>
             <div id="review-data-list" className="flex items-center justify-center pt-4">
                 <ol className="hidden text-sm lg:text-lg md:flex items-center md:space-x-4 text-lg">
@@ -82,6 +83,6 @@ export function Review(data: Company) {
                 </section>
             }
             <Text text={data.article.text}/>
-        </article >
+        </Article >
     )
 }

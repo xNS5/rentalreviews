@@ -3,7 +3,7 @@ export type Config = {
     name: string;
     title?: string;
     description?: string;
-    text?: [] | Text[];
+    text?: Text[];
   } | any
 };
 

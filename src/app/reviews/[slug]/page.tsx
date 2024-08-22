@@ -45,5 +45,6 @@ export default async function Page({ params }: Readonly<{
     return (
         <Suspense fallback={<Spinner />}>
             <Review {...companyObj as Company} />
-        </Suspense>)
+        </Suspense>
+        )
 }
