@@ -19,10 +19,10 @@ export default function Accordion({ triggerText = "", children, className, defau
     defaultValue?: string,
 }>) {
     return (
-        <AccordionComp type="single" defaultValue={defaultValue} collapsible className={`w-full ${className?.comp ?? ""}`}>
-            <AccordionItem value={triggerText} className={`w-full ${className?.item ?? ""}`}>
-                <AccordionTrigger className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
-                <AccordionContent className={`${className?.content ?? ""} shadow`}>
+        <AccordionComp id="accordion-comp"type="single" defaultValue={defaultValue} collapsible className={`w-full ${className?.comp ?? ""}`}>
+            <AccordionItem id="accordion-item" value={triggerText} className={`w-full ${className?.item ?? ""}`}>
+                <AccordionTrigger id="accordion-trigger" className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
+                <AccordionContent id="accordion-content" className={`${className?.content ?? ""} shadow`}>
                     {children}
                 </AccordionContent>
             </AccordionItem>

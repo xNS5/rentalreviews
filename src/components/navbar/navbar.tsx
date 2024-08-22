@@ -43,30 +43,35 @@ export const Navbar = ({ nav }: Config) => {
         className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
-        <Icon type={isNavOpen ? "fas-x" : "fas-bars"} className="w-8" />
+        {isNavOpen ? <Icon type="fas-x" className="w-8" altText="Close Menu"/> : <Icon type="fas-bars" className="w-8" altText="Open Menu"/>}
       </button>
 
       {isNavOpen && (
-        <ul className="flex z-10 flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
+        <ol className="flex z-10 flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
           {nav?.map((link: Link, i: number) => (
             <li
               key={i}
               className="py-4 cursor-pointer capitalize  text-4xl hover:text-blue-900"
-              role="link"
             >
               {link.type === "link" ? (
                 <NavItem link={link} className={`${getActiveClassName(link.url)}`}/>
               ) : (
-                <Accordion triggerText={link.name} className={{ trigger: "text-4xl justify-center", content: "flex flex-col" }}>
+                <Accordion triggerText={link.name} className={{ trigger: "text-4xl justify-center", content: "rounded border border-slate-400"}}>
+                  <ol className="text-center">
                   {
-                    link.children?.map((child: Link, i: number) => 
-                      (<NavItem key={i} link={child} className="p-3 text-black text-xl hover:bg-blue-600 hover:text-white text-center rounded" />)
-                    )}
+                      link.children?.map((child: Link, i: number) => 
+                        (
+                          <li key={i} className="my-4 px-2">
+                            <NavItem key={i} link={child} className="!inline-block p-3 text-black text-xl hover:bg-blue-600 hover:text-white text-center rounded" />
+                          </li>
+                        )
+                      )}
+                  </ol>
                 </Accordion>
               )}
             </li>
           ))}
-        </ul>
+        </ol>
       )}
     </>
   );

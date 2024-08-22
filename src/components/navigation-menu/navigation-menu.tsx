@@ -3,10 +3,10 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 import Icon from "../icons/icon";
-import { NavbarItem } from "../navbar/navbartypes";
+import type { Link } from "@/lib/link";
 
 export const NavigationMenu = ({link, className}: Readonly<{
-    link: NavbarItem,
+    link: Link,
     className?: string
 }>) => {
   return (
@@ -28,7 +28,7 @@ export const NavigationMenu = ({link, className}: Readonly<{
               leaveTo="transform opacity-0 scale-95"
             >
               <MenuItems className="fixed w-max -translate-x-1/2 mt-2 w-70 border border-solid border-slate-300 origin-top-right rounded-md bg-white shadow-lg z-10" aria-orientation="vertical" >
-                {link.children?.map((child: NavbarItem) => {
+                {link.children?.map((child: Link) => {
                   return (
                     <MenuItem
                       as="a"
@@ -38,8 +38,7 @@ export const NavigationMenu = ({link, className}: Readonly<{
                     >
                       {({ focus }) => (
                         <span
-                          className={`flex ${focus ? "bg-blue-600 text-white" : "text-gray-900"
-                            } rounded-md p-2 text-base md:text-lg`}
+                          className={`flex rounded-md p-2 text-base md:text-lg`}
                         >
                           {child.name}
                         </span>

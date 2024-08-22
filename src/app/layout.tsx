@@ -35,6 +35,9 @@ export default async function RootLayout({
   const footerData = await getDocument<Config>("config", "footer");
   return (
     <html lang="en">
+      <head>
+        <title>{title as string}</title>
+      </head>
       <body className={cn("bg-white h-screen")}>
         <header>
           <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white">
@@ -45,7 +48,7 @@ export default async function RootLayout({
                   <h2 className="lg:text-md sm:text-sm">{description as string}</h2>
                 </div>
               </a>
-            </Logo>
+              </Logo>
             <Navbar nav={navbarConfig?.nav} />
           </nav>
         </header>
