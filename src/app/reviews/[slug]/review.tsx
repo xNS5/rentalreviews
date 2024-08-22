@@ -2,7 +2,7 @@ import Link from "next/link";
 import Icon from "@/components/icons/icon";
 import Tooltip from "@/components/tooltip/tooltip";
 import { Company } from "../columns";
-import parse from 'html-react-parser';
+import Text from "@/components/text/text";
 import Accordion from "@/components/accordion/accordion";
 import "./review.css"
 
@@ -81,7 +81,7 @@ export function Review(data: Company) {
                     {data.article.disclaimer}
                 </section>
             }
-            {parse(data.article.text)}
+            <Text text={data.article.text}/>
         </article >
     )
 }

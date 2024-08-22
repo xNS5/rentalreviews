@@ -17,7 +17,7 @@ export default async function Home() {
           <div key={i}>
             <h1 className="text-center underline underline-offset-8 decoration-slate-300 text-3xl py-5">{elem.title}</h1>
             <div className="lg:px-20 xs:px-10 py-5">
-              <Text {...elem} className="text-lg xs:text-base xl:text-xl indent-10" />
+              <Text text={elem.text} className="text-lg xs:text-base xl:text-xl indent-10" />
             </div>
           </div>
         ))}

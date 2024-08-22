@@ -1,14 +1,15 @@
 
 import React from 'react';
 import parse from 'html-react-parser/lib/index';
-import { Text as TextType } from '@/app/configtype';
+import type { Text } from '@/lib/configtype';
 
-const Text = ( textObj: TextType) => {
+export default function Text({text, className = ''}: Readonly<{
+    text: string;
+    className?: string,
+}>){
     return (
-        <p className={`${textObj.className}`}>{
-            parse(textObj.text)}
+        <p className={`${className}`}>{
+            parse(text)}
         </p>
     )
 }
-
-export default Text;

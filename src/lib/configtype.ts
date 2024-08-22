@@ -7,14 +7,7 @@ export type Config = {
   } | any
 };
 
-export type TextList = {
-  title: string;
-  format: string;
-  content: Text[]
-};
-
-export interface Text extends React.HTMLProps<HTMLDivElement> {
+export type Text = {
   title: string,
-  type: string,
   text: string
 }
