@@ -1,10 +1,9 @@
 import React from 'react'
 import Link from 'next/link';
 import Accordion from '@/components/accordion/accordion'
-import parse from 'html-react-parser';
 import Text from '@/components/text/text';
+import Article from '@/components/article/article';
 import { getDocument } from '../db/db';
-import type { Text as TextType } from '@/lib/configtype';
 import type { FaqType } from './faq-type';
 import type { Link as LinkType } from '@/lib/link';
 
@@ -13,7 +12,7 @@ export default async function FAQ() {
     const data: FaqType | undefined = await getDocument<FaqType>("config", "faq");
 
     return (
-        <div className="container mx-auto py-10">
+        <Article className="container mx-auto py-10">
             {data?.questions.map((q, i: number) =>
                 <Accordion key={i} defaultValue={q.expanded ? q.question : undefined}triggerText={q.question} className={{trigger: "font-semibold !text-xl !md:text-2xl no-underline text-start"}} >
                     <div className={`${q.links ? "grid grid-rows-2" : ""} border border-slate-500 rounded`}>
@@ -24,9 +23,7 @@ export default async function FAQ() {
                             )}</div>
                         }
                     </div>
-                    
-                    
                 </Accordion>
             )}
-        </div>)
+        </Article>)
 }

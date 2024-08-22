@@ -1,14 +1,19 @@
-import Image from "next/image";
+import { getDocument } from "../db/db";
+import Text from "@/components/text/text";
+import Article from "@/components/article/article";
+import type { Text as TextType } from "@/lib/configtype";
 
-export default function Home() {
+import "./privacy-policy.css";
+
+export default async function PrivacyPolicy() {
+  const data: TextType | undefined = await getDocument<TextType>(
+    "config",
+    "privacy-policy"
+  );
+  
   return (
-    <div className="container mx-auto px-4">
-    <h1>Hello word</h1>
-    <p>This is a content to make our page longer</p>
-    <div className="w-full h-screen bg-green-300"></div>
-    <p>
-      Lorem Ipsum is simply dummy text ...
-    </p>
-  </div>
+      <Article className="container mx-auto px-4">
+        <Text text={data?.text ?? ""} />
+      </Article>
   );
 }
