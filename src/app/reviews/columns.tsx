@@ -1,3 +1,6 @@
+"use client"
+
+
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { DocumentData } from "firebase/firestore"
@@ -37,6 +40,10 @@ export const columns: ColumnDef<Company>[] = [
   {
     accessorKey: "company_type",
     header: ({column}) => getSortButton(column, "Type"),
+    cell: (value) => {
+      let cellValue: string = value.getValue() as string;
+      return cellValue.charAt(0).toUpperCase() + cellValue.slice(1)
+    },
     meta: {
       filterVariant: 'select'
     }
@@ -54,3 +61,4 @@ export const columns: ColumnDef<Company>[] = [
     header: ({column}) => getSortButton(column, "Reviews")
   },
 ]
+

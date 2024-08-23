@@ -36,18 +36,21 @@ const DEFAULT_PAGINATION_VALUE = 10;
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
+  initialState?: {[key: string]: any},
   onRowSelectProps?: {
     fn?: (a: any) => void,
     url?: string,
     target?: string
   },
-  row?: Row<TData>
+  row?: Row<TData>,
+  [key: string]: any
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   onRowSelectProps,
+  initialState = {},
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -65,6 +68,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    initialState,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
@@ -99,7 +103,7 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                <TableHead key={header.id} scope="col" role="columnheader">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -112,22 +116,26 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="table-auto">
+        <TableBody className="table-auto" role="rowgroup">
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, i: number) => {
+              const tableVisibleCells = row.getVisibleCells();
+
+              return (              
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                onClick={() => onRowSelectHandler(row)}
-                className={styles.data_table_row}
+                className={`${styles.data_table_row} focusable`}
+                aria-label={`Row ${i}: ${tableVisibleCells[0].getValue()}`}
+                role="row"
               >
-                {row.getVisibleCells().map((cell, i: number) => (
-                  <TableCell key={cell.id}>
+                {tableVisibleCells.map((cell, i: number) => (
+                  <TableCell title={cell.getValue() as string} key={cell.id} tabIndex={0} className="focusable" role="cell">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
-            )
+              )
+            }
             )
           ) : (
             <TableRow>

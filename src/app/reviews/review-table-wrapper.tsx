@@ -9,30 +9,21 @@ import Icon from "@/components/icons/icon";
 export function ReviewsTableWrapper({ data }: Readonly<{
   data: Company[]
 }>) {
+
   columns[0].cell = ({ cell, row }) => {
-    const [visible, setVisible] = useState(false)
-   
     return (
-      <span
-        className={`flex h-max items-center`}
-        onMouseOver={() => setVisible(true)}
-        onMouseLeave={() => setVisible(false)}
-      >
+      <Link
+      href={`/reviews/${row.original.slug}`}
+      className={`mx-3`}
+      tabIndex={0}
+    >
         {cell.getValue() as string}
-          <Link
-            href={`/reviews/${row.original.slug}`}
-            className={`${visible ? "visible" : "invisible"} rounded bg-blue-500 mx-3`}
-          >
-            <button className="px-2 flex items-center justify-center ">
-              Read
-              <Icon type="fas-arrow-right" className={` px-2 h-4 w-4 color-black`} />
-            </button>
-          </Link>
-      </span>
+    </Link>
     )
   }
 
+
   return (
-    <DataTable columns={columns} data={data} />
+    <DataTable columns={columns} data={data}/>
   );
 }
