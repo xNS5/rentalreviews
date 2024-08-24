@@ -49,8 +49,8 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  onRowSelectProps,
   initialState = {},
+  tableCaption,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -58,12 +58,6 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: DEFAULT_PAGINATION_VALUE,
   })
-
-  const onRowSelectHandler = (row: Row<TData>) => {
-    if(onRowSelectProps?.fn !== undefined){
-      onRowSelectProps.fn(row)
-    }
-  }
 
   const table = useReactTable({
     data,
@@ -97,7 +91,9 @@ export function DataTable<TData, TValue>({
           />
         </label>
       </div>
+
       <Table>
+      <caption className="caption-top text-lg" >{tableCaption}</caption>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -116,20 +112,19 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="table-auto" role="rowgroup">
+        <TableBody className="table-auto">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, i: number) => {
               const tableVisibleCells = row.getVisibleCells();
-
               return (              
               <TableRow
                 key={row.id}
                 className={`${styles.data_table_row} focusable`}
-                aria-label={`Row ${i}: ${tableVisibleCells[0].getValue()}`}
-                role="row"
+                role="rowgroup"
+                tabIndex={0}
               >
                 {tableVisibleCells.map((cell, i: number) => (
-                  <TableCell title={cell.getValue() as string} key={cell.id} tabIndex={0} className="focusable" role="cell">
+                  <TableCell key={cell.id} role="cell">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

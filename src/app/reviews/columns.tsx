@@ -43,22 +43,31 @@ export const columns: ColumnDef<Company>[] = [
     cell: (value) => {
       let cellValue: string = value.getValue() as string;
       return cellValue.charAt(0).toUpperCase() + cellValue.slice(1)
-    },
-    meta: {
-      filterVariant: 'select'
     }
   },
   {
     accessorKey: "average_rating",
-    header: ({column}) => getSortButton(column, "Rating")
+    header: ({column}) => getSortButton(column, "Rating"),
+    cell: ({row}) => {
+      const average_rating: number = row.getValue("average_rating");
+      return (<span aria-label={`Rating ${average_rating} out of 5`}>{average_rating}</span>)
+    }
   },
   {
     accessorKey: "adjusted_average_rating",
-    header: ({column}) => getSortButton(column, "Adjusted Rating")
+    header: ({column}) => getSortButton(column, "Adjusted Rating"),
+    cell: ({row}) => {
+      const average_rating: number = row.getValue("adjusted_average_rating");
+      return (<span aria-label={`Adjusted rating ${average_rating} out of 5`}>{average_rating}</span>)
+    }
   },
   {
     accessorKey: "review_count",
-    header: ({column}) => getSortButton(column, "Reviews")
+    header: ({column}) => getSortButton(column, "Reviews"),
+    cell: ({row}) => {
+      const review_count: number = row.getValue("review_count");
+      return (<span aria-label={`${review_count} reviews`}>{review_count}</span>)
+    }
   },
 ]
 

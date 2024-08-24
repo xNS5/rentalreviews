@@ -1,10 +1,8 @@
 "use client"
 
 import Link from "next/link";
-import { createContext, useContext, useState } from "react";
 import { DataTable } from "@/components/table/data-table";
 import { Company, columns } from "./columns";
-import Icon from "@/components/icons/icon";
 
 export function ReviewsTableWrapper({ data }: Readonly<{
   data: Company[]
@@ -24,6 +22,6 @@ export function ReviewsTableWrapper({ data }: Readonly<{
 
 
   return (
-    <DataTable columns={columns} data={data}/>
+    <DataTable columns={columns} data={data} tableCaption={"Rental Reviews Data"}/>
   );
 }

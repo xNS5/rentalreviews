@@ -14,7 +14,7 @@ export default async function Home() {
     <div className="container mx-auto px-4">
       <section className="my-20">
         {data?.content?.map((elem: TextType, i: number) => (
-          <div key={i}>
+          <div key={i} role="article">
             <h1 className="text-center underline underline-offset-8 decoration-slate-300 text-3xl py-5">{elem.title}</h1>
             <div className="lg:px-20 xs:px-10 py-5">
               <Text text={elem.text} className="text-lg xs:text-base xl:text-xl indent-10" />
