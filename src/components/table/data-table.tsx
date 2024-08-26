@@ -37,11 +37,6 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
   initialState?: {[key: string]: any},
-  onRowSelectProps?: {
-    fn?: (a: any) => void,
-    url?: string,
-    target?: string
-  },
   row?: Row<TData>,
   [key: string]: any
 }
@@ -51,12 +46,14 @@ export function DataTable<TData, TValue>({
   data,
   initialState = {},
   tableCaption,
+  paginationValue,
+  alt
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: DEFAULT_PAGINATION_VALUE,
+    pageSize: paginationValue ?? DEFAULT_PAGINATION_VALUE,
   })
 
   const table = useReactTable({
@@ -77,9 +74,12 @@ export function DataTable<TData, TValue>({
     }
   })
 
+  const tableHeaderGroups = table.getHeaderGroups();
+  const tableRowModel = table.getRowModel();
+
   return (
     <div className="rounded-md border">
-      <div className="flex items-center p-4 justify-end">
+      <div className="flex items-center p-4 justify-end" role="presentation">
         <label className="flex text-lg items-center">
           Search
           <Input
@@ -92,10 +92,10 @@ export function DataTable<TData, TValue>({
         </label>
       </div>
 
-      <Table>
-      <caption className="caption-top text-lg" >{tableCaption}</caption>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+      <Table role="grid" aria-colcount={tableHeaderGroups?.length ?? 0} aria-rowcount={tableRowModel.rows?.length ?? 0}>
+      <caption className="caption-top text-lg" aria-label={tableCaption}>{tableCaption}</caption>
+        <TableHeader aria-label="Table Header">
+          {tableHeaderGroups.map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
@@ -113,21 +113,35 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody className="table-auto">
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, i: number) => {
+          {tableRowModel.rows?.length ? (
+            tableRowModel.rows.map((row, i: number) => {
               const tableVisibleCells = row.getVisibleCells();
               return (              
               <TableRow
                 key={row.id}
                 className={`${styles.data_table_row} focusable`}
                 role="rowgroup"
-                tabIndex={0}
+                aria-rowindex={i}
               >
-                {tableVisibleCells.map((cell, i: number) => (
-                  <TableCell key={cell.id} role="cell">
+                {tableVisibleCells.map((cell, j: number) => {
+                  // Gets the alt object ID from the cell ID, and uses it as the key for the alt object.
+                  const altKey: string = cell.id.slice(2);
+                  let ariaLabel = cell.getValue() as string;
+
+                  if(alt["reviews"][altKey]){
+                    const {prefix, postfix} = alt["reviews"][altKey];
+                    ariaLabel = `${prefix} ${cell.getValue()} ${postfix}`;
+                  }
+
+                  return ( <TableCell 
+                    key={cell.id}
+                    aria-label={ariaLabel}
+                    aria-colindex={j}
+                    role="cell"
+                    tabIndex={0}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                  </TableCell>)
+                })}
               </TableRow>
               )
             }
