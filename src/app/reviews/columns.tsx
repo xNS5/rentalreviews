@@ -24,7 +24,7 @@ export interface Company extends DocumentData {
 
 function getSortButton(column: any, name: string) {
   const isSorted = column.getIsSorted();
-  console.log(isSorted);
+  
   return (
     <Button
       variant="ghost"
