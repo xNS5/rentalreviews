@@ -22,13 +22,12 @@ export async function Review(data: Company) {
       >
         <ol className="flex text-sm lg:text-lg justify-center items-center md:space-x-4 text-lg">
           <li
-            //tabIndex={0}
             aria-label={`${await getAltStringAsync(
               data.review_count,
               "review",
               "review_count"
             )}`}
-            value={ data.review_count}
+            value={data.review_count}
           >
             <span className="m-1">
               <b>Review Count: </b>
@@ -36,7 +35,6 @@ export async function Review(data: Company) {
             </span>
           </li>
           <li
-            //tabIndex={0}
             aria-label={`${await getAltStringAsync(
               data.average_rating,
               "review",
@@ -51,7 +49,6 @@ export async function Review(data: Company) {
           {hasAdjustedReviewValue && (
             <>
               <li
-                //tabIndex={0}
                 aria-label={`${await getAltStringAsync(
                   data.adjusted_review_count,
                   "review",
@@ -64,7 +61,6 @@ export async function Review(data: Company) {
                 </span>
               </li>
               <li
-                //tabIndex={0}
                 aria-label={`${await getAltStringAsync(
                   data.adjusted_average_rating,
                   "review",
@@ -112,7 +108,6 @@ export async function Review(data: Company) {
         >
           <ol className="space-y-2 text-gray-500 list-none list-inside dark:text-gray-400 text-lg !text-black">
             <li
-              //tabIndex={0}
               aria-label={`${await getAltStringAsync(
                 data.review_count,
                 "review",
@@ -125,7 +120,6 @@ export async function Review(data: Company) {
               </span>
             </li>
             <li
-              //tabIndex={0}
               aria-label={`${await getAltStringAsync(
                 data.average_rating,
                 "review",
@@ -140,7 +134,6 @@ export async function Review(data: Company) {
             {hasAdjustedReviewValue && (
               <>
                 <li
-                  //tabIndex={0}
                   aria-label={`${await getAltStringAsync(
                     data.adjusted_review_count,
                     "review",
@@ -153,7 +146,6 @@ export async function Review(data: Company) {
                   </span>
                 </li>
                 <li
-                  //tabIndex={0}
                   aria-label={`${await getAltStringAsync(
                     data.adjusted_average_rating,
                     "review",
@@ -175,8 +167,7 @@ export async function Review(data: Company) {
             Raw Data
           </Link>
           {hasAdjustedReviewValue && (
-            <span //tabIndex={0} 
-            className="flex justify-center text-md">
+            <span className="flex justify-center text-md">
               {adjustedReviewDisclaimerString}
             </span>
           )}

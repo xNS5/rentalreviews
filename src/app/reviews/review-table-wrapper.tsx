@@ -17,7 +17,6 @@ export function ReviewsTableWrapper({
       <Link
         href={`/reviews/${row.original.slug}`}
         className={`mx-3`}
-        tabIndex={0}
       >
         {cell.getValue() as string}
       </Link>
