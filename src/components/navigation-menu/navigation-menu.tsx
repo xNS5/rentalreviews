@@ -16,7 +16,7 @@ export const NavigationMenu = ({link, className}: Readonly<{
           <>
             <MenuButton className="inline-flex w-full justify-center rounded-md">
               {link.name}
-              <Icon type="fas-chevron-down" className={`mt-2 h-3 w-3 ml-1 text-black ${open ? 'rotate-180 transform' : ''}`} ariahidden={true} />
+              <Icon type="fas-chevron-down" className={`mt-2 h-3 w-3 ml-1 text-black transition-transform ${open ? 'rotate-180 transform' : ''}`} ariahidden={true} />
             </MenuButton>
             <Transition
               as={Fragment}
