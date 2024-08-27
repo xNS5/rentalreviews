@@ -22,7 +22,7 @@ export default function Accordion({ triggerText = "", children, className, defau
         <AccordionComp id="accordion-comp"type="single" defaultValue={defaultValue} collapsible className={`w-full ${className?.comp ?? ""}`}>
             <AccordionItem id="accordion-item" value={triggerText} className={`w-full ${className?.item ?? ""}`}>
                 <AccordionTrigger id="accordion-trigger" className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
-                <AccordionContent id="accordion-content" className={`${className?.content ?? ""} shadow`}>
+                <AccordionContent id="accordion-content" className={`${className?.content ?? ""}`}>
                     {children}
                 </AccordionContent>
             </AccordionItem>

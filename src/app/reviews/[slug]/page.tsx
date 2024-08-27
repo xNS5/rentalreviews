@@ -1,5 +1,3 @@
-"use server"
-
 import { development } from "@/lib/config-provider";
 import { notFound } from "next/navigation";
 import { Review } from "./review";

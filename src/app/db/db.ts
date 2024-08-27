@@ -9,7 +9,7 @@ type TProps<T> = {
     [k: string]: string | number | T | T[keyof T]
 }
 
-export const getCollection = async<T extends TProps<T>>(collection: string): Promise<T[] | undefined> => {
+export const getCollection = async<T extends TProps<T>>(collection: string): Promise<T[]> => {
     let collection_arr: T[] | undefined  = global.collectionCache.get(collection) ?? undefined;
 
     if(collection_arr === undefined){
@@ -23,7 +23,7 @@ export const getCollection = async<T extends TProps<T>>(collection: string): Pro
     return collection_arr as T[];
 }
 
-export const getDocument = async<T extends TProps<T>>(collection: string, document_id: string): Promise<T | undefined> => {
+export const getDocument = async<T extends TProps<T>>(collection: string, document_id: string): Promise<T> => {
     let document: T | undefined = global.documentCache.get(`${collection}/${document_id}`) ?? undefined;
     
     if(document === undefined){

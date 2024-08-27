@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+
 import { Button } from "../ui/button"
 import {
     Tooltip as TooltipComp,
@@ -11,10 +11,10 @@ export default function Tooltip(props: any) {
     const {tooltipText, children, className} = props;
 
     return (
-        <TooltipProvider>
+        <TooltipProvider delayDuration={250}>
             <TooltipComp>
                 <TooltipTrigger asChild>
-                    <Button variant="ghost" className={`rounded ${className}`}>{children}</Button>
+                    <Button variant="ghost" className={`rounded ${className} text-inherit w-full h-auto`}>{children}</Button>
                 </TooltipTrigger>
                 <TooltipContent>
                     <p>{tooltipText}</p>

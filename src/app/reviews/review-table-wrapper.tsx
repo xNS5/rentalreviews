@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { DataTable } from "@/components/table/data-table";
 import { Company, columns } from "./columns";
-import { Alt } from "@/lib/alttype";
+import { AltRecord } from "@/lib/altprovider";
 
 export function ReviewsTableWrapper({
   data,
-  alt,
+  alt
 }: Readonly<{
   data: Company[];
-  alt: Alt | undefined;
+  alt: AltRecord;
 }>) {
   columns[0].cell = ({ cell, row }) => {
     return (
@@ -36,5 +36,5 @@ export function ReviewsTableWrapper({
     ]
   }
 
-  return <DataTable columns={columns} data={data} tableCaption={"Rental Reviews Data"} alt={alt ?? undefined} initialState={initialState}/>;
+  return <DataTable columns={columns} data={data} tableCaption={"Rental Reviews Data"} alt={alt} initialState={initialState}/>;
 }

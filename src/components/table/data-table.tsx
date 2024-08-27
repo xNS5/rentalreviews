@@ -28,7 +28,6 @@ import {
 
 import { useState } from 'react';
 import { Input } from "@/components/ui/input"
-
 import styles from "./data-table.module.css"
 
 const DEFAULT_PAGINATION_VALUE = 10;
@@ -119,7 +118,7 @@ export function DataTable<TData, TValue>({
               return (              
               <TableRow
                 key={row.id}
-                className={`${styles.data_table_row} focusable`}
+                className={`${styles.data_table_row}`}
                 role="rowgroup"
                 aria-rowindex={i}
               >
@@ -128,8 +127,8 @@ export function DataTable<TData, TValue>({
                   const altKey: string = cell.id.slice(2);
                   let ariaLabel = cell.getValue() as string;
 
-                  if(alt["reviews"][altKey]){
-                    const {prefix, postfix} = alt["reviews"][altKey];
+                  if(alt[altKey]){
+                    const {prefix, postfix} = alt[altKey];
                     ariaLabel = `${prefix} ${cell.getValue()} ${postfix}`;
                   }
 
