@@ -23,15 +23,27 @@ export function ReviewsTableWrapper({
     );
   };
   const initialState = {
-    "sorting": [
+    sorting: [
       {
-        "id": 'asc',
-        "desc": false
+        id: 'name',
+        desc: false
       },
       {
-        "id": 'desc',
-        "desc": true
-      }
+        id: 'company_type',
+        desc: false
+      },
+      {
+        id: 'average_rating',
+        desc: false
+      },
+      {
+        id: 'adjusted_average_rating',
+        desc: false
+      },
+      {
+        id: 'review_count',
+        desc: false
+      },
     ]
   }
 

@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({
   paginationValue,
   alt
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>(initialState.sorting ?? [])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -137,7 +137,8 @@ export function DataTable<TData, TValue>({
                     aria-label={ariaLabel}
                     aria-colindex={j}
                     role="cell"
-                    tabIndex={0}>
+                    // tabIndex={0}
+                    >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>)
                 })}
