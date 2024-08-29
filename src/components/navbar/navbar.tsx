@@ -9,13 +9,20 @@ import { usePathname as getPathname, usePathname, useRouter } from "next/navigat
 import type { Link } from "@/lib/link";
 import type { Config } from "@/lib/config-provider";
 
-
-function getActiveClassName(url: string) {
-  const pathname = getPathname();
-  return pathname === url || (pathname.includes(url) && url.length > 1) ? "underline decoration-2 font-bold text-black" : "";
+function getActiveClassProps(url: string){
+  const pathnameArr: string[] = getPathname().split("/");
+  const urlArr: string[] = url.split("/")
+  if(pathnameArr[1] == urlArr[1]){
+    return {
+      "className": "underline decoration-2 font-bold text-black",
+      "aria-label": `${urlArr[1]} current page`
+    }
+  }
 }
 
-export const Navbar = ({ nav }: Config) => {
+export default function Navbar({ nav }: Readonly<{
+  nav: Config
+}>){
   const pathname = usePathname();
   const [isNavOpen, setNavOpen] = useState(false);
 
@@ -31,9 +38,9 @@ export const Navbar = ({ nav }: Config) => {
         {nav?.map((link: Link, i: number) => (
           <li key={i} className="md:text-lg mx-2">
             {link.type == "link" ? (
-              <NavItem link={link} className={`${getActiveClassName(link.url)}`}/>
+              <NavItem href={link.url} name={link.name} {...getActiveClassProps(link.url)} />
             ) : (
-              <NavigationMenu link={link} className={`${getActiveClassName(link.url)}`}/>
+              <NavigationMenu link={link} className={getActiveClassProps(link.url)?.className}/>
             )}
           </li>
         ))}
@@ -43,7 +50,7 @@ export const Navbar = ({ nav }: Config) => {
         className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
         onClick={() => setNavOpen(!isNavOpen)}
       >
-        {isNavOpen ? <Icon type="fas-x" className="w-8" altText="Close Menu"/> : <Icon type="fas-bars" className="w-8" altText="Open Menu"/>}
+        {isNavOpen ? <Icon type="fas-x" className="w-8" altText="Close navigation menu"/> : <Icon type="fas-bars" className="w-8" altText="Open navigation menu"/>}
       </button>
 
       {isNavOpen && (
@@ -54,7 +61,7 @@ export const Navbar = ({ nav }: Config) => {
               className="py-4 cursor-pointer capitalize  text-4xl hover:text-blue-900"
             >
               {link.type === "link" ? (
-                <NavItem link={link} className={`${getActiveClassName(link.url)}`}/>
+               <NavItem href={link.url} name={link.name} {...getActiveClassProps(link.url)}/>
               ) : (
                 <Accordion triggerText={link.name} className={{ trigger: "text-4xl justify-center", content: "rounded border border-slate-400"}}>
                   <ol className="text-center">
