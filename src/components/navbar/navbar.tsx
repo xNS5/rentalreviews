@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavItem } from "./nav-item";
 import { NavigationMenu } from "../navigation-menu/navigation-menu";
 import Icon from "../icons/icon";
 import Accordion from "../accordion/accordion";
 import {
   usePathname as getPathname,
-  usePathname,
-  useRouter,
 } from "next/navigation";
 import type { Link } from "@/lib/link";
 import type { Config } from "@/lib/config-provider";

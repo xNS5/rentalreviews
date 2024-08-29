@@ -16,10 +16,10 @@ export default async function FAQ() {
             {data?.questions.map((q, i: number) =>
                 <Accordion key={i} defaultValue={q.expanded ? q.question : undefined}triggerText={q.question} className={{trigger: "font-semibold !text-xl !md:text-2xl no-underline text-start"}} >
                     <div className={`${q.links ? "grid grid-rows-2" : ""} border border-slate-500 rounded`}>
-                        <Text className='m-3 text-lg' text={q.answer}/>
+                        <Text className='p-3 text-lg' text={q.answer}/>
                         {
                             q.links && <div className='content-center text-center'>{q.links.map((link: LinkType, i:number) => 
-                                <span key={i}><Link className='m-5 rounded m-2 p-2 text-lg border border-slate-500 shadow-md' href={link.url} target={link.target ?? "_blank"} >{link.name}</Link></span>
+                                <span key={i}><Link className='m-5 rounded m-3 p-2 text-lg border border-slate-500 shadow-md' href={link.url} target={link.target ?? "_blank"} >{link.name}</Link></span>
                             )}</div>
                         }
                     </div>
