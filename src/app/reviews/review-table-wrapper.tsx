@@ -12,16 +12,38 @@ export function ReviewsTableWrapper({
   data: Company[];
   alt: AltRecord;
 }>) {
+  
   columns[0].cell = ({ cell, row }) => {
     return (
       <Link
         href={`/reviews/${row.original.slug}`}
         className={`mx-3`}
       >
-        {cell.getValue() as string}
+        {`${cell.getValue()}`}
       </Link>
     );
   };
+
+  for(let i = 1; i < columns.length; i++){
+    let column = columns[i];
+    column.cell = ({cell, row}) => {
+      const altKey = cell.column.id;
+      if(alt[altKey] != undefined){
+        const {prefix, postfix} = alt[altKey];
+        return (
+          <span
+          aria-label={`${prefix} ${cell.getValue()} ${postfix}`}
+          >
+            {`${cell.getValue()}`}
+          </span>
+        )
+      }
+      return (
+        <span>{cell.getValue() as string}</span>
+      )
+    }
+  }
+  
   const initialState = {
     sorting: [
       {

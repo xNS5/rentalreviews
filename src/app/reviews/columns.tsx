@@ -1,11 +1,7 @@
-"use client"
-
-
 import { Button } from "@/components/ui/button"
 import { ColumnDef, ColumnSort } from "@tanstack/react-table"
 import { DocumentData } from "firebase/firestore"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import Icon from "@/components/icons/icon"
+import { ArrowUpDown } from "lucide-react"
 
 export interface Company extends DocumentData {
   name: string,
