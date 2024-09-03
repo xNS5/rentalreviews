@@ -1,9 +1,7 @@
-"use server"
-
 import { notFound } from "next/navigation";
 import type { Company } from "../../columns";
 import { Data } from "./data";
-import { getCompanyData } from "../page";
+import getCompanyData from "@/lib/getCompanyData";
 
 
 export default async function ReviewData({ params: { slug } }: Readonly<{

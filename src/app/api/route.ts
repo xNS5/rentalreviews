@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCompanyData } from "@/lib/getCompanyData";
+import getCompanyData from "@/lib/getCompanyData";
 
 export enum STATUS {
   SUCCESS = 200,
