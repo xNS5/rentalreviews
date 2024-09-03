@@ -21,8 +21,7 @@ export function getResponse(message: any, code: STATUS) {
 }
 
 export async function GET(
-  req: NextRequest,
-  res: NextResponse,
+  req: NextRequest
 ) {
   const searchParams = req.nextUrl.searchParams;
   const idRegex = new RegExp("[^a-z0-9-]");
@@ -30,7 +29,7 @@ export async function GET(
   try {
     if (id) {
       if (idRegex.test(id)) {
-        return getResponse("Invalid location ID", STATUS.CLIENT_ERROR);
+        return getResponse("Invalid ID", STATUS.CLIENT_ERROR);
       }
       const data = await getCompanyData(id);
       return getResponse(data, STATUS.SUCCESS);

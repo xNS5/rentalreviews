@@ -5,7 +5,7 @@ import Text from "@/components/text/text";
 import Article from "@/components/article/article";
 import { getDocument } from "../db/db";
 import type { FaqType } from "./faq-type";
-import type { Link as LinkType } from "@/lib/link";
+import type { Link as LinkType } from "@/lib/linktype";
 
 export default async function FAQ() {
   const data: FaqType | undefined = await getDocument<FaqType>("config", "faq");

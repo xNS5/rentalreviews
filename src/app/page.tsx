@@ -1,7 +1,7 @@
 import Text from "@/components/text/text";
 import { notFound } from "next/navigation";
 import { getDocument } from "./db/db";
-import type { Config, Text as TextType } from "../lib/configtype";
+import type { Config, Text as TextType } from "@/lib/config-provider";
 
 export default async function Home() {
   const data: Config | undefined = await getDocument<Config>("config", "home")

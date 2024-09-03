@@ -76,7 +76,7 @@ export async function Review(data: Company) {
           )}
           <li>
             <Link
-              href={`/reviews/${data.slug}/data`}
+              href={`/api?id=${data.slug}`}
               className="rounded block content-center mx-3 bg-blue-500 h-8 px-2 w-auto text-white"
             >
               Raw Data
