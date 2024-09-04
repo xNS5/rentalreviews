@@ -7,7 +7,6 @@ export function NavItem(props: Readonly<{
     <Link
       href={"/"}
       {...props}
-      replace
     >
      {props.name}
     </Link>

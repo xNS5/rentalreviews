@@ -15,7 +15,7 @@ export async function Review(data: Company) {
 
   return (
     <Article className="container mx-auto py-10 review-summary">
-      <h1 className="text-3xl text-center font-bold">{data.name}</h1>
+      <h1 className="text-2xl md:text-3xl text-center font-bold my-2">{data.name}</h1>
       <div
         id="review-data-list"
         className="hidden md:grid grid-cols-1 grid-rows-2 items-center justify-center pt-4"

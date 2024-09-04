@@ -3,7 +3,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 import Icon from "../icons/icon";
-import type { Link } from "@/lib/link";
+import type { Link } from "@/lib/linktype";
 
 export const NavigationMenu = ({link, className}: Readonly<{
     link: Link,
@@ -35,14 +35,9 @@ export const NavigationMenu = ({link, className}: Readonly<{
                       key={child.url}
                       href={child.url}
                       target={child.target}
+                      className={"flex rounded-md p-2 text-base md:text-lg"}
                     >
-                      {({ focus }) => (
-                        <span
-                          className={`flex rounded-md p-2 text-base md:text-lg`}
-                        >
-                          {child.name}
-                        </span>
-                      )}
+                      {child.name}
                     </MenuItem>
                   );
                 })}
