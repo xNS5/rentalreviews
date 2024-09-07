@@ -15,7 +15,7 @@ export async function Review(data: Company) {
 
   return (
     <Article className="container mx-auto py-10 review-summary">
-      <h1 className="text-3xl text-center font-bold">{data.name}</h1>
+      <h1 className="text-2xl md:text-3xl text-center font-bold my-2">{data.name}</h1>
       <div
         id="review-data-list"
         className="hidden md:grid grid-cols-1 grid-rows-2 items-center justify-center pt-4"
@@ -76,7 +76,7 @@ export async function Review(data: Company) {
           )}
           <li>
             <Link
-              href={`/reviews/${data.slug}/data`}
+              href={`/api?id=${data.slug}`}
               className="rounded block content-center mx-3 bg-blue-500 h-8 px-2 w-auto text-white"
             >
               Raw Data
