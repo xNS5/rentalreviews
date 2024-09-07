@@ -22,4 +22,6 @@ export default function Tooltip(props: any) {
             </TooltipComp>
         </TooltipProvider>
     )
-}
+} 
+
+Tooltip.displayName = "tooltip";

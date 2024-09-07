@@ -124,7 +124,6 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   className={`${styles.data_table_row}`}
                   role="rowgroup"
-                  aria-rowindex={i}
                 >
                   {tableVisibleCells.map((cell, j: number) => {
                     // Gets the alt object ID from the cell ID, and uses it as the key for the alt object.
