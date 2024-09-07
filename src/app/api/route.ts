@@ -5,19 +5,17 @@ export enum STATUS {
   SUCCESS = 200,
   CLIENT_ERROR = 400,
   SERVER_ERROR = 500,
-  NOT_ALLOWED = 403,
 }
 
-export function validateID(id: string) {
-  const idRegex = new RegExp("[^a-z0-9-]");
-  return idRegex.test(id);
-}
-
-export function getResponse(message: any, code: STATUS) {
+function getResponse(message: any, code: STATUS) {
   return NextResponse.json(
     code == STATUS.SUCCESS ? { data: message } : { error: message },
     { status: code }
   );
+}
+
+export async function POST(){
+  return getResponse("POST is not supported", STATUS.CLIENT_ERROR);
 }
 
 export async function GET(
