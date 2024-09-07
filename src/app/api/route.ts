@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import getCompanyData from "@/lib/getCompanyData";
 
-export enum STATUS {
+ enum STATUS {
   SUCCESS = 200,
   CLIENT_ERROR = 400,
   SERVER_ERROR = 500,

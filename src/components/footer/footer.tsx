@@ -1,7 +1,7 @@
 import Icon from "../icons/icon";
 import Link from "next/link";
 import type { FooterItem } from "./footertypes";
-import type { Config } from "@/lib/configtype";
+import type { Config } from "@/lib/config-provider";
 
 function getConfigEntries<T extends Config>(obj: Record<string, T>): [number, T][] {
     return Object.entries(obj).map(([key, value]) => [parseInt(key, 10), value] as [number, T]);
