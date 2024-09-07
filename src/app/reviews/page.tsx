@@ -1,13 +1,15 @@
 import { Company } from "./columns";
-import { getCollection } from "../db/db";
+import { getCollection, getDocument } from "../db/db";
 import { ReviewsTableWrapper } from "./review-table-wrapper";
+import { getAltObj } from "@/lib/altprovider";
 
 export default async function Reviews() {
-  let data: Company[] | undefined = await getCollection<Company>("companies");
+  const data: Company[] | undefined = await getCollection<Company>("companies");
+  const alt = await getAltObj("reviews");
 
   return (
     <div className="container mx-auto py-10">
-      <ReviewsTableWrapper data={data ?? []} />
+      <ReviewsTableWrapper data={data ?? []} alt={alt}/>
     </div>
   );
 }

@@ -5,24 +5,15 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 
-type AccordionClass = {
-    comp?: string,
-    item?: string,
-    trigger?: string,
-    content?: string
-}
-
-export default function Accordion({ triggerText = "", children, className, defaultValue = ""}: Readonly<{
-    triggerText: string;
-    className?: AccordionClass,
-    children: React.ReactNode,
-    defaultValue?: string,
-}>) {
+export default function Accordion(props: Readonly<{
+    [key: string]: any
+  }>){
+    const {triggerText, children, className, defaultValue} = props; 
     return (
-        <AccordionComp type="single" defaultValue={defaultValue} collapsible className={`w-full ${className?.comp ?? ""}`}>
-            <AccordionItem value={triggerText} className={`w-full ${className?.item ?? ""}`}>
-                <AccordionTrigger className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
-                <AccordionContent className={`${className?.content ?? ""} shadow`}>
+        <AccordionComp id="accordion-comp" type="single" defaultValue={defaultValue} collapsible className={`w-full ${className?.comp ?? ""}`}>
+            <AccordionItem id="accordion-item" value={triggerText} className={`w-full ${className?.item ?? ""}`}>
+                <AccordionTrigger id="accordion-trigger" className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
+                <AccordionContent id="accordion-content" className={`${className?.content ?? ""}`}>
                     {children}
                 </AccordionContent>
             </AccordionItem>

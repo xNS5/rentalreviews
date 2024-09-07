@@ -84,10 +84,9 @@ h3 {
 body {
   @apply bg-background text-foreground;
 }
+
 a[href]:hover {
-  color: white;
-  background-color: rgb(37 99 235);
-  border-radius: 4px;
+  text-decoration: underline;
 }
 
 button[id^="headlessui-menu-button-*"]:hover{

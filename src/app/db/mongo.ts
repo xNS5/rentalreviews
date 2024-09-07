@@ -1,5 +1,4 @@
 import { MongoClient, ObjectId } from 'mongodb';
-import { unstable_cache as cache } from "next/cache";
 
 function getClient(){
     return new MongoClient(`mongodb://${process.env.NEXT_PUBLIC_MONGODB_USER}:${process.env.NEXT_PUBLIC_MONGODB_PASSWORD}@${process.env.NEXT_PUBLIC_MONGODB_URL}`);

@@ -1,29 +1,46 @@
-import React from 'react'
-import Link from 'next/link';
-import Accordion from '@/components/accordion/accordion'
-import Text from '@/components/text/text';
-import Article from '@/components/article/article';
-import { getDocument } from '../db/db';
-import type { FaqType } from './faq-type';
-import type { Link as LinkType } from '@/lib/link';
-
+import React from "react";
+import Link from "next/link";
+import Text from "@/components/text/text";
+import Article from "@/components/article/article";
+import { getDocument } from "../db/db";
+import type { FaqType } from "./faq-type";
+import type { Link as LinkType } from "@/lib/linktype";
 
 export default async function FAQ() {
-    const data: FaqType | undefined = await getDocument<FaqType>("config", "faq");
+  const data: FaqType | undefined = await getDocument<FaqType>("config", "faq");
 
-    return (
-        <Article className="container mx-auto py-10">
-            {data?.questions.map((q, i: number) =>
-                <Accordion key={i} defaultValue={q.expanded ? q.question : undefined}triggerText={q.question} className={{trigger: "font-semibold !text-xl !md:text-2xl no-underline text-start"}} >
-                    <div className={`${q.links ? "grid grid-rows-2" : ""} border border-slate-500 rounded`}>
-                        <Text className='m-3 text-lg' text={q.answer}/>
-                        {
-                            q.links && <div className='content-center text-center'>{q.links.map((link: LinkType, i:number) => 
-                                <span key={i}><Link className='m-5 rounded m-2 p-2 text-lg border border-slate-500 shadow-md' href={link.url} target={link.target ?? "_blank"} >{link.name}</Link></span>
-                            )}</div>
-                        }
-                    </div>
-                </Accordion>
-            )}
-        </Article>)
+  return (
+    <Article className="container mx-auto py-10">
+      <h1 className="text-center mb-5"><b>{data.description}</b></h1>
+      <ol>
+        {data?.questions.map((questionObj, i: number) => (
+          <li key={i}>
+            <section className="m-2">
+              <h2 className="font-semibold !text-xl !md:text-2xl no-underline text-start">
+                {questionObj.question}
+              </h2>
+              <Text className={"py-2"} text={questionObj.answer} />
+              {questionObj.links && (
+                <div className="content-center text-center m-5">
+                  {questionObj.links.map((link: LinkType, j: number) => (
+                    <span key={j}>
+                      <Link
+                        className="p-2 rounded text-xl border border-slate-500 shadow-md"
+                        href={link.url}
+                        target={link.target ?? "_blank"}
+                      >
+                        <button className="w-40">
+                        {link.name}
+                        </button>
+                      </Link>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </section>
+          </li>
+        ))}
+      </ol>
+    </Article>
+  );
 }

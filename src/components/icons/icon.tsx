@@ -14,6 +14,7 @@ type IconProps = {
     type: string,
     className?: string,
     ariahidden?: boolean | true,
+    altText?: string,
     accessibilityProps?: {},
     tabIndex?: number | -1
 }
@@ -27,16 +28,13 @@ const getIcon = (type: string, delimiter: string) => {
 
 export default function Icon(props: IconProps){
     if (props !== undefined) {
-        // if(props.type === "fab-limailto:michael@michaelkennedy.devnkedin-square"){
-        //     return <FontAwesomeIcon icon={"fa-brands fa-linkedin"} />
-        // }
         const DynamicIcon = getIcon(props.type, "-");
        
         if (DynamicIcon == null) {
-            return <FontAwesomeIcon icon={getIcon("fas-xmark", "-")} />;
+            return <FontAwesomeIcon title="X icon" icon={getIcon("fas-xmark", "-")} />;
         }
         return (
-            <FontAwesomeIcon icon={DynamicIcon} style={{height: "inherit"}} className={`rounded my-2 ${props?.className}`} aria-hidden={props.ariahidden} tabIndex={props.tabIndex}/>
+            <FontAwesomeIcon icon={DynamicIcon} style={{height: "inherit"}} className={`rounded my-2 ${props?.className}`} aria-hidden={props.ariahidden} tabIndex={props.tabIndex} title={props.altText ?? ""} />
         )
     }
 }

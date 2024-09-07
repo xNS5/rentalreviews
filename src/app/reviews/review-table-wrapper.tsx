@@ -1,38 +1,73 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-import { createContext, useContext, useState } from "react";
 import { DataTable } from "@/components/table/data-table";
 import { Company, columns } from "./columns";
-import Icon from "@/components/icons/icon";
+import { AltRecord } from "@/lib/altprovider";
 
-export function ReviewsTableWrapper({ data }: Readonly<{
-  data: Company[]
+export function ReviewsTableWrapper({
+  data,
+  alt
+}: Readonly<{
+  data: Company[];
+  alt: AltRecord;
 }>) {
+  
   columns[0].cell = ({ cell, row }) => {
-    const [visible, setVisible] = useState(false)
-   
     return (
-      <span
-        className={`flex h-max items-center`}
-        onMouseOver={() => setVisible(true)}
-        onMouseLeave={() => setVisible(false)}
+      <Link
+        href={`/reviews/${row.original.slug}`}
+        className={`mx-3`}
       >
-        {cell.getValue() as string}
-          <Link
-            href={`/reviews/${row.original.slug}`}
-            className={`${visible ? "visible" : "invisible"} rounded bg-blue-500 mx-3`}
+        {`${cell.getValue()}`}
+      </Link>
+    );
+  };
+
+  for(let i = 1; i < columns.length; i++){
+    let column = columns[i];
+    column.cell = ({cell, row}) => {
+      const altKey = cell.column.id;
+      if(alt[altKey] != undefined){
+        const {prefix, postfix} = alt[altKey];
+        return (
+          <span
+          aria-label={`${prefix} ${cell.getValue()} ${postfix}`}
           >
-            <button className="px-2 flex items-center justify-center ">
-              Read
-              <Icon type="fas-arrow-right" className={` px-2 h-4 w-4 color-black`} />
-            </button>
-          </Link>
-      </span>
-    )
+            {`${cell.getValue()}`}
+          </span>
+        )
+      }
+      return (
+        <span>{cell.getValue() as string}</span>
+      )
+    }
+  }
+  
+  const initialState = {
+    sorting: [
+      {
+        id: 'name',
+        desc: false
+      },
+      {
+        id: 'company_type',
+        desc: false
+      },
+      {
+        id: 'average_rating',
+        desc: false
+      },
+      {
+        id: 'adjusted_average_rating',
+        desc: false
+      },
+      {
+        id: 'review_count',
+        desc: false
+      },
+    ]
   }
 
-  return (
-    <DataTable columns={columns} data={data} />
-  );
+  return <DataTable columns={columns} data={data} tableCaption={"Rental Reviews Data"} alt={alt} initialState={initialState}/>;
 }
