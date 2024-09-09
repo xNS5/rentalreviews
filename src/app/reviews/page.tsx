@@ -11,8 +11,8 @@ export default async function Reviews() {
 
   return (
     <div className="container mx-auto py-10">
-     <Suspense fallback={<Loading/>}>
-     <ReviewsTableWrapper data={data ?? []} alt={alt}/>
+     <Suspense key={Math.random()} fallback={<Loading/>}>
+      <ReviewsTableWrapper data={data ?? []} alt={alt}/>
      </Suspense>
     </div>
   );
