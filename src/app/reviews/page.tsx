@@ -1,5 +1,5 @@
 import { Company } from "./columns";
-import { getCollection, getDocument } from "../db/db";
+import { getCollection, getDocument } from "../../db/db";
 import { ReviewsTableWrapper } from "./review-table-wrapper";
 import { getAltObj } from "@/lib/altprovider";
 

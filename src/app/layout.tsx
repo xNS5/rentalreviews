@@ -1,15 +1,14 @@
 import { Inter as FontSans } from "next/font/google";
 import { Suspense } from "react";
-import Spinner from "@/components/spinner/spinner";
-import { getDocument } from "./db/db";
+import { getDocument } from "../db/db";
 import { Config } from "../lib/config-provider";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/logo/logo";
 import Navbar from "@/components/navbar/navbar";
 import { Footer } from "@/components/footer/footer";
-import type { Metadata } from "next";
 import "./globals.css";
 import Loading from "./loading";
+import type { Metadata } from "next";
 
 const inter = FontSans({
   subsets: ["latin"],
