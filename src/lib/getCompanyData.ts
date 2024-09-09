@@ -1,4 +1,4 @@
-import { getDocument, getCollection } from "@/app/db/db";
+import { getDocument, getCollection } from "@/db/db";
 import { Company } from "@/app/reviews/columns";
 import { development } from "./config-provider";
 

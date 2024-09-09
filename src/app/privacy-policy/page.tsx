@@ -1,4 +1,4 @@
-import { getDocument } from "../db/db";
+import { getDocument } from "../../db/db";
 import Text from "@/components/text/text";
 import Article from "@/components/article/article";
 import type { Text as TextType } from "@/lib/config-provider";

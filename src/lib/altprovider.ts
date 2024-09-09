@@ -1,4 +1,4 @@
-import { getDocument } from "@/app/db/db";
+import { getDocument } from "@/db/db";
 
 export type Alt = {
   [key: string]: AltRecord;
