@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import getCompanyData from "@/lib/getCompanyData";
 
-export enum STATUS {
+ enum STATUS {
   SUCCESS = 200,
   CLIENT_ERROR = 400,
   SERVER_ERROR = 500,
@@ -15,7 +15,7 @@ function getResponse(message: any, code: STATUS) {
 }
 
 export async function POST(){
-  return getResponse("POST is not supported", STATUS.CLIENT_ERROR);
+  return getResponse("POST not supported", STATUS.CLIENT_ERROR)
 }
 
 export async function GET(

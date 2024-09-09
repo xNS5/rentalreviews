@@ -1,4 +1,4 @@
-import type { Link } from "@/lib/link";
+import type { Link } from "@/lib/linktype";
 
 export type NavbarObject = {
     name: string;

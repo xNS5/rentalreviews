@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
 import Article from "@/components/article/article";
-import { getDocument } from "../db/db";
+import { getDocument } from "../../db/db";
 import type { FaqType } from "./faq-type";
 import type { Link as LinkType } from "@/lib/linktype";
 
