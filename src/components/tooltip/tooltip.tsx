@@ -17,9 +17,9 @@ export default function Tooltip(props: any) {
                     <Button variant="ghost" className={`rounded ${className} text-inherit w-full h-auto`}>{children}</Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>{tooltipText}</p>
+                    <span>{tooltipText}</span>
                 </TooltipContent>
             </TooltipComp>
         </TooltipProvider>
     )
-}
+} 
