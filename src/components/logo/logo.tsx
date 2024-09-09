@@ -7,11 +7,12 @@ export default function Logo({ children, className }: Readonly<{
 }>){
   return( <div className="inline-flex">
     <Image
-      src={"/images/building-icon.svg"}
+      src={"/images/apartment.png"}
       alt="Apartment logo"
-      width={30}
-      height={30}
-      className={`${className} object-contain filter brightness-0 w-10 h-auto`}
+      width={60}
+      height={60}
+      className={`${className} object-contain`}
+      unoptimized={true}
     />
     {children}
   </div>
