@@ -95,4 +95,16 @@ button[id^="headlessui-menu-button-*"]:hover{
   border-radius: 4px;
 }
 
+article {
+  margin: 1em;
+}
+
+article > header {
+  margin: 1em;
+}
+
+article > section {
+  margin: 1em;
+}
+
 }

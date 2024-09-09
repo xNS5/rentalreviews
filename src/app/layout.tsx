@@ -17,11 +17,25 @@ const inter = FontSans({
 
 export let metadata: Metadata;
 
-async function setMetadata() {
+export async function getMetadata() {
   const config: Config | undefined = await getDocument("config", "metadata");
   metadata = {
     title: config?.metadata.title,
     description: config?.metadata.description,
+    icons: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        url: '/images/building-icon-light.png',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        url: '/images/building-icon-dark.png',
+        media: '(prefers-color-scheme: dark)',
+      },
+    ],
   };
 }
 
@@ -30,7 +44,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await setMetadata();
+  await getMetadata();
   const { title, description } = metadata;
   const navbarConfig = await getDocument<Config>("config", "navigation");
   const footerData = await getDocument<Config>("config", "footer");
@@ -51,7 +65,7 @@ export default async function RootLayout({
             <Navbar nav={navbarConfig?.nav} />
           </nav>
         </header>
-        <Suspense fallback={<Loading />}>
+        <Suspense key={Math.random()} fallback={<Loading />}>
           <main role="main" className={`${inter.variable}`}>
             {children}
           </main>

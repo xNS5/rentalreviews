@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DataTable } from "@/components/table/data-table";
 import { Company, columns } from "./columns";
 import { AltRecord } from "@/lib/altprovider";
+import Icon from "@/components/icons/icon";
 
 export function ReviewsTableWrapper({
   data,
@@ -17,9 +18,10 @@ export function ReviewsTableWrapper({
     return (
       <Link
         href={`/reviews/${row.original.slug}`}
-        className={`mx-3`}
+        className={`flex mx-3 font-medium items-center justify-center`}
       >
         {`${cell.getValue()}`}
+        <Icon type="fas-arrow-up-right-from-square" ariahidden={true} className="mx-1 !h-3 w-auto"/>
       </Link>
     );
   };

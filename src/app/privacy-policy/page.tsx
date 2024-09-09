@@ -3,8 +3,6 @@ import Text from "@/components/text/text";
 import Article from "@/components/article/article";
 import type { Text as TextType } from "@/lib/config-provider";
 
-import "./privacy-policy.css";
-
 export default async function PrivacyPolicy() {
   const data: TextType | undefined = await getDocument<TextType>(
     "config",
@@ -13,7 +11,7 @@ export default async function PrivacyPolicy() {
   
   return (
       <Article className="container mx-auto px-4">
-        <Text text={data?.text ?? ""} />
+<Text text={data?.text ?? ""} />
       </Article>
   );
 }

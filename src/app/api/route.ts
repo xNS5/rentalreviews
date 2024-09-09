@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import getCompanyData from "@/lib/getCompanyData";
+import { isValidSlug } from "@/lib/utils";
 
  enum STATUS {
   SUCCESS = 200,
@@ -22,11 +23,11 @@ export async function GET(
   req: NextRequest
 ) {
   const searchParams = req.nextUrl.searchParams;
-  const idRegex = new RegExp("[^a-z0-9-]");
   const id: string | null = searchParams.get("id");
+  
   try {
     if (id) {
-      if (idRegex.test(id)) {
+      if (!isValidSlug(id)) {
         return getResponse("Invalid ID", STATUS.CLIENT_ERROR);
       }
       const data = await getCompanyData(id);
