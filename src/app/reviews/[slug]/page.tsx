@@ -3,6 +3,7 @@ import { Review } from "./review";
 import { Suspense } from "react";
 import getCompanyData from "@/lib/getCompanyData";
 import type { Company } from "../columns";
+import Loading from "@/app/loading";
 
 export default async function Page({ params }: Readonly<{
     params: { [key: string]: string }
@@ -17,6 +18,8 @@ export default async function Page({ params }: Readonly<{
     const companyObj: Company | undefined = await getCompanyData(slug);
 
     return (
-            <Review {...companyObj as Company} />
+            <Suspense key={Math.random()} fallback={<Loading/>}>
+                <Review {...companyObj as Company} />
+            </Suspense>
         )
 }

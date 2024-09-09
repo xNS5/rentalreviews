@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
 import Article from "@/components/article/article";
 import { getDocument } from "../../db/db";
 import type { FaqType } from "./faq-type";
 import type { Link as LinkType } from "@/lib/linktype";
+import Loading from "../loading";
 
 export default async function FAQ() {
   const data: FaqType | undefined = await getDocument<FaqType>("config", "faq");
@@ -12,7 +13,8 @@ export default async function FAQ() {
   return (
     <Article className="container mx-auto py-10">
       <h1 className="text-center mb-5"><b>{data.description}</b></h1>
-      <ol>
+     <Suspense key={Math.random()} fallback={<Loading/>}>
+     <ol>
         {data?.questions.map((questionObj, i: number) => (
           <li key={i}>
             <section className="m-2">
@@ -40,7 +42,7 @@ export default async function FAQ() {
             </section>
           </li>
         ))}
-      </ol>
+      </ol></Suspense>
     </Article>
   );
 }
