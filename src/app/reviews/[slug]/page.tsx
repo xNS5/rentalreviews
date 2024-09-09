@@ -18,8 +18,6 @@ export default async function Page({ params }: Readonly<{
     const companyObj: Company | undefined = await getCompanyData(slug);
 
     return (
-            <Suspense key={Math.random()} fallback={<Loading/>}>
                 <Review {...companyObj as Company} />
-            </Suspense>
         )
 }

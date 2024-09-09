@@ -12,7 +12,7 @@ export default async function FAQ() {
 
   return (
     <Article className="container mx-auto py-10">
-      <h1 className="text-center mb-5"><b>{data.description}</b></h1>
+      <h1 className="text-center mb-5">{data.description}</h1>
      <Suspense key={Math.random()} fallback={<Loading/>}>
      <ol>
         {data?.questions.map((questionObj, i: number) => (
