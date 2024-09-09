@@ -94,6 +94,7 @@ export async function Review(data: Company) {
         <div className="flex-grow border-t border-gray-400"></div>
       </div>
 
+      {/* Mobile component */}
       <div
         id="data-accordion"
         className="flex md:hidden w-full flex-col items-center"
