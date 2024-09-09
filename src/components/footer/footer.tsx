@@ -17,7 +17,7 @@ export const Footer = ({footer}: Config) => {
                     <div key={i} className="my-1 flex inline-flex items-center justify-center">
                         {elem[1].map((item: FooterItem, j: number) => {
                             if (item.type === "text") {
-                                return <p className={"rounded"} key={j}>{item.text}</p>;
+                                return <span className={"rounded"} key={j}>{item.text}</span>;
                             }
                             return (
                                 <Link key={j} href={item?.url ?? ""} target={item.target} className={"mx-1"}>
