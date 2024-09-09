@@ -27,7 +27,7 @@ export async function GET(
   
   try {
     if (id) {
-      if (isValidSlug(id)) {
+      if (!isValidSlug(id)) {
         return getResponse("Invalid ID", STATUS.CLIENT_ERROR);
       }
       const data = await getCompanyData(id);
