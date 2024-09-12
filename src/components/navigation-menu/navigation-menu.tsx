@@ -3,10 +3,11 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 import Icon from "../icons/icon";
-import type { Link } from "@/lib/linktype";
+import type { Link as LinkType } from "@/lib/linktype";
+import Link from "next/link";
 
 export const NavigationMenu = ({link, className}: Readonly<{
-    link: Link,
+    link: LinkType,
     className?: string
 }>) => {
   return (
@@ -16,7 +17,7 @@ export const NavigationMenu = ({link, className}: Readonly<{
           <>
             <MenuButton className="inline-flex w-full justify-center rounded-md">
               {link.name}
-              <Icon type="fas-chevron-down" className={`mt-2 h-3 w-3 ml-1 text-black transition-transform ${open ? 'rotate-180 transform' : ''}`} ariahidden={true} />
+              <Icon type="fas-chevron-down" className={`mt-2 h-3 w-3 ml-1 text-black transition-transform ${open ? 'ro  te-180 transform' : ''}`} ariahidden={true} />
             </MenuButton>
             <Transition
               as={Fragment}
@@ -28,16 +29,19 @@ export const NavigationMenu = ({link, className}: Readonly<{
               leaveTo="transform opacity-0 scale-95"
             >
               <MenuItems className="fixed w-max -translate-x-1/2 mt-2 w-70 border border-solid border-slate-300 origin-top-right rounded-md bg-white shadow-lg z-10" aria-orientation="vertical" >
-                {link.children?.map((child: Link) => {
+                {link.children?.map((child: LinkType) => {
                   return (
                     <MenuItem
-                      as="a"
+                      as="span"
                       key={child.url}
-                      href={child.url}
-                      target={child.target}
-                      className={"flex rounded-md p-2 text-base md:text-lg"}
+                      className={"flex rounded-md p-2 text-base md:text-lg focusable"}
                     >
-                      {child.name}
+                      <Link
+                       href={child.url}
+                       target={child.target}
+                      >
+                        {child.name}
+                      </Link>
                     </MenuItem>
                   );
                 })}

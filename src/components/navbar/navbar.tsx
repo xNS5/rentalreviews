@@ -18,12 +18,12 @@ export function getActiveClassProps(url: string) {
   const urlArr: string[] = url.split("/");
   if (pathnameArr[1] == urlArr[1]) {
     return {
-      className: "underline decoration-2 font-bold text-black underline-offset-8",
+      className: "rounded underline decoration-2 font-bold text-black underline-offset-8",
       "aria-label": `${urlArr[1]} current page`,
     };
   } else {
     return {
-      className: "hover:underline hover:text-slate-500 underline-offset-8",
+      className: "rounded hover:underline hover:text-slate-500 underline-offset-8",
     };
   }
 }
@@ -35,6 +35,10 @@ export default function Navbar({
 }>) {
   const [isNavOpen, setNavOpen] = useState(false);
 
+  if(isNavOpen){
+    document.body.style.overflow = 'hidden';
+  }
+
   // Mobile Navbar
   if (isNavOpen) {
     return (
@@ -42,11 +46,12 @@ export default function Navbar({
         <button
           className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
           onClick={() => setNavOpen(!isNavOpen)}
+
         >
           <Icon type="fas-x" className="w-8" altText="Close navigation menu" />
         </button>
 
-        <ol className="flex z-10 flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
+        <ol className="flex z-10 flex-col justify-center items-center absolute top-0 left-0 w-full h-screen bg-white">
           {nav?.map((link: Link, i: number) => (
             <li
               key={i}
