@@ -1,55 +1,47 @@
-"use client";
+"use client"
 
-import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import {useState} from "react";
+import {  Dropdown as DropdownComp,  DropdownTrigger,  DropdownMenu,  DropdownSection,  DropdownItem} from "@nextui-org/dropdown";
+import { Button } from "../ui/button";
+import type {Link as LinkType} from "@/lib/linktype";
 import Icon from "../icons/icon";
-import type { Link as LinkType } from "@/lib/linktype";
 import Link from "next/link";
 
-export const NavigationMenu = ({link, className}: Readonly<{
-    link: LinkType,
-    className?: string
-}>) => {
-  return (
-    <div className="w-fit">
-      <Menu>
-        {({ open }) => (
-          <>
-            <MenuButton className="inline-flex w-full justify-center rounded-md">
-              {link.name}
-              <Icon type="fas-chevron-down" className={`mt-2 h-3 w-3 ml-1 text-black transition-transform ${open ? 'ro  te-180 transform' : ''}`} ariahidden={true} />
-            </MenuButton>
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
+export default function Dropdown({data, className}: Readonly<{
+    data: LinkType;
+    className?: {
+      comp?: string,
+      menu?: string,
+      trigger?: string,
+      item?: string
+    };
+}>) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    if(data.children === undefined) return;
+
+    return (
+        <DropdownComp
+         onOpenChange={(isOpen) => setIsMenuOpen(isOpen)}
+         className={`${className?.comp}`}
+        >
+          <DropdownTrigger>
+            <Button
+              variant={"ghost"}
+              className={`${className?.trigger} font-normal`}
             >
-              <MenuItems className="fixed w-max -translate-x-1/2 mt-2 w-70 border border-solid border-slate-300 origin-top-right rounded-md bg-white shadow-lg z-10" aria-orientation="vertical" >
-                {link.children?.map((child: LinkType) => {
-                  return (
-                    <MenuItem
-                      as="span"
-                      key={child.url}
-                      className={"flex rounded-md p-2 text-base md:text-lg focusable"}
-                    >
-                      <Link
-                       href={child.url}
-                       target={child.target}
-                      >
-                        {child.name}
-                      </Link>
-                    </MenuItem>
-                  );
-                })}
-              </MenuItems>
-            </Transition>
-          </>
-        )}
-      </Menu>
-    </div>
-  );
-};
+              {data.name}
+          <Icon type="fas-chevron-down" className={`mt-2 h-3 w-3 ml-1 text-black transition-transform focus:!border-blue-500 ${isMenuOpen ? 'rotate-180 transform' : ''}`}/>
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Static Actions" variant="light" className={`${className?.menu}`} items={data.children}>
+            {(child: LinkType) =>  
+              <DropdownItem key={`${child.name}-${Math.random()}`} value={child.name} variant="flat">
+                  <Link href={child.url}>
+                  {child.name}
+                  </Link>
+                </DropdownItem>}
+          </DropdownMenu>
+        </DropdownComp>
+      );
+}

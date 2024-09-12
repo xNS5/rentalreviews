@@ -6,7 +6,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { library, config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css'
 
-config.autoAddCss = false
+config.autoAddCss = true
 
 library.add(fas, fab);
 

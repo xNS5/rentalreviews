@@ -102,7 +102,7 @@ export default function Navbar({
           <li key={i} className="md:text-xl mx-2">
             {link.type == "link" ? (
               <NavItem
-              id={`nav-link-${i+1}`}
+                id={`nav-link-${i+1}`}
                 href={link.url}
                 name={link.name}
                 {...getActiveClassProps(link.url)}
