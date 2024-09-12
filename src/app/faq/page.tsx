@@ -27,13 +27,12 @@ export default async function FAQ() {
                   {questionObj.links.map((link: LinkType, j: number) => (
                     <span key={j}>
                       <Link
-                        className="p-2 rounded text-xl border border-slate-500 shadow-md"
+                        className="px-5 py-3 rounded text-xl border border-slate-500 shadow-md"
                         href={link.url}
                         target={link.target ?? "_blank"}
+                        tabIndex={0}
                       >
-                        <button className="w-40">
-                        {link.name}
-                        </button>
+                       {link.name}
                       </Link>
                     </span>
                   ))}
