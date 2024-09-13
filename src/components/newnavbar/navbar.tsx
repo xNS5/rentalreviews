@@ -1,7 +1,8 @@
 "use client";
 
 import { Config } from "@/lib/config-provider";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
+import Link from "next/link";
 import { usePathname as getPathname } from "next/navigation";
 import type { Link as LinkType } from "@/lib/linktype";
 import Logo from "../logo/logo";
@@ -14,12 +15,10 @@ function isCurrentPath(url: string) {
 }
 
 function getActiveClassProps(isActive: boolean) {
-  const baseClass: string = "rounded underline-offset-8 text-xl font-normal"
-  return isActive ? {
-    className: baseClass + "underline decoration-2 font-bold text-black",
-  } : {
-    className: baseClass + "rounded hover:underline hover:text-slate-500",
-  };
+  const baseClass: string = "rounded underline-offset-8 text-xl font-normal";
+  return {
+    className: baseClass + (isActive ? "underline decoration-2 font-bold text-black" : "rounded hover:underline hover:text-slate-500")
+  }
 }
 
 export default function NewNavbar({
@@ -43,30 +42,22 @@ export default function NewNavbar({
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
         {data?.map((link: LinkType, i: number) => {
+          let tempChildComponent: React.ReactElement | undefined = undefined;
           if(link){
             const isActive: boolean = isCurrentPath(link.url);
             const props = getActiveClassProps(isActive);
             if(link.type == "link"){
-              if (isActive) {
-                return (
-                  <NavbarItem key={i} isActive>
-                    <Link color="foreground" href={link.url} aria-current="page" {...props}>
-                      {link.name}
-                    </Link>
-                  </NavbarItem>
+              tempChildComponent = (
+                <Link color="foreground" href={link.url} aria-current={isActive ? "page" : undefined} {...props}>
+                  {link.name}
+                </Link>
                 );
-              }
-              return (
-                <NavbarItem key={i}>
-                  <Link color="foreground" href={link.url} {...props}>
-                    {link.name}
-                  </Link>
-                </NavbarItem>
-              );
+            } else {
+              tempChildComponent = (<Dropdown  data={link} className={{trigger: `${props.className}`}}/>)
             }
             return (
-              <NavbarItem key={i}>
-                <Dropdown  data={link} className={{trigger: `${props.className}`}}/>
+              <NavbarItem key={i} isActive={isActive}>
+                {tempChildComponent}
               </NavbarItem>
             )
           }
