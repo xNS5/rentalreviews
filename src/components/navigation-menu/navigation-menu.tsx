@@ -7,7 +7,7 @@ import type {Link as LinkType} from "@/lib/linktype";
 import Icon from "../icons/icon";
 import Link from "next/link";
 
-export default function Dropdown({data, className}: Readonly<{
+export default function Dropdown({data, className, onClickFn = (tempParam: any) => {}}: Readonly<{
     data: LinkType;
     className?: {
       comp?: string,
@@ -15,6 +15,7 @@ export default function Dropdown({data, className}: Readonly<{
       trigger?: string,
       item?: string
     };
+    onClickFn?: (param: any) => void;
 }>) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -37,7 +38,7 @@ export default function Dropdown({data, className}: Readonly<{
           <DropdownMenu aria-label="Static Actions" variant="light" className={`${className?.menu}`} items={data.children}>
             {(child: LinkType) =>  
               <DropdownItem key={`${child.name}-${Math.random()}`} value={child.name} variant="flat">
-                  <Link href={child.url}>
+                  <Link href={child.url} onClick={() => onClickFn(false)} target={child.target}>
                   {child.name}
                   </Link>
                 </DropdownItem>}
