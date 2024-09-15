@@ -33,18 +33,24 @@ export default function NewNavbar({
 }>) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  function onMenuChangeHandler() {
+    if (!isMenuOpen) {
+      document.body.classList.add("no-scroll");
+    }
+    setIsMenuOpen(!isMenuOpen);
+  }
+
   return (
-    <Navbar isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+    <Navbar isMenuOpen={isMenuOpen} onMenuOpenChange={onMenuChangeHandler}>
       <NavbarBrand>
         <Logo>
-          <a href="/" className="rounded px-2 grid grid-rows-2" role="link">
+          <Link href="/" className="rounded px-2 grid grid-rows-2" role="link">
             <span className="text-lg md:text-2xl">{title}</span>
             <span className="text-sm md:text-lg">{description}</span>
-          </a>
+          </Link>
         </Logo>
-      
       </NavbarBrand>
-      <Fragment>
+      <NavbarMenuToggle id="menubotton" aria-controls="menu" aria-label={isMenuOpen ? "Close Menu" : "Open Menu"} className="sm:hidden h-10 w-auto" />
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
         {data?.map((link: LinkType, i: number) => {
           let tempChildComponent: React.ReactElement | undefined = undefined;
@@ -68,10 +74,8 @@ export default function NewNavbar({
           }
         })}
       </NavbarContent>
-      <NavbarMenuToggle aria-label={isMenuOpen ? "Close Menu" : "Open Menu"} className="sm:hidden h-10 w-auto" />
-      </Fragment>
-      <NavbarMenu className="my-10">
-      {data?.map((link: LinkType, i: number) => {
+      <NavbarMenu id="menu" className="my-10 fixed" role="menu" aria-labelledby="menubutton">
+        {data?.map((link: LinkType, i: number) => {
           let tempChildComponent: React.ReactElement | undefined = undefined;
           if (link) {
             const isActive: boolean = isCurrentPath(link.url);
@@ -83,10 +87,10 @@ export default function NewNavbar({
                 </Link>
               );
             } else {
-              tempChildComponent = <Dropdown data={link} className={{ trigger: `${props.className} p-0 m-0` }} onClickFn={setIsMenuOpen}/>;
+              tempChildComponent = <Dropdown data={link} className={{ trigger: `${props.className} p-0 m-0` }} onClickFn={setIsMenuOpen} />;
             }
             return (
-              <NavbarMenuItem key={i} isActive={isActive}>
+              <NavbarMenuItem key={i} isActive={isActive} tabIndex={i + 1}>
                 {tempChildComponent}
               </NavbarMenuItem>
             );
