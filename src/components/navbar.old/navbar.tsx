@@ -7,13 +7,12 @@ import Logo from "../logo/logo";
 import Link from "next/link";
 import { NavItem } from "./nav-item";
 import { usePathname as getPathname } from "next/navigation";
-import { NavigationMenu } from "../navigation-menu.old/navigation-menu";
+import NavigationMenu from "../navigation-menu/navigation-menu";
 import { FocusTrap } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
 import "./navbar.css";
-import { Modal } from "@nextui-org/react";
 
 export function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
@@ -49,16 +48,18 @@ export default function Navbar({
     };
     if (isNavOpen) {
       document.addEventListener("keydown", escHandler);
+      document.body.style.overflow = "hidden"
     } else {
       window.removeEventListener("keydown", escHandler);
+      document.body.style.overflow = "visible"
     }
   }, [isNavOpen]);
 
   // Mobile Navbar
   if (isNavOpen) {
     return (
-      <FocusTrap as="div" className={"flex flex-col w-full h-screen bg-white"}>
-        <button className="self-end cursor-pointer pr-4 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)}>
+      <FocusTrap id="navbar-menu" as="div" className={"flex flex-col w-full h-screen bg-white"}>
+        <button className="self-end cursor-pointer pr-4 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)} aria-controls="navbar-menu" aria-label="Close menu" aria-expanded={true}>
           <Icon type="fas-x" className="w-8" />
         </button>
         <ol className="flex flex-col relative justify-center items-center">
@@ -107,13 +108,13 @@ export default function Navbar({
             {link.type == "link" ? (
               <NavItem id={`nav-link-${i + 1}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} />
             ) : (
-              <NavigationMenu link={link} className={`${getActiveClassProps(link.url)?.className} text-xl`} />
+              <NavigationMenu data={link} className={{trigger: `${getActiveClassProps(link.url)?.className} text-xl`}} />
             )}
           </li>
         ))}
       </ol>
 
-      <button className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)}>
+      <button className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)} aria-controls="navbar-menu" aria-label="Open menu" aria-expanded={false}>
         <Icon type="fas-bars" className="w-8" altText="Open navigation menu" />
       </button>
     </Fragment>
