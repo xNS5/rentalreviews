@@ -10,6 +10,7 @@ import Link from "next/link";
 export default function NavigationMenu({
   data,
   className,
+  initialState,
   onClickFn = (tempParam: any) => {},
 }: Readonly<{
   data: LinkType;
@@ -19,20 +20,20 @@ export default function NavigationMenu({
     trigger?: string;
     item?: string;
   };
-  onClickFn?: (param: any) => void;
+  initialState: boolean
+  onClickFn?: (param: boolean) => void;
 }>) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (data.children === undefined) return;
 
   return (
-    <DropdownComp onOpenChange={(isOpen) => setIsMenuOpen(isOpen)} className={`${className?.comp}`}>
+    <DropdownComp onOpenChange={(isOpen) => onClickFn(!initialState)} className={`${className?.comp}`}>
       <DropdownTrigger>
         <Button variant={"ghost"} className={`${className?.trigger} font-normal`}>
           {data.name}
           <Icon
             type="fas-chevron-down"
-            className={`mt-2 h-3 w-3 ml-1 text-black transition-transform focus:!border-blue-500 ${isMenuOpen ? "rotate-180 transform" : ""}`}
+            className={`mt-2 h-3 w-3 ml-1 text-black transition-transform focus:!border-blue-500 ${initialState ? "rotate-180 transform" : ""}`}
           />
         </Button>
       </DropdownTrigger>
