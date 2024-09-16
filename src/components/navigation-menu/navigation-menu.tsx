@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { Dropdown as DropdownComp, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/dropdown";
 import { Button } from "../ui/button";
 import type { Link as LinkType } from "@/lib/linktype";
@@ -11,7 +8,7 @@ export default function NavigationMenu({
   data,
   className,
   initialState,
-  onClickFn = (tempParam: any) => {},
+  onClickFn = (param: any | null) => {},
 }: Readonly<{
   data: LinkType;
   className?: {
@@ -27,7 +24,7 @@ export default function NavigationMenu({
   if (data.children === undefined) return;
 
   return (
-    <DropdownComp onOpenChange={(isOpen) => onClickFn(!initialState)} className={`${className?.comp}`}>
+    <DropdownComp onOpenChange={(initialState) => onClickFn(!initialState)} className={`${className?.comp}`}>
       <DropdownTrigger>
         <Button variant={"ghost"} className={`${className?.trigger} font-normal`}>
           {data.name}

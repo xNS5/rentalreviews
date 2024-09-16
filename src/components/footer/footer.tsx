@@ -7,7 +7,7 @@ function getConfigEntries<T extends Config>(obj: Record<string, T>): [number, T]
     return Object.entries(obj).map(([key, value]) => [parseInt(key, 10), value] as [number, T]);
   }
 
-export const Footer = ({footer}: Config) => {
+export default function Footer({footer}: Config){
     const entries = getConfigEntries<FooterItem[]>(footer);
 
     return (
