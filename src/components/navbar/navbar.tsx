@@ -68,42 +68,57 @@ export default function Navbar({
       if (isMobile !== isMobileWidth) {
         setIsMobileWidth(isMobile);
         if (isNavOpen) {
-          setIsNavOpen(prev => !prev);
+          setIsNavOpen((prev) => !prev);
         }
       }
     };
 
     if (isNavOpen) {
-      window.addEventListener('resize', resizeHandler);
+      window.addEventListener("resize", resizeHandler);
       document.addEventListener("keydown", escHandler);
       document.body.style.overflow = "hidden";
     }
 
     return () => {
-      window.removeEventListener('resize', resizeHandler);
+      window.removeEventListener("resize", resizeHandler);
       document.removeEventListener("keydown", escHandler);
       document.body.style.overflow = "visible";
     };
   }, [isNavOpen, isMobileWidth]);
 
   return (
-    <div>
-      <Logo>
-        <Link href="/" className="rounded px-2 grid grid-rows-2" role="link">
-          <span className="text-lg md:text-2xl">{title}</span>
-          <span className="text-sm md:text-lg">{description}</span>
-        </Link>
-      </Logo>
-      <button
-        className={`self-end cursor-pointer z-20 pr-4 text-gray-500 md:hidden transition-transform`}
-        onClick={() => setIsNavOpen(!isNavOpen)}
-        aria-controls="navbar-menu"
-        aria-label={`${isNavOpen ? "Close" : "Open"} navigation menu`}
-        aria-expanded={isNavOpen}
-      >
-        <Icon type={`${isNavOpen ? "fas-x" : "fas-bars"}`} className="w-8" />
-      </button>
-      {isNavOpen ? (
+    <nav className="flex flex-col flex-wrap shadow-lg">
+      <div className="flex flex-row flex-wrap space-between w-full justify-between align-center">
+        <Logo>
+          <Link href="/" className="self-start rounded px-2 grid grid-rows-2" role="link">
+            <span className="text-lg md:text-2xl">{title}</span>
+            <span className="text-sm md:text-lg">{description}</span>
+          </Link>
+        </Logo>
+        <button
+          className={`self-end cursor-pointer z-20 pr-4 text-gray-500 md:hidden transition-transform`}
+          onClick={() => setIsNavOpen(!isNavOpen)}
+          aria-controls="navbar-menu"
+          aria-label={`${isNavOpen ? "Close" : "Open"} navigation menu`}
+          aria-expanded={isNavOpen}
+        >
+          <Icon type={`${isNavOpen ? "fas-x" : "fas-bars"}`} className="w-8" />
+        </button>
+        {!isNavOpen && (
+          <ol className="hidden md:flex flex-row justify-center items-center">
+            {data?.map((link: LinkType, i: number) => (
+              <li key={i} className="md:text-xl mx-2">
+                {link.type == "link" ? (
+                  <NavItem id={`nav-link-${i + 1}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} />
+                ) : (
+                  <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} />
+                )}
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+      {isNavOpen && (
         <FocusTrap id="navbar-menu" as="div" className={"md:hidden w-full h-screen bg-white"}>
           <ol className="flex flex-col relative justify-center items-center">
             {data?.map((link: LinkType, i: number) => (
@@ -139,20 +154,8 @@ export default function Navbar({
             ))}
           </ol>
         </FocusTrap>
-      ) : (
-        <ol className="hidden md:flex flex-row justify-center items-center">
-          {data?.map((link: LinkType, i: number) => (
-            <li key={i} className="md:text-xl mx-2">
-              {link.type == "link" ? (
-                <NavItem id={`nav-link-${i + 1}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} />
-              ) : (
-                <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} />
-              )}
-            </li>
-          ))}
-        </ol>
       )}
-    </div>
+    </nav>
   );
 }
 

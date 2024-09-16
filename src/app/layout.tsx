@@ -3,18 +3,19 @@ import { Suspense } from "react";
 import { getDocument } from "../db/db";
 import { Config } from "../lib/config-provider";
 import { cn } from "@/lib/utils";
-import {Providers} from "./providers";
+import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";
-import Footer  from "@/components/footer/footer";
+import Footer from "@/components/footer/footer";
 import "./globals.css";
 import Loading from "./loading";
 import type { Metadata } from "next";
+import Logo from "@/components/logo/logo";
+import Link from "next/link";
 
 const inter = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
-
 
 export let metadata: Metadata;
 
@@ -25,16 +26,16 @@ export async function getMetadata() {
     description: config?.metadata.description,
     icons: [
       {
-        rel: 'icon',
-        type: 'image/png',
-        url: '/images/building-icon-light.png',
-        media: '(prefers-color-scheme: light)',
+        rel: "icon",
+        type: "image/png",
+        url: "/images/building-icon-light.png",
+        media: "(prefers-color-scheme: light)",
       },
       {
-        rel: 'icon',
-        type: 'image/png',
-        url: '/images/building-icon-dark.png',
-        media: '(prefers-color-scheme: dark)',
+        rel: "icon",
+        type: "image/png",
+        url: "/images/building-icon-dark.png",
+        media: "(prefers-color-scheme: dark)",
       },
     ],
   };
@@ -56,15 +57,11 @@ export default async function RootLayout({
       </head>
       <body className={cn("bg-white h-screen")}>
         <header>
-          <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white">
-            <Navbar data={navbarConfig?.nav} title={title as string} description={description as string}/>
-          </nav>
+          <Navbar data={navbarConfig?.nav} title={title as string} description={description as string} />
         </header>
         <Suspense key={Math.random()} fallback={<Loading />}>
           <main role="main" className={`${inter.variable}`}>
-            <Providers>
-              {children}
-            </Providers>
+            <Providers>{children}</Providers>
           </main>
         </Suspense>
         <Footer footer={footerData?.footer} />
@@ -72,3 +69,4 @@ export default async function RootLayout({
     </html>
   );
 }
+
