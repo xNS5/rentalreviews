@@ -8,6 +8,7 @@ import type { Link as LinkType } from "@/lib/linktype";
 import Logo from "../logo/logo";
 import Dropdown from "../navigation-menu/navigation-menu";
 import { Fragment, useState } from "react";
+import { FocusTrap } from "@headlessui/react";
 
 function isCurrentPath(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
@@ -74,29 +75,31 @@ export default function NewNavbar({
           }
         })}
       </NavbarContent>
-      <NavbarMenu id="menu" className="my-10 fixed" role="menu" aria-labelledby="menubutton">
-        {data?.map((link: LinkType, i: number) => {
-          let tempChildComponent: React.ReactElement | undefined = undefined;
-          if (link) {
-            const isActive: boolean = isCurrentPath(link.url);
-            const props = getActiveClassProps(isActive);
-            if (link.type == "link") {
-              tempChildComponent = (
-                <Link color="foreground" href={link.url} aria-current={isActive ? "page" : undefined} {...props} onClick={() => setIsMenuOpen(false)}>
-                  {link.name}
-                </Link>
+      <FocusTrap>
+        <NavbarMenu id="menu" className="my-10 fixed z-20" role="menu" aria-labelledby="menubutton">
+          {data?.map((link: LinkType, i: number) => {
+            let tempChildComponent: React.ReactElement | undefined = undefined;
+            if (link) {
+              const isActive: boolean = isCurrentPath(link.url);
+              const props = getActiveClassProps(isActive);
+              if (link.type == "link") {
+                tempChildComponent = (
+                  <Link color="foreground" href={link.url} aria-current={isActive ? "page" : undefined} {...props} onClick={() => setIsMenuOpen(false)}>
+                    {link.name}
+                  </Link>
+                );
+              } else {
+                tempChildComponent = <Dropdown data={link} className={{ trigger: `${props.className} p-0 m-0` }} onClickFn={setIsMenuOpen} />;
+              }
+              return (
+                <NavbarMenuItem key={i} isActive={isActive} tabIndex={i + 1}>
+                  {tempChildComponent}
+                </NavbarMenuItem>
               );
-            } else {
-              tempChildComponent = <Dropdown data={link} className={{ trigger: `${props.className} p-0 m-0` }} onClickFn={setIsMenuOpen} />;
             }
-            return (
-              <NavbarMenuItem key={i} isActive={isActive} tabIndex={i + 1}>
-                {tempChildComponent}
-              </NavbarMenuItem>
-            );
-          }
-        })}
-      </NavbarMenu>
+          })}
+        </NavbarMenu>
+      </FocusTrap>
     </Navbar>
   );
 }

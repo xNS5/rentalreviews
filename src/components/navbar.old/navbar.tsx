@@ -1,17 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { NavItem } from "./nav-item";
-import { NavigationMenu } from "../navigation-menu/navigation-menu";
+import { Fragment, useEffect, useState } from "react";
 import Icon from "../icons/icon";
 import Accordion from "../accordion/accordion";
-import {
-  usePathname as getPathname,
-} from "next/navigation";
-import type { Link } from "@/lib/linktype";
+import Logo from "../logo/logo";
+import Link from "next/link";
+import { NavItem } from "./nav-item";
+import { usePathname as getPathname } from "next/navigation";
+import { NavigationMenu } from "../navigation-menu.old/navigation-menu";
+import { FocusTrap } from "@headlessui/react";
+import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
 import "./navbar.css";
+import { Modal } from "@nextui-org/react";
 
 export function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
@@ -29,59 +31,55 @@ export function getActiveClassProps(url: string) {
 }
 
 export default function Navbar({
-  nav,
+  data,
+  title,
+  description,
 }: Readonly<{
-  nav: Config;
+  data: Config;
+  title: string;
+  description: string;
 }>) {
   const [isNavOpen, setNavOpen] = useState(false);
 
-  if(isNavOpen){
-    document.body.style.overflow = 'hidden';
-  }
+  useEffect(() => {
+    const escHandler = (e: KeyboardEvent) => {
+      if (e.key == "Escape") {
+        setNavOpen(!isNavOpen);
+      }
+    };
+    if (isNavOpen) {
+      document.addEventListener("keydown", escHandler);
+    } else {
+      window.removeEventListener("keydown", escHandler);
+    }
+  }, [isNavOpen]);
 
   // Mobile Navbar
   if (isNavOpen) {
     return (
-      <>
-        <button
-          className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
-          onClick={() => setNavOpen(!isNavOpen)}
-
-        >
-          <Icon type="fas-x" className="w-8" altText="Close navigation menu" />
+      <FocusTrap as="div" className={"flex flex-col w-full h-screen bg-white"}>
+        <button className="self-end cursor-pointer pr-4 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)}>
+          <Icon type="fas-x" className="w-8" />
         </button>
-
-        <ol className="flex z-10 flex-col justify-center items-center absolute top-0 left-0 w-full h-screen bg-white">
-          {nav?.map((link: Link, i: number) => (
-            <li
-              key={i}
-              className="py-4 cursor-pointer capitalize text-4xl hover:text-blue-900"
-            >
+        <ol className="flex flex-col relative justify-center items-center">
+          {data?.map((link: LinkType, i: number) => (
+            <li key={i} className="py-4 cursor-pointer capitalize text-4xl hover:text-blue-900">
               {link.type === "link" ? (
-                <NavItem
-                  id={`nav-link-${i}`}
-                  href={link.url}
-                  name={link.name}
-                  {...getActiveClassProps(link.url)}
-                  onClick={() => setNavOpen(false)}
-                />
+                <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} onClick={() => setNavOpen(false)} />
               ) : (
                 <Accordion
+                  id={`nav-accordion-${i}`}
                   triggerText={link.name}
+                  as="button"
                   className={{
                     trigger: "justify-center",
                     content: "rounded border border-slate-400 my-2",
                   }}
                 >
                   <ol className="text-center">
-                    {link.children?.map((child: Link, i: number) => (
-                      <li key={i} className="my-4 px-2">
-                        <NavItem
-                          key={i}
-                          href={child.url}
-                          name={child.name}
-                          className="!inline-block text-black text-xl text-center rounded"
-                        />
+                    {link.children?.map((child: LinkType, j: number) => (
+                      <li key={j} className="my-4 px-2">
+                        <NavItem href={child.url} name={child.name} className="!inline-block text-black text-xl text-center rounded" />
                       </li>
                     ))}
                   </ol>
@@ -90,39 +88,35 @@ export default function Navbar({
             </li>
           ))}
         </ol>
-      </>
+      </FocusTrap>
     );
   }
 
   // Normal navbar
   return (
-    <>
+    <Fragment>
+      <Logo>
+        <Link href="/" className="rounded px-2 grid grid-rows-2" role="link">
+          <span className="text-lg md:text-2xl">{title}</span>
+          <span className="text-sm md:text-lg">{description}</span>
+        </Link>
+      </Logo>
       <ol className="hidden md:flex flex-row justify-center items-center">
-        {nav?.map((link: Link, i: number) => (
+        {data?.map((link: LinkType, i: number) => (
           <li key={i} className="md:text-xl mx-2">
             {link.type == "link" ? (
-              <NavItem
-                id={`nav-link-${i+1}`}
-                href={link.url}
-                name={link.name}
-                {...getActiveClassProps(link.url)}
-              />
+              <NavItem id={`nav-link-${i + 1}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} />
             ) : (
-              <NavigationMenu
-                link={link}
-                className={`${getActiveClassProps(link.url)?.className} text-xl`}
-              />
+              <NavigationMenu link={link} className={`${getActiveClassProps(link.url)?.className} text-xl`} />
             )}
           </li>
         ))}
       </ol>
 
-      <button
-        className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
-        onClick={() => setNavOpen(!isNavOpen)}
-      >
+      <button className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden" onClick={() => setNavOpen(!isNavOpen)}>
         <Icon type="fas-bars" className="w-8" altText="Open navigation menu" />
       </button>
-    </>
+    </Fragment>
   );
 }
+

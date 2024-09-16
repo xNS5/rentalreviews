@@ -5,6 +5,7 @@ import { Config } from "../lib/config-provider";
 import { cn } from "@/lib/utils";
 import {Providers} from "./providers";
 import NewNavbar from "@/components/navbar/navbar";
+import Navbar from "@/components/navbar.old/navbar";
 import { Footer } from "@/components/footer/footer";
 import "./globals.css";
 import Loading from "./loading";
@@ -57,7 +58,7 @@ export default async function RootLayout({
       <body className={cn("bg-white h-screen")}>
         <header>
           <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white">
-            <NewNavbar data={navbarConfig?.nav} title={title as string} description={description as string}/>
+            <Navbar data={navbarConfig?.nav} title={title as string} description={description as string}/>
           </nav>
         </header>
         <Suspense key={Math.random()} fallback={<Loading />}>

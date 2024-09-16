@@ -6,7 +6,7 @@ import Icon from "../icons/icon";
 import type { Link as LinkType } from "@/lib/linktype";
 import Link from "next/link";
 
-export const NavigationMenuOld = ({link, className}: Readonly<{
+export const NavigationMenu = ({link, className}: Readonly<{
     link: LinkType,
     className?: string
 }>) => {
