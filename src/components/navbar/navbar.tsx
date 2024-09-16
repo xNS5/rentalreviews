@@ -86,8 +86,8 @@ export default function Navbar({
     };
   }, [isNavOpen, isMobileWidth]);
 
-  return (
-    <nav className="flex flex-col flex-wrap shadow-lg">
+  const NavbarComp: React.ReactNode = (
+    <>
       <div className="flex flex-row flex-wrap space-between w-full justify-between align-center">
         <Logo>
           <Link href="/" className="self-start rounded px-2 grid grid-rows-2" role="link">
@@ -119,41 +119,51 @@ export default function Navbar({
         )}
       </div>
       {isNavOpen && (
+        <ol className="flex flex-col relative justify-center items-center">
+          {data?.map((link: LinkType, i: number) => (
+            <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
+              {link.type === "link" ? (
+                <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} onClick={() => setIsNavOpen(false)} />
+              ) : (
+                <Accordion
+                  id={`nav-accordion-${i}`}
+                  triggerText={link.name}
+                  as="button"
+                  className={{
+                    trigger: "justify-center text-[length:inherit] px-2",
+                    content: "rounded border border-slate-400 ",
+                  }}
+                >
+                  <ol className="text-center">
+                    {link.children?.map((child: LinkType, j: number) => (
+                      <li key={j} className="my-4 px-2">
+                        <NavItem
+                          href={child.url}
+                          name={child.name}
+                          className="!inline-block text-black text-xl text-center rounded"
+                          target={child.target}
+                          onClick={() => setIsNavOpen(!isNavOpen)}
+                        />
+                      </li>
+                    ))}
+                  </ol>
+                </Accordion>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
+    </>
+  );
+
+  return (
+    <nav className="flex flex-col flex-wrap shadow-lg">
+      {isNavOpen ? (
         <FocusTrap id="navbar-menu" as="div" className={"md:hidden w-full h-screen bg-white"}>
-          <ol className="flex flex-col relative justify-center items-center">
-            {data?.map((link: LinkType, i: number) => (
-              <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
-                {link.type === "link" ? (
-                  <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} onClick={() => setIsNavOpen(false)} />
-                ) : (
-                  <Accordion
-                    id={`nav-accordion-${i}`}
-                    triggerText={link.name}
-                    as="button"
-                    className={{
-                      trigger: "justify-center text-[length:inherit] px-2",
-                      content: "rounded border border-slate-400 ",
-                    }}
-                  >
-                    <ol className="text-center">
-                      {link.children?.map((child: LinkType, j: number) => (
-                        <li key={j} className="my-4 px-2">
-                          <NavItem
-                            href={child.url}
-                            name={child.name}
-                            className="!inline-block text-black text-xl text-center rounded"
-                            target={child.target}
-                            onClick={() => setIsNavOpen(!isNavOpen)}
-                          />
-                        </li>
-                      ))}
-                    </ol>
-                  </Accordion>
-                )}
-              </li>
-            ))}
-          </ol>
+          {NavbarComp}
         </FocusTrap>
+      ) : (
+        <>{NavbarComp}</>
       )}
     </nav>
   );
