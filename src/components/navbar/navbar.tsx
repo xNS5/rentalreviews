@@ -11,12 +11,19 @@ import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
-import "./navbar.css";
 
-function NavItem(props: Readonly<{ [key: string]: any }>) {
+function NavItem({name, ...rest}: Readonly<{
+  name: string,
+  [key: string]: any
+}>) {
+  const {href} = rest;
+  const activeClassProps = getActiveClassProps(href)
+  const activeClassPropsCount = Object.keys(activeClassProps).length;
+  const combinedProps = {...rest, ...activeClassProps};
   return (
-    <Link href={"/"} {...props}>
-      {props.name}
+    <Link href={"/"} {...combinedProps} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
+      {name}
+      {activeClassPropsCount > 1 && <span className="sr-only">current page</span>}
     </Link>
   );
 }
@@ -56,6 +63,11 @@ export default function Navbar({
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(IsMobileWidth());
 
+  /* handles the following scenarios:
+   User hits `escape` to exit out of navbar
+   User resizes window while mobile navbar is open
+   User attempts to tab away from mobile navbar while it's expanded
+  */
   useEffect(() => {
     const escHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -88,7 +100,8 @@ export default function Navbar({
 
 
   return (
-    <nav className="flex flex-col flex-wrap shadow-lg py-5">
+    <nav className="flex flex-col flex-wrap shadow-lg py-3 px-5">
+      {/* Features: conditionally enables/disables the focus trap based on isMobileNavOpen state */}
         <FocusTrap id="navbar-menu" as="div" className={"w-full bg-white"} features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}>
         <div className="flex flex-row flex-wrap space-between w-full justify-between align-center">
         <Logo>
@@ -112,7 +125,7 @@ export default function Navbar({
             {data?.map((link: LinkType, i: number) => (
               <li key={i} className="md:text-xl mx-2">
                 {link.type == "link" ? (
-                  <NavItem id={`nav-link-${i + 1}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} />
+                  <NavItem href={link.url} name={link.name}/>
                 ) : (
                   <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} />
                 )}
@@ -126,7 +139,7 @@ export default function Navbar({
           {data?.map((link: LinkType, i: number) => (
             <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
               {link.type === "link" ? (
-                <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} onClick={() => setIsMobileNavOpen(false)} />
+                <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} onClick={() => setIsMobileNavOpen(false)} />
               ) : (
                 <Accordion
                   id={`nav-accordion-${i}`}
