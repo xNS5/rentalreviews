@@ -22,9 +22,8 @@ function NavItem({
   const { href } = rest;
   const activeClassProps = getActiveClassProps(href);
   const activeClassPropsCount = Object.keys(activeClassProps).length;
-  const combinedProps = { ...rest, ...activeClassProps };
   return (
-    <Link href={"/"} {...combinedProps} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
+    <Link href={"/"} {...activeClassProps} {...rest} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
       {name}
       {activeClassPropsCount > 1 && <span className="sr-only">current page</span>}
     </Link>
@@ -152,7 +151,7 @@ export default function Navbar({
                     triggerText={link.name}
                     as="button"
                     className={{
-                      trigger: "rounded justify-center text-[length:inherit] px-2",
+                      trigger: "rounded justify-center text-2xl px-2",
                       content: "rounded border border-slate-400 ",
                     }}
                   >
@@ -162,7 +161,7 @@ export default function Navbar({
                           <NavItem
                             href={child.url}
                             name={child.name}
-                            className="!inline-block text-black text-xl text-center rounded"
+                            className="!inline-block text-black !text-xl text-center rounded"
                             target={child.target}
                             onClick={() => setIsMobileNavOpen((prev) => !prev)}
                           />
