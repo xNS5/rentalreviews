@@ -1,123 +1,181 @@
 "use client";
 
-import { useState } from "react";
-import { NavItem } from "./nav-item";
-import { NavigationMenu } from "../navigation-menu/navigation-menu";
+import { useEffect, useState } from "react";
 import Icon from "../icons/icon";
 import Accordion from "../accordion/accordion";
-import {
-  usePathname as getPathname,
-} from "next/navigation";
-import type { Link } from "@/lib/linktype";
+import Logo from "../logo/logo";
+import Link from "next/link";
+import { usePathname as getPathname } from "next/navigation";
+import NavigationMenu from "../navigation-menu/navigation-menu";
+import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
+import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
-import "./navbar.css";
+function NavItem({
+  name,
+  ...rest
+}: Readonly<{
+  name: string;
+  [key: string]: any;
+}>) {
+  // Hacky way to get the active class props
+  const { href } = rest;
+  const activeClassProps = getActiveClassProps(href);
+  const activeClassPropsCount = Object.keys(activeClassProps).length;
+  return (
+    <Link href={"/"} {...activeClassProps} {...rest} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
+      {name}
+      {activeClassPropsCount > 1 && <span className="sr-only">current page</span>}
+    </Link>
+  );
+}
+
+function IsMobileWidth(): boolean {
+  if (typeof window !== "undefined") {
+    return window.innerWidth < 750;
+  }
+  return false;
+}
 
 export function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
   const urlArr: string[] = url.split("/");
-  if (pathnameArr[1] == urlArr[1]) {
+  const baseStyle = "rounded underline-offset-8 px-2 focus:!ring-1";
+  if (pathnameArr[1] === urlArr[1]) {
     return {
-      className: "underline decoration-2 font-bold text-black underline-offset-8",
-      "aria-label": `${urlArr[1]} current page`,
+      className: `${baseStyle} underline decoration-2 font-bold text-black`,
     };
   } else {
     return {
-      className: "hover:underline hover:text-slate-500 underline-offset-8",
+      className: `${baseStyle} hover:underline hover:text-slate-500`,
     };
   }
 }
 
 export default function Navbar({
-  nav,
+  data,
+  title,
+  description,
 }: Readonly<{
-  nav: Config;
+  data: Config;
+  title: string;
+  description: string;
 }>) {
-  const [isNavOpen, setNavOpen] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isMobileWidth, setIsMobileWidth] = useState(IsMobileWidth());
 
-  // Mobile Navbar
-  if (isNavOpen) {
-    return (
-      <>
-        <button
-          className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
-          onClick={() => setNavOpen(!isNavOpen)}
-        >
-          <Icon type="fas-x" className="w-8" altText="Close navigation menu" />
-        </button>
+  /* handles the following scenarios:
+   User hits `escape` to exit out of navbar
+   User resizes window while mobile navbar is open
+   User attempts to tab away from mobile navbar while it's expanded
+  */
+  useEffect(() => {
+    const escHandler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsMobileNavOpen((prev) => !prev);
+      }
+    };
 
-        <ol className="flex z-10 flex-col justify-center items-center overflow-hidden absolute top-0 left-0 w-full h-screen bg-white">
-          {nav?.map((link: Link, i: number) => (
-            <li
-              key={i}
-              className="py-4 cursor-pointer capitalize text-4xl hover:text-blue-900"
-            >
-              {link.type === "link" ? (
-                <NavItem
-                  id={`nav-link-${i}`}
-                  href={link.url}
-                  name={link.name}
-                  {...getActiveClassProps(link.url)}
-                  onClick={() => setNavOpen(false)}
-                />
-              ) : (
-                <Accordion
-                  triggerText={link.name}
-                  className={{
-                    trigger: "justify-center",
-                    content: "rounded border border-slate-400 my-2",
-                  }}
-                >
-                  <ol className="text-center">
-                    {link.children?.map((child: Link, i: number) => (
-                      <li key={i} className="my-4 px-2">
-                        <NavItem
-                          key={i}
-                          href={child.url}
-                          name={child.name}
-                          className="!inline-block text-black text-xl text-center rounded"
-                        />
-                      </li>
-                    ))}
-                  </ol>
-                </Accordion>
-              )}
-            </li>
-          ))}
-        </ol>
-      </>
-    );
-  }
+    const resizeHandler = () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile !== isMobileWidth) {
+        setIsMobileWidth(isMobile);
+        if (isMobileNavOpen) {
+          setIsMobileNavOpen((prev) => !prev);
+        }
+      }
+    };
 
-  // Normal navbar
+    if (isMobileNavOpen) {
+      window.addEventListener("resize", resizeHandler);
+      document.addEventListener("keydown", escHandler);
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+      document.removeEventListener("keydown", escHandler);
+      document.body.style.overflow = "visible";
+    };
+  }, [isMobileNavOpen, isMobileWidth]);
+
   return (
     <>
-      <ol className="hidden md:flex flex-row justify-center items-center">
-        {nav?.map((link: Link, i: number) => (
-          <li key={i} className="md:text-xl mx-2">
-            {link.type == "link" ? (
-              <NavItem
-              id={`nav-link-${i+1}`}
-                href={link.url}
-                name={link.name}
-                {...getActiveClassProps(link.url)}
-              />
-            ) : (
-              <NavigationMenu
-                link={link}
-                className={`${getActiveClassProps(link.url)?.className} text-xl`}
-              />
-            )}
-          </li>
-        ))}
-      </ol>
-
-      <button
-        className="cursor-pointer z-20 pr-4 text-gray-500 md:hidden"
-        onClick={() => setNavOpen(!isNavOpen)}
+      {/* Features: conditionally enables/disables the focus trap based on isMobileNavOpen state */}
+      <FocusTrap
+        id="navbar-menu"
+        as="nav"
+        className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-3 px-5"}
+        features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}
       >
-        <Icon type="fas-bars" className="w-8" altText="Open navigation menu" />
-      </button>
+        <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
+          <Logo id="website-logo" className="py-2">
+            <Link href="/" className="self-start rounded px-2 py-4 grid grid-rows-2" role="link">
+              <span className="text-lg md:text-2xl">{title}</span>
+              <span className="text-sm md:text-lg">{description}</span>
+            </Link>
+          </Logo>
+          <button
+            className={`self-end cursor-pointer z-20 text-gray-500 md:hidden transition-transform mb-4`}
+            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+            aria-controls="navbar-menu"
+            aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}
+            aria-expanded={isMobileNavOpen}
+          >
+            <Icon type={`${isMobileNavOpen ? "fas-x" : "fas-bars"}`} className="w-8" />
+          </button>
+          {/* Wanted to keep this inside the same div as the logo */}
+          {!isMobileNavOpen && (
+            <ol className="hidden md:flex flex-row justify-center items-center">
+              {data?.map((link: LinkType, i: number) => (
+                <li key={i} className="md:text-xl mx-2">
+                  {link.type == "link" ? (
+                    <NavItem id={`headlessui-menu-button-${i}`} href={link.url} name={link.name} />
+                  ) : (
+                    <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} props={{trigger: {id: `headlessui-menu-button-${i}`}}}/>
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+        {isMobileNavOpen && (
+          <ol className="flex flex-col relative justify-center items-center w-full h-screen">
+            {data?.map((link: LinkType, i: number) => (
+              <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
+                {link.type === "link" ? (
+                  <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} onClick={() => setIsMobileNavOpen((prev) => !prev)} />
+                ) : (
+                  <Accordion
+                    id={`nav-accordion-${i}`}
+                    triggerText={link.name}
+                    as="button"
+                    className={{
+                      trigger: "rounded justify-center text-2xl px-2",
+                      content: "rounded border border-slate-400 ",
+                    }}
+                  >
+                    <ol className="text-center">
+                      {link.children?.map((child: LinkType, j: number) => (
+                        <li key={j} className="my-4 px-2">
+                          <NavItem
+                            href={child.url}
+                            name={child.name}
+                            className="!inline-block text-black !text-xl text-center rounded"
+                            target={child.target}
+                            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+                          />
+                        </li>
+                      ))}
+                    </ol>
+                  </Accordion>
+                )}
+              </li>
+            ))}
+          </ol>
+        )}
+      </FocusTrap>
     </>
   );
 }
+

@@ -1,9 +1,10 @@
 import React from "react";
 import Image from "next/image";
 
-export default function Logo({ children, className }: Readonly<{
+export default function Logo({ children, className, ...rest}: Readonly<{
   children: React.ReactNode;
   className?: string;
+  [key: string]: any;
 }>){
   return( <div className="inline-flex">
     <Image
@@ -13,6 +14,7 @@ export default function Logo({ children, className }: Readonly<{
       height={60}
       className={`${className} object-contain`}
       unoptimized={true}
+      {...rest}
     />
     {children}
   </div>

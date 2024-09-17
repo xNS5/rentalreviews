@@ -89,12 +89,6 @@ a[href]:hover {
   text-decoration: underline;
 }
 
-button[id^="headlessui-menu-button-*"]:hover{
-  color: white;
-  background-color: rgb(37 99 235);
-  border-radius: 4px;
-}
-
 article {
   margin: 1em;
 }
