@@ -110,7 +110,7 @@ export default function Navbar({
           </Link>
         </Logo>
         <button
-          className={`self-end cursor-pointer z-20 pr-4 text-gray-500 md:hidden transition-transform`}
+          className={`self-end cursor-pointer z-20 px-4 text-gray-500 md:hidden transition-transform`}
           onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
           aria-controls="navbar-menu"
           aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}
