@@ -7,7 +7,7 @@ import Logo from "../logo/logo";
 import Link from "next/link";
 import { usePathname as getPathname } from "next/navigation";
 import NavigationMenu from "../navigation-menu/navigation-menu";
-import { FocusTrap } from "@headlessui/react";
+import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
@@ -53,13 +53,13 @@ export default function Navbar({
   title: string;
   description: string;
 }>) {
-  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(IsMobileWidth());
 
   useEffect(() => {
     const escHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setIsNavOpen((prev) => !prev);
+        setIsMobileNavOpen((prev) => !prev);
       }
     };
 
@@ -67,13 +67,13 @@ export default function Navbar({
       const isMobile = window.innerWidth <= 768;
       if (isMobile !== isMobileWidth) {
         setIsMobileWidth(isMobile);
-        if (isNavOpen) {
-          setIsNavOpen((prev) => !prev);
+        if (isMobileNavOpen) {
+          setIsMobileNavOpen((prev) => !prev);
         }
       }
     };
 
-    if (isNavOpen) {
+    if (isMobileNavOpen) {
       window.addEventListener("resize", resizeHandler);
       document.addEventListener("keydown", escHandler);
       document.body.style.overflow = "hidden";
@@ -84,11 +84,13 @@ export default function Navbar({
       document.removeEventListener("keydown", escHandler);
       document.body.style.overflow = "visible";
     };
-  }, [isNavOpen, isMobileWidth]);
+  }, [isMobileNavOpen, isMobileWidth]);
 
-  const NavbarComp: React.ReactNode = (
-    <>
-      <div className="flex flex-row flex-wrap space-between w-full justify-between align-center">
+
+  return (
+    <nav className="flex flex-col flex-wrap shadow-lg py-5">
+        <FocusTrap id="navbar-menu" as="div" className={"w-full bg-white"} features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}>
+        <div className="flex flex-row flex-wrap space-between w-full justify-between align-center">
         <Logo>
           <Link href="/" className="self-start rounded px-2 grid grid-rows-2" role="link">
             <span className="text-lg md:text-2xl">{title}</span>
@@ -97,14 +99,15 @@ export default function Navbar({
         </Logo>
         <button
           className={`self-end cursor-pointer z-20 pr-4 text-gray-500 md:hidden transition-transform`}
-          onClick={() => setIsNavOpen(!isNavOpen)}
+          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
           aria-controls="navbar-menu"
-          aria-label={`${isNavOpen ? "Close" : "Open"} navigation menu`}
-          aria-expanded={isNavOpen}
+          aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}
+          aria-expanded={isMobileNavOpen}
         >
-          <Icon type={`${isNavOpen ? "fas-x" : "fas-bars"}`} className="w-8" />
+          <Icon type={`${isMobileNavOpen ? "fas-x" : "fas-bars"}`} className="w-8" />
         </button>
-        {!isNavOpen && (
+        {/* Wanted to keep this inside the same div as the logo */}
+        {!isMobileNavOpen && (
           <ol className="hidden md:flex flex-row justify-center items-center">
             {data?.map((link: LinkType, i: number) => (
               <li key={i} className="md:text-xl mx-2">
@@ -118,12 +121,12 @@ export default function Navbar({
           </ol>
         )}
       </div>
-      {isNavOpen && (
-        <ol className="flex flex-col relative justify-center items-center">
+      {isMobileNavOpen && (
+        <ol className="flex flex-col relative justify-center items-center w-full h-screen">
           {data?.map((link: LinkType, i: number) => (
             <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
               {link.type === "link" ? (
-                <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} onClick={() => setIsNavOpen(false)} />
+                <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} {...getActiveClassProps(link.url)} onClick={() => setIsMobileNavOpen(false)} />
               ) : (
                 <Accordion
                   id={`nav-accordion-${i}`}
@@ -142,7 +145,7 @@ export default function Navbar({
                           name={child.name}
                           className="!inline-block text-black text-xl text-center rounded"
                           target={child.target}
-                          onClick={() => setIsNavOpen(!isNavOpen)}
+                          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
                         />
                       </li>
                     ))}
@@ -153,18 +156,7 @@ export default function Navbar({
           ))}
         </ol>
       )}
-    </>
-  );
-
-  return (
-    <nav className="flex flex-col flex-wrap shadow-lg">
-      {isNavOpen ? (
-        <FocusTrap id="navbar-menu" as="div" className={"md:hidden w-full h-screen bg-white"}>
-          {NavbarComp}
         </FocusTrap>
-      ) : (
-        <>{NavbarComp}</>
-      )}
     </nav>
   );
 }
