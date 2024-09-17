@@ -10,6 +10,7 @@ import Link from "next/link";
 export default function NavigationMenu({
   data,
   className,
+  props
 }: Readonly<{
   data: LinkType;
   className?: {
@@ -18,6 +19,12 @@ export default function NavigationMenu({
     trigger?: string;
     item?: string;
   };
+  props?: {
+    comp?: {[key: string]: any};
+    menu?: {[key: string]: any};
+    trigger?: {[key: string]: any};
+    item?: {[key: string]: any};
+  }
 }>) {
 
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -25,9 +32,9 @@ export default function NavigationMenu({
   if (data.children === undefined) return;
 
   return (
-    <DropdownComp onOpenChange={() => setIsNavOpen(!isNavOpen)} className={`${className?.comp}`}>
+    <DropdownComp onOpenChange={() => setIsNavOpen(!isNavOpen)} className={`${className?.comp ?? ""}`} {...(props?.comp && props.comp)}>
       <DropdownTrigger>
-        <Button variant={"ghost"} className={` p-0 ${className?.trigger} font-normal`}>
+        <Button id={props?.trigger?.id} variant={"ghost"} className={` p-0 ${className?.trigger ?? ""} font-normal`} {...(props?.trigger && props.trigger)}>
           {data.name}
           <Icon
             type="fas-chevron-down"
@@ -35,11 +42,11 @@ export default function NavigationMenu({
           />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu variant="light" className={`${className?.menu}`} items={data.children}>
+      <DropdownMenu variant="flat" className={`${className?.menu ?? ""}`} items={data.children} {...(props?.menu && props.menu)}>
         {(child: LinkType) => (
-          <DropdownItem key={`${child.name}-${Math.random()}`} value={child.name} variant="flat">
+          <DropdownItem key={`${child.name}`} value={child.name} variant="flat" className={`${className?.item ?? ""}`}>
             <Link href={child.url} onClick={() => setIsNavOpen(!isNavOpen)} target={child.target}>
-              <p tabIndex={-1}> {child.name}</p>
+              <p>{child.name}</p>
             </Link>
           </DropdownItem>
         )}

@@ -11,15 +11,18 @@ import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
-
-function NavItem({name, ...rest}: Readonly<{
-  name: string,
-  [key: string]: any
+function NavItem({
+  name,
+  ...rest
+}: Readonly<{
+  name: string;
+  [key: string]: any;
 }>) {
-  const {href} = rest;
-  const activeClassProps = getActiveClassProps(href)
+  // Hacky way to get the active class props
+  const { href } = rest;
+  const activeClassProps = getActiveClassProps(href);
   const activeClassPropsCount = Object.keys(activeClassProps).length;
-  const combinedProps = {...rest, ...activeClassProps};
+  const combinedProps = { ...rest, ...activeClassProps };
   return (
     <Link href={"/"} {...combinedProps} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
       {name}
@@ -38,7 +41,7 @@ function IsMobileWidth(): boolean {
 export function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
   const urlArr: string[] = url.split("/");
-  const baseStyle = "rounded underline-offset-8 px-2";
+  const baseStyle = "rounded underline-offset-8 px-2 focus:!ring-1";
   if (pathnameArr[1] === urlArr[1]) {
     return {
       className: `${baseStyle} underline decoration-2 font-bold text-black`,
@@ -97,79 +100,83 @@ export default function Navbar({
     };
   }, [isMobileNavOpen, isMobileWidth]);
 
-
   return (
-    <nav className="flex flex-col flex-wrap shadow-lg py-3 px-5">
+    <>
       {/* Features: conditionally enables/disables the focus trap based on isMobileNavOpen state */}
-        <FocusTrap id="navbar-menu" as="div" className={"w-full bg-white"} features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}>
-        <div className="flex flex-row flex-wrap space-between w-full justify-between align-center">
-        <Logo>
-          <Link href="/" className="self-start rounded px-2 grid grid-rows-2" role="link">
-            <span className="text-lg md:text-2xl">{title}</span>
-            <span className="text-sm md:text-lg">{description}</span>
-          </Link>
-        </Logo>
-        <button
-          className={`self-end cursor-pointer z-20 px-4 text-gray-500 md:hidden transition-transform`}
-          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-          aria-controls="navbar-menu"
-          aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}
-          aria-expanded={isMobileNavOpen}
-        >
-          <Icon type={`${isMobileNavOpen ? "fas-x" : "fas-bars"}`} className="w-8" />
-        </button>
-        {/* Wanted to keep this inside the same div as the logo */}
-        {!isMobileNavOpen && (
-          <ol className="hidden md:flex flex-row justify-center items-center">
+      <FocusTrap
+        id="navbar-menu"
+        as="nav"
+        className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-3 px-5"}
+        features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}
+      >
+        <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
+          <Logo id="website-logo" className="py-2">
+            <Link href="/" className="self-start rounded px-2 py-4 grid grid-rows-2" role="link">
+              <span className="text-lg md:text-2xl">{title}</span>
+              <span className="text-sm md:text-lg">{description}</span>
+            </Link>
+          </Logo>
+          <button
+            className={`self-end cursor-pointer z-20 text-gray-500 md:hidden transition-transform mb-4`}
+            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+            aria-controls="navbar-menu"
+            aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}
+            aria-expanded={isMobileNavOpen}
+          >
+            <Icon type={`${isMobileNavOpen ? "fas-x" : "fas-bars"}`} className="w-8" />
+          </button>
+          {/* Wanted to keep this inside the same div as the logo */}
+          {!isMobileNavOpen && (
+            <ol className="hidden md:flex flex-row justify-center items-center">
+              {data?.map((link: LinkType, i: number) => (
+                <li key={i} className="md:text-xl mx-2">
+                  {link.type == "link" ? (
+                    <NavItem id={`headlessui-menu-button-${i}`} href={link.url} name={link.name} />
+                  ) : (
+                    <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} props={{trigger: {id: `headlessui-menu-button-${i}`}}}/>
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+        {isMobileNavOpen && (
+          <ol className="flex flex-col relative justify-center items-center w-full h-screen">
             {data?.map((link: LinkType, i: number) => (
-              <li key={i} className="md:text-xl mx-2">
-                {link.type == "link" ? (
-                  <NavItem href={link.url} name={link.name}/>
+              <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
+                {link.type === "link" ? (
+                  <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} onClick={() => setIsMobileNavOpen((prev) => !prev)} />
                 ) : (
-                  <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} />
+                  <Accordion
+                    id={`nav-accordion-${i}`}
+                    triggerText={link.name}
+                    as="button"
+                    className={{
+                      trigger: "rounded justify-center text-[length:inherit] px-2",
+                      content: "rounded border border-slate-400 ",
+                    }}
+                  >
+                    <ol className="text-center">
+                      {link.children?.map((child: LinkType, j: number) => (
+                        <li key={j} className="my-4 px-2">
+                          <NavItem
+                            href={child.url}
+                            name={child.name}
+                            className="!inline-block text-black text-xl text-center rounded"
+                            target={child.target}
+                            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+                          />
+                        </li>
+                      ))}
+                    </ol>
+                  </Accordion>
                 )}
               </li>
             ))}
           </ol>
         )}
-      </div>
-      {isMobileNavOpen && (
-        <ol className="flex flex-col relative justify-center items-center w-full h-screen">
-          {data?.map((link: LinkType, i: number) => (
-            <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
-              {link.type === "link" ? (
-                <NavItem id={`nav-link-${i}`} href={link.url} name={link.name} onClick={() => setIsMobileNavOpen(false)} />
-              ) : (
-                <Accordion
-                  id={`nav-accordion-${i}`}
-                  triggerText={link.name}
-                  as="button"
-                  className={{
-                    trigger: "justify-center text-[length:inherit] px-2",
-                    content: "rounded border border-slate-400 ",
-                  }}
-                >
-                  <ol className="text-center">
-                    {link.children?.map((child: LinkType, j: number) => (
-                      <li key={j} className="my-4 px-2">
-                        <NavItem
-                          href={child.url}
-                          name={child.name}
-                          className="!inline-block text-black text-xl text-center rounded"
-                          target={child.target}
-                          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
-                        />
-                      </li>
-                    ))}
-                  </ol>
-                </Accordion>
-              )}
-            </li>
-          ))}
-        </ol>
-      )}
-        </FocusTrap>
-    </nav>
+      </FocusTrap>
+    </>
   );
 }
 
