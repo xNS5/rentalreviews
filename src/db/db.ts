@@ -3,7 +3,7 @@ import { mongoGetCollection, mongoGetDocument } from "./mongo";
 import { development as isDevelopment } from "@/lib/config-provider";
 import type { RequestType } from "./requesttype";
 
-const CACHE_TTL: number = process.env.NEXT_PUBLIC_CACHE_TTL ? parseInt(process.env.NEXT_PUBLIC_CACHE_TTL, 10) || 3600000 : 3600000; // 1 month if .env value isn't there.
+const CACHE_TTL: number = process.env.NEXT_PUBLIC_CACHE_TTL ? parseInt(process.env.NEXT_PUBLIC_CACHE_TTL) || 3600000 : 3600000; // 1 month if .env value isn't there.
 
 type TProps<T> = {
   [k: string]: string | number | T | T[keyof T];
@@ -43,7 +43,6 @@ export async function getDocument<T extends TProps<T>>(collection: string, docum
       }
     }
     global.documentCache?.set(`${collection}/${document_id}`, document, TTL);
-    console.log(`${collection}/${document_id}`, global.documentCache?.getTtl(`${collection}/${document_id}`));
   }
   return document as T;
 }

@@ -20,7 +20,7 @@ const inter = FontSans({
 export let metadata: Metadata;
 
 export async function getMetadata() {
-  const config: Config | undefined = await getDocument("config", "metadata", 604800);
+  const config: Config | undefined = await getDocument<Config>("config", "metadata", 2592000);
   metadata = {
     title: config?.metadata.title,
     description: config?.metadata.description,
@@ -48,8 +48,8 @@ export default async function RootLayout({
 }>) {
   await getMetadata();
   const { title, description } = metadata;
-  const navbarConfig = await getDocument<Config>("config", "navigation", 604800);
-  const footerData = await getDocument<Config>("config", "footer", 604800);
+  const navbarConfig = await getDocument<Config>("config", "navigation", 2592000);
+  const footerData = await getDocument<Config>("config", "footer", 2592000);
   return (
     <html lang="en">
       <head>
