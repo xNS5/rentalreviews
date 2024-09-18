@@ -40,7 +40,7 @@ function IsMobileWidth(): boolean {
 export function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
   const urlArr: string[] = url.split("/");
-  const baseStyle = "rounded underline-offset-8 px-2 focus:!ring-1";
+  const baseStyle = "rounded underline-offset-8 px-2 focus-visible:!ring-1";
   if (pathnameArr[1] === urlArr[1]) {
     return {
       className: `${baseStyle} underline decoration-2 font-bold text-black`,
