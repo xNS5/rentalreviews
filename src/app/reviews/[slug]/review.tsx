@@ -68,30 +68,30 @@ export async function Review(data: Company) {
           }}
         >
           <ol className="space-y-2 text-gray-500 list-none list-inside dark:text-gray-400 text-lg !text-black">
-            <li aria-label={`${await getAltStringAsync(data.review_count, "review", "review_count")}`}>
+            <li tabIndex={0}  aria-label={`${await getAltStringAsync(data.review_count, "review", "review_count")}`}>
               <span className="m-1">
                 <b>Review Count: </b>
                 {data.review_count}
               </span>
             </li>
-            <li aria-label={`${await getAltStringAsync(data.average_rating, "review", "average_rating")}`}>
+            <li  tabIndex={0}  aria-label={`${await getAltStringAsync(data.average_rating, "review", "average_rating")}`}>
               <span className="m-1">
                 <b>Average Rating: </b>
-                {data.average_rating}
+                {data.average_rating}/5
               </span>
             </li>
             {hasAdjustedReviewValue && (
               <>
-                <li aria-label={`${await getAltStringAsync(data.adjusted_review_count, "review", "adjusted_review_count")}`}>
+                <li tabIndex={0}  aria-label={`${await getAltStringAsync(data.adjusted_review_count, "review", "adjusted_review_count")}`}>
                   <span className="m-1">
                     <b>Adjusted Review Count: </b>
                     {data.adjusted_review_count}
                   </span>
                 </li>
-                <li aria-label={`${await getAltStringAsync(data.adjusted_average_rating, "review", "adjusted_average_rating")}`}>
+                <li  tabIndex={0}  aria-label={`${await getAltStringAsync(data.adjusted_average_rating, "review", "adjusted_average_rating")}`}>
                   <span className="m-1">
                     <b>Adjusted Rating: </b>
-                    {data.adjusted_average_rating}
+                    {data.adjusted_average_rating}/5
                   </span>
                 </li>
               </>
