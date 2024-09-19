@@ -50,7 +50,7 @@ export async function Review(data: Company) {
             </Link>
           </li>
         </ol>
-        {hasAdjustedReviewValue && <p className="text-sm lg:text-lg">{adjustedReviewDisclaimerString}</p>}
+        {hasAdjustedReviewValue && <p className="text-sm lg:text-lg" aria-hidden="true">{adjustedReviewDisclaimerString}</p>}
       </div>
       {/* Divider element */}
       <div className="hidden md:flex relativepb-5 pt-2 items-center">
