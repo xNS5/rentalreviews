@@ -14,8 +14,8 @@ export async function Review(data: Company) {
   return (
     <Article className="container mx-auto py-10 review-summary">
       <h1 className="text-2xl md:text-3xl text-center font-bold my-2">{data.name}</h1>
-      <div id="review-data-list" className="hidden md:grid grid-cols-1 grid-rows-2 items-center justify-center pt-4">
-        <ol className="flex text-sm lg:text-lg justify-center items-center md:space-x-4 text-lg">
+      <div id="review-data-list" className="hidden md:flex flex-col items-center justify-center pt-4">
+        <ol className="flex flex-row  lg:text-lg sm:text-sm ">
           <li value={data.review_count} tabIndex={0} aria-label={`${await getAltStringAsync(data.review_count, "review", "review_count")}`}>
             <p className="m-1">
               <b>Review Count: </b>
@@ -45,12 +45,12 @@ export async function Review(data: Company) {
             </>
           )}
           <li>
-            <Link href={`/api?id=${data.slug}`} className="rounded block content-center mx-3 bg-blue-500 h-8 px-2 w-auto text-white">
+            <Link href={`/api?id=${data.slug}`} className="rounded flex text-center justify-center mx-3 bg-blue-500 h-8 px-2 w-auto text-white">
               Raw Data
             </Link>
           </li>
         </ol>
-        {hasAdjustedReviewValue && <p className="flex justify-center">{adjustedReviewDisclaimerString}</p>}
+        {hasAdjustedReviewValue && <p className="text-sm lg:text-lg">{adjustedReviewDisclaimerString}</p>}
       </div>
       {/* Divider element */}
       <div className="hidden md:flex relativepb-5 pt-2 items-center">
@@ -61,6 +61,7 @@ export async function Review(data: Company) {
       <div id="data-accordion" className="flex md:hidden w-full flex-col items-center">
         <Accordion
           triggerText={"Data"}
+          defaultValue={"Data"}
           className={{
             trigger: "font-semibold inline-flex justify-center",
             comp: "border border-gray-400 border-1 rounded w-full p-2 shadow-md",
