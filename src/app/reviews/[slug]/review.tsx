@@ -6,88 +6,51 @@ import Accordion from "@/components/accordion/accordion";
 import { getAltStringAsync } from "@/lib/altprovider";
 import "./review.css";
 
-const adjustedReviewDisclaimerString =
-  "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
+const adjustedReviewDisclaimerString = "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
 
 export async function Review(data: Company) {
-  const hasAdjustedReviewValue: boolean =
-    data.review_count != data.adjusted_review_count;
+  const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
 
   return (
     <Article className="container mx-auto py-10 review-summary">
       <h1 className="text-2xl md:text-3xl text-center font-bold my-2">{data.name}</h1>
-      <div
-        id="review-data-list"
-        className="hidden md:grid grid-cols-1 grid-rows-2 items-center justify-center pt-4"
-      >
-        <ol className="flex text-sm lg:text-lg justify-center items-center md:space-x-4 text-lg">
-          <li
-            aria-label={`${await getAltStringAsync(
-              data.review_count,
-              "review",
-              "review_count"
-            )}`}
-            value={data.review_count}
-          >
-            <span className="m-1">
+      <div id="review-data-list" className="hidden md:flex flex-col items-center justify-center pt-4">
+        <ol className="flex flex-row  lg:text-lg sm:text-sm ">
+          <li value={data.review_count} tabIndex={0} aria-label={`${await getAltStringAsync(data.review_count, "review", "review_count")}`}>
+            <p className="m-1">
               <b>Review Count: </b>
               {data.review_count}
-            </span>
+            </p>
           </li>
-          <li
-            aria-label={`${await getAltStringAsync(
-              data.average_rating,
-              "review",
-              "average_rating"
-            )}`}
-          >
-            <span className="m-1">
+          <li value={data.average_rating} tabIndex={0} aria-label={`${await getAltStringAsync(data.average_rating, "review", "average_rating")}`}>
+            <p className="m-1">
               <b>Average Rating: </b>
-              {data.average_rating}
-            </span>
+              {data.average_rating}/5
+            </p>
           </li>
           {hasAdjustedReviewValue && (
             <>
-              <li
-                aria-label={`${await getAltStringAsync(
-                  data.adjusted_review_count,
-                  "review",
-                  "adjusted_review_count"
-                )}`}
-              >
-                <span className="m-1">
+              <li tabIndex={0} value={data.adjusted_review_count} aria-label={`${await getAltStringAsync(data.adjusted_review_count, "review", "adjusted_review_count")}`}>
+                <p className="m-1">
                   <b>Adjusted Review Count: </b>
                   {data.adjusted_review_count}
-                </span>
+                </p>
               </li>
-              <li
-                aria-label={`${await getAltStringAsync(
-                  data.adjusted_average_rating,
-                  "review",
-                  "adjusted_average_rating"
-                )}`}
-              >
-                <span className="m-1">
+              <li tabIndex={0} value={data.adjusted_average_rating} aria-label={`${await getAltStringAsync(data.adjusted_average_rating, "review", "adjusted_average_rating")}`}>
+                <p className="m-1">
                   <b>Adjusted Rating: </b>
-                  {data.adjusted_average_rating}
-                </span>
+                  {data.adjusted_average_rating}/5
+                </p>
               </li>
             </>
           )}
           <li>
-            <Link
-              href={`/api?id=${data.slug}`}
-              className="rounded block content-center mx-3 bg-blue-500 h-8 px-2 w-auto text-white"
-            >
+            <Link href={`/api?id=${data.slug}`} className="rounded flex text-center justify-center mx-3 bg-blue-500 h-8 px-2 w-auto text-white">
               Raw Data
             </Link>
           </li>
         </ol>
-        {hasAdjustedReviewValue && (
-          <span className="flex justify-center">
-            {adjustedReviewDisclaimerString}
-          </span>
-        )}
+        {hasAdjustedReviewValue && <p className="text-sm lg:text-lg" aria-hidden="true">{adjustedReviewDisclaimerString}</p>}
       </div>
       {/* Divider element */}
       <div className="hidden md:flex relativepb-5 pt-2 items-center">
@@ -95,12 +58,10 @@ export async function Review(data: Company) {
       </div>
 
       {/* Mobile component */}
-      <div
-        id="data-accordion"
-        className="flex md:hidden w-full flex-col items-center"
-      >
+      <div id="data-accordion" className="flex md:hidden w-full flex-col items-center">
         <Accordion
           triggerText={"Data"}
+          defaultValue={"Data"}
           className={{
             trigger: "font-semibold inline-flex justify-center",
             comp: "border border-gray-400 border-1 rounded w-full p-2 shadow-md",
@@ -108,55 +69,31 @@ export async function Review(data: Company) {
           }}
         >
           <ol className="space-y-2 text-gray-500 list-none list-inside dark:text-gray-400 text-lg !text-black">
-            <li
-              aria-label={`${await getAltStringAsync(
-                data.review_count,
-                "review",
-                "review_count"
-              )}`}
-            >
-              <span className="m-1">
+            <li tabIndex={0}  aria-label={`${await getAltStringAsync(data.review_count, "review", "review_count")}`}>
+              <p className="m-1">
                 <b>Review Count: </b>
                 {data.review_count}
-              </span>
+              </p>
             </li>
-            <li
-              aria-label={`${await getAltStringAsync(
-                data.average_rating,
-                "review",
-                "average_rating"
-              )}`}
-            >
-              <span className="m-1">
+            <li  tabIndex={0}  aria-label={`${await getAltStringAsync(data.average_rating, "review", "average_rating")}`}>
+              <p className="m-1">
                 <b>Average Rating: </b>
-                {data.average_rating}
-              </span>
+                {data.average_rating}/5
+              </p>
             </li>
             {hasAdjustedReviewValue && (
               <>
-                <li
-                  aria-label={`${await getAltStringAsync(
-                    data.adjusted_review_count,
-                    "review",
-                    "adjusted_review_count"
-                  )}`}
-                >
-                  <span className="m-1">
+                <li tabIndex={0}  aria-label={`${await getAltStringAsync(data.adjusted_review_count, "review", "adjusted_review_count")}`}>
+                  <p className="m-1">
                     <b>Adjusted Review Count: </b>
                     {data.adjusted_review_count}
-                  </span>
+                  </p>
                 </li>
-                <li
-                  aria-label={`${await getAltStringAsync(
-                    data.adjusted_average_rating,
-                    "review",
-                    "adjusted_average_rating"
-                  )}`}
-                >
-                  <span className="m-1">
+                <li  tabIndex={0}  aria-label={`${await getAltStringAsync(data.adjusted_average_rating, "review", "adjusted_average_rating")}`}>
+                  <p className="m-1">
                     <b>Adjusted Rating: </b>
-                    {data.adjusted_average_rating}
-                  </span>
+                    {data.adjusted_average_rating}/5
+                  </p>
                 </li>
               </>
             )}
@@ -167,11 +104,7 @@ export async function Review(data: Company) {
           >
             Raw Data
           </Link>
-          {hasAdjustedReviewValue && (
-            <span className="flex justify-center text-md">
-              {adjustedReviewDisclaimerString}
-            </span>
-          )}
+          {hasAdjustedReviewValue && <span className="flex justify-center text-md">{adjustedReviewDisclaimerString}</span>}
         </Accordion>
       </div>
 
@@ -186,3 +119,4 @@ export async function Review(data: Company) {
     </Article>
   );
 }
+
