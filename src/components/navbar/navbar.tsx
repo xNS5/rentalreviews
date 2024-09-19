@@ -116,7 +116,7 @@ export default function Navbar({
             </Link>
           </Logo>
           <button
-            className={`self-end cursor-pointer z-20 text-gray-500 md:hidden transition-transform mb-4`}
+            className={`min-[810px]:hidden self-end cursor-pointer z-20 text-gray-500 md:hidden transition-transform mb-4`}
             onClick={() => setIsMobileNavOpen((prev) => !prev)}
             aria-controls="navbar-menu"
             aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}
@@ -128,11 +128,11 @@ export default function Navbar({
           {!isMobileNavOpen && (
             <ol className="hidden md:flex flex-row justify-center items-center">
               {data?.map((link: LinkType, i: number) => (
-                <li key={i} className="md:text-xl mx-2">
+                <li key={i} className="lg:text-2xl md:text-base mx-2">
                   {link.type == "link" ? (
                     <NavItem id={`headlessui-menu-button-${i}`} href={link.url} name={link.name} />
                   ) : (
-                    <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} props={{trigger: {id: `headlessui-menu-button-${i}`}}}/>
+                    <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} lg:text-2xl md:text-base` }} props={{trigger: {id: `headlessui-menu-button-${i}`}}}/>
                   )}
                 </li>
               ))}
@@ -140,7 +140,7 @@ export default function Navbar({
           )}
         </div>
         {isMobileNavOpen && (
-          <ol className="flex flex-col relative justify-center items-center w-full h-screen">
+          <ol className="flex flex-col relative justify-start items-center w-full h-screen">
             {data?.map((link: LinkType, i: number) => (
               <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
                 {link.type === "link" ? (
@@ -152,7 +152,7 @@ export default function Navbar({
                     as="button"
                     className={{
                       trigger: "rounded justify-center text-2xl px-2",
-                      content: "rounded border border-slate-400 ",
+                      content: "rounded border border-slate-400 shadow-lg",
                     }}
                   >
                     <ol className="text-center">
