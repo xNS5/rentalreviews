@@ -30,11 +30,11 @@ const columnKeys = [
   },
   {
     key: "average_rating",
-    title: "Average Rating (1-5)",
+    title: "Average Rating",
   },
   {
     key: "adjusted_average_rating",
-    title: "Adjusted Average Rating (1-5)",
+    title: "Adjusted Average Rating",
   },
   {
     key: "review_count",
