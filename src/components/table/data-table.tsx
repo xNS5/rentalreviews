@@ -5,7 +5,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  RowSelection,
   SortingState,
   getSortedRowModel,
   getPaginationRowModel,
@@ -44,7 +43,6 @@ export function DataTable<TData, TValue>({
   initialState,
   tableCaption,
   paginationValue,
-  alt,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(initialState.sorting);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -74,6 +72,8 @@ export function DataTable<TData, TValue>({
   const tableHeaderGroups = table.getHeaderGroups();
   const tableRowModel = table.getRowModel();
 
+  console.log(tableHeaderGroups[0].headers);
+
   return (
     <div className="rounded-md border">
       <div className="flex items-center p-4 justify-end" role="presentation">
@@ -101,8 +101,20 @@ export function DataTable<TData, TValue>({
           {tableHeaderGroups.map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
+                const column = header.column;
                 return (
-                  <TableHead key={header.id} scope="col" role="columnheader">
+                  <TableHead 
+                  key={header.id} 
+                  scope="col" 
+                  role="columnheader"
+                  aria-sort={
+                    column.getIsSorted()
+                      ? column.getIsSorted() == 'desc'
+                        ? 'descending'
+                        : 'ascending'
+                      : 'none'
+                  }
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -125,31 +137,19 @@ export function DataTable<TData, TValue>({
                   className={`${styles.data_table_row}`}
                   role="rowgroup"
                 >
-                  {tableVisibleCells.map((cell, j: number) => {
-                    // Gets the alt object ID from the cell ID, and uses it as the key for the alt object.
-                    const altKey: string = cell.id.slice(2);
-                    let ariaLabel = cell.getValue() as string;
-
-                    if (alt[altKey]) {
-                      const { prefix, postfix } = alt[altKey];
-                      ariaLabel = `${prefix} ${cell.getValue()} ${postfix}`;
-                    }
-
-                    return (
+                  {tableVisibleCells.map((cell, j: number) => (
                       <TableCell
                         key={cell.id}
-                        aria-label={ariaLabel}
                         aria-colindex={j}
                         role="cell"
-                        // tabIndex={0}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
                         )}
                       </TableCell>
-                    );
-                  })}
+                    )
+                  )}
                 </TableRow>
               );
             })

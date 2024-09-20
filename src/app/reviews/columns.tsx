@@ -1,3 +1,4 @@
+import Icon from "@/components/icons/icon";
 import { Button } from "@/components/ui/button";
 import { ColumnDef, ColumnSort } from "@tanstack/react-table";
 import { DocumentData } from "firebase/firestore";
@@ -29,11 +30,11 @@ const columnKeys = [
   },
   {
     key: "average_rating",
-    title: "Average Rating",
+    title: "Average Rating (1-5)",
   },
   {
     key: "adjusted_average_rating",
-    title: "Adjusted Average Rating",
+    title: "Adjusted Average Rating (1-5)",
   },
   {
     key: "review_count",
@@ -46,16 +47,33 @@ function getSortButton(
   isSortedObj: string | boolean,
   name: string
 ) {
+  let sortIcon: React.ReactNode;
+  let aria_label: string;
+
+  switch(isSortedObj){
+    case "asc":
+      aria_label = `${name} sorted ascending`;
+      sortIcon = <Icon type="fas-arrow-up-short-wide" className="ml-2 h-4 w-4"/>
+      break;
+    case "desc":
+      aria_label = `${name} sorted descending`;
+      sortIcon = <Icon type="fas-arrow-down-wide-short" className="ml-2 h-4 w-4"/>
+      break;
+    default:
+      aria_label = `${name} sorting disabled`;
+      sortIcon = <Icon type="fas-arrow-down-up-across-line" className="ml-2 h-4 w-4"/>
+      break;
+  }
+  
+
   return (
     <Button
       variant="ghost"
       onClick={() => onClickFn(isSortedObj === "asc")}
-      aria-label={`${name} sorted ${
-        isSortedObj === "asc" ? "ascending" : "descending"
-      }`}
+      aria-label={aria_label}
     >
       {name}
-      <ArrowUpDown className="ml-2 h-4 w-4" />
+      {sortIcon}
     </Button>
   );
 }
