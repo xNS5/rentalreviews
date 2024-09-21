@@ -16,7 +16,7 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import styles from "./data-table.module.css";
 
@@ -58,22 +58,6 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
 
   const tableHeaderGroups = table.getHeaderGroups();
   const tableRowModel = table.getRowModel();
-  const tableBodyRef = useRef(null);
-
-  const handleKeyDown = (event: KeyboardEvent, row: Row<TData>) => {
-    event.stopPropagation();
-    const currentRow = tableBodyRef.current?.children.namedItem(row.id);
-    switch (event.key) {
-      case "ArrowUp":
-        currentRow?.previousElementSibling?.focus();
-        break;
-      case "ArrowDown":
-        currentRow?.nextElementSibling?.focus();
-        break;
-      default:
-        break;
-    }
-  };
 
   return (
     <div className="rounded-md border">
@@ -115,7 +99,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="table-auto" ref={tableBodyRef}>
+        <TableBody className="table-auto">
           {tableRowModel.rows?.length ? (
             tableRowModel.rows.map((row, i: number) => {
               const tableVisibleCells = row.getVisibleCells();
