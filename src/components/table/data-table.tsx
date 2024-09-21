@@ -16,9 +16,10 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import { useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
 import { Input } from "@/components/ui/input";
 import styles from "./data-table.module.css";
+import { Company } from "@/app/reviews/columns";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -58,6 +59,45 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
 
   const tableHeaderGroups = table.getHeaderGroups();
   const tableRowModel = table.getRowModel();
+  const tableBodyRef = useRef<HTMLTableSectionElement>(null);
+
+  const tableNavigationHandler = (event: KeyboardEvent, row: Row<TData>, index: number) => {
+    event.stopPropagation();
+    const isCtrlAlt = event.ctrlKey && event.altKey;
+
+    if (!isCtrlAlt) return;
+
+    const originalData: Company = row.original as Company;
+    const currentRow = tableBodyRef.current?.children.namedItem(originalData.slug) as HTMLTableRowElement | null;
+
+    if (!currentRow) return;
+
+    console.log(event.key);
+
+    switch (event.key) {
+      case "ArrowUp": {
+        if (isCtrlAlt) {
+          const previousRow = currentRow.previousElementSibling as HTMLTableRowElement | null;
+          if (previousRow) {
+            const targetCell = previousRow.children[index] as HTMLElement | null;
+            targetCell?.focus();
+          }
+          break;
+        }
+      }
+
+      case "ArrowDown": {
+        if (isCtrlAlt) {
+          const nextRow = currentRow.nextElementSibling as HTMLTableRowElement | null;
+          if (nextRow) {
+            const targetCell = nextRow.children[index] as HTMLElement | null;
+            targetCell?.focus();
+          }
+          break;
+        }
+      }
+  };
+}
 
   return (
     <div className="rounded-md border">
@@ -99,13 +139,19 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="table-auto">
+        <TableBody className="table-auto" ref={tableBodyRef}>
           {tableRowModel.rows?.length ? (
             tableRowModel.rows.map((row, i: number) => {
               const tableVisibleCells = row.getVisibleCells();
-              // console.log(tableVisibleCells.forEach(cell => console.log(cell)));
               return (
-                <TableRow key={row.id} className={`${styles.data_table_row}`} aria-rowindex={i + 1} role="rowgroup" tabIndex={-1}>
+                <TableRow
+                  id={(row.original as Company).slug}
+                  key={i}
+                  className={`${styles.data_table_row}`}
+                  aria-rowindex={i + 1}
+                  role="rowgroup"
+                  tabIndex={-1}
+                >
                   {tableVisibleCells.map((cell, j: number) => (
                     <TableCell
                       key={cell.id}
@@ -115,6 +161,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
                       aria-labelledby={cell.column.id}
                       className="focus:ring"
                       role="cell"
+                      onKeyDown={(e) => tableNavigationHandler(e, row, j)}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
