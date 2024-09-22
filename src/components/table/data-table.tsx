@@ -72,30 +72,44 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
 
     if (!currentRow) return;
 
+    const currentCell = currentRow.children[index];
+
     console.log(event.key);
 
     switch (event.key) {
-      case "ArrowUp": {
+      case "ArrowUp":
         if (isCtrlAlt) {
           const previousRow = currentRow.previousElementSibling as HTMLTableRowElement | null;
           if (previousRow) {
             const targetCell = previousRow.children[index] as HTMLElement | null;
             targetCell?.focus();
           }
-          break;
         }
-      }
-
-      case "ArrowDown": {
+        break;
+      case "ArrowDown":
         if (isCtrlAlt) {
           const nextRow = currentRow.nextElementSibling as HTMLTableRowElement | null;
           if (nextRow) {
             const targetCell = nextRow.children[index] as HTMLElement | null;
             targetCell?.focus();
           }
-          break;
         }
-      }
+        break;
+      case "ArrowRight":
+        const nextCell = currentCell.nextElementSibling as HTMLElement | null;
+        if(nextCell){
+          nextCell.focus();
+        }
+        break;
+      case "ArrowLeft":
+        const previousCell = currentCell.previousElementSibling as HTMLElement | null;
+        if(previousCell){
+          previousCell.focus();
+        }
+        break;
+      default:
+        break;
+      
   };
 }
 
