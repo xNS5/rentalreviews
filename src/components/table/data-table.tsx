@@ -12,6 +12,7 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
   Row,
+  Header,
 } from "@tanstack/react-table";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -59,59 +60,99 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
 
   const tableHeaderGroups = table.getHeaderGroups();
   const tableRowModel = table.getRowModel();
-  const tableBodyRef = useRef<HTMLTableSectionElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
 
-  const tableNavigationHandler = (event: KeyboardEvent, row: Row<TData>, index: number) => {
+  const tableNavigationHandler = (event: KeyboardEvent, index: number, row?: Row<TData>, header?: Header<TData, unknown>) => {
     event.stopPropagation();
+
     const isCtrlAlt = event.ctrlKey && event.altKey;
 
-    if (!isCtrlAlt) return;
+    const table = tableRef.current;
 
-    const originalData: Company = row.original as Company;
-    const currentRow = tableBodyRef.current?.children.namedItem(originalData.slug) as HTMLTableRowElement | null;
+    if (!table) return;
+
+    const thead = table.querySelector("thead") as HTMLTableSectionElement | null;
+    const tbody = table.querySelector("tbody") as HTMLTableSectionElement | null;
+
+    let currentRow: HTMLTableRowElement | null = thead?.children.namedItem("header-row") as HTMLTableRowElement | null;
+
+    if (row) {
+      const originalData: Company = row.original as Company;
+      currentRow = tbody?.children.namedItem(originalData.slug) as HTMLTableRowElement | null;
+    }
 
     if (!currentRow) return;
 
     const currentCell = currentRow.children[index];
 
-    console.log(event.key);
-
     switch (event.key) {
-      case "ArrowUp":
+      // If there isn't a previous row, assume 0th row of table and switch to table head
+      case "ArrowUp": {
         if (isCtrlAlt) {
-          const previousRow = currentRow.previousElementSibling as HTMLTableRowElement | null;
+          let previousRow = currentRow.previousElementSibling as HTMLTableRowElement | null;
           if (previousRow) {
             const targetCell = previousRow.children[index] as HTMLElement | null;
             targetCell?.focus();
+          } else {
+            previousRow = thead?.children[0] as HTMLTableRowElement | null;
+            if (previousRow) {
+              const targetCell = previousRow.children[index] as HTMLElement | null;
+              targetCell?.focus();
+            }
           }
         }
         break;
-      case "ArrowDown":
+      }
+      // If table head, jump to first row of table
+      case "ArrowDown": {
         if (isCtrlAlt) {
           const nextRow = currentRow.nextElementSibling as HTMLTableRowElement | null;
           if (nextRow) {
             const targetCell = nextRow.children[index] as HTMLElement | null;
             targetCell?.focus();
+          } else {
+            const nextRow = tbody?.children[0] as HTMLTableRowElement | null;
+            if (nextRow) {
+              const targetCell = nextRow.children[index] as HTMLElement | null;
+              targetCell?.focus();
+            }
           }
         }
         break;
-      case "ArrowRight":
-        const nextCell = currentCell.nextElementSibling as HTMLElement | null;
-        if(nextCell){
-          nextCell.focus();
+      }
+      case "ArrowRight": {
+        if (isCtrlAlt) {
+          const nextCell = currentCell.nextElementSibling as HTMLElement | null;
+          if (nextCell) {
+              nextCell.focus();
+          }
         }
         break;
-      case "ArrowLeft":
-        const previousCell = currentCell.previousElementSibling as HTMLElement | null;
-        if(previousCell){
-          previousCell.focus();
+      }
+      case "ArrowLeft": {
+        if (isCtrlAlt) {
+          const previousCell = currentCell.previousElementSibling as HTMLElement | null;
+          if (previousCell) {
+              previousCell.focus();
+          }
         }
         break;
-      default:
+      }
+      // Checks to see if the element has a button component -- if it does, click it. 
+      case "Enter": {
+        if (currentCell.children[0].nodeName.toLowerCase() === "button") {
+          const sortButton = currentCell.children[0] as HTMLElement | null;
+          if (sortButton) {
+            sortButton.click();
+          }
+        }
         break;
-      
+      }
+      default: {
+        break;
+      }
+    }
   };
-}
 
   return (
     <div className="rounded-md border">
@@ -126,13 +167,13 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
         </label>
       </div>
 
-      <Table role="grid" aria-colcount={tableHeaderGroups?.length ?? 0} aria-rowcount={tableRowModel.rows?.length ?? 0}>
+      <Table role="grid" aria-colcount={tableHeaderGroups?.length ?? 0} aria-rowcount={tableRowModel.rows?.length ?? 0} ref={tableRef}>
         <caption className="caption-top text-lg" aria-label={tableCaption}>
           {tableCaption}
         </caption>
         <TableHeader aria-label="Table Header">
           {tableHeaderGroups.map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow id="header-row" key={headerGroup.id}>
               {headerGroup.headers.map((header, i: number) => {
                 const columnIsSorted = header.column.getIsSorted();
                 return (
@@ -145,6 +186,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
                     aria-colindex={i}
                     aria-rowindex={0}
                     tabIndex={-1}
+                    onKeyDown={(e) => tableNavigationHandler(e, i, undefined, header)}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
@@ -153,7 +195,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody className="table-auto" ref={tableBodyRef}>
+        <TableBody className="table-auto">
           {tableRowModel.rows?.length ? (
             tableRowModel.rows.map((row, i: number) => {
               const tableVisibleCells = row.getVisibleCells();
@@ -175,7 +217,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
                       aria-labelledby={cell.column.id}
                       className="focus:ring"
                       role="cell"
-                      onKeyDown={(e) => tableNavigationHandler(e, row, j)}
+                      onKeyDown={(e) => tableNavigationHandler(e, j, row)}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

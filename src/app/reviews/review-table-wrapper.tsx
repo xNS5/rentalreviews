@@ -38,7 +38,7 @@ export function ReviewsTableWrapper({
         const { prefix, postfix } = alt[altKey];
         ret = (
           <>
-            <label className="sr-only">{`${prefix} ${cell.getValue()} ${postfix}`}</label>
+            {/* <label className="sr-only">{`${prefix} ${cell.getValue()} ${postfix}`}</label> */}
             <p>{`${cell.getValue()}${["average_rating", "adjusted_average_rating"].includes(altKey) ? "/5" : ""}`}</p>
           </>
         );
