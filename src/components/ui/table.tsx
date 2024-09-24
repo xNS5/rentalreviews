@@ -72,6 +72,8 @@ const TableHead = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <th
     ref={ref}
+    scope="col"
+    role="columnheader"
     className={cn(
       "h-12 px-4 text-left align-middle font-medium text-muted-foreground text-center",
       className

@@ -2,7 +2,6 @@ import Icon from "@/components/icons/icon";
 import { Button } from "@/components/ui/button";
 import { ColumnDef, ColumnSort } from "@tanstack/react-table";
 import { DocumentData } from "firebase/firestore";
-import { ArrowUpDown } from "lucide-react";
 
 export interface Company extends DocumentData {
   name: string;
@@ -47,21 +46,27 @@ function getSortButton(
   isSortedObj: string | boolean,
   name: string
 ) {
-  let sortIcon: React.ReactNode;
-  let aria_label: string;
+
+  let props: {[key: string]: any} = {}
 
   switch(isSortedObj){
     case "asc":
-      aria_label = `${name} sorted ascending`;
-      sortIcon = <Icon type="fas-arrow-up-short-wide" className="ml-2 h-4 w-4"/>
+      props = {
+        aria_label: `${name} sorted ascending`,
+        sortIcon: <Icon type="fas-arrow-up-short-wide" className="ml-2 h-4 w-4"/>
+      }
       break;
     case "desc":
-      aria_label = `${name} sorted descending`;
-      sortIcon = <Icon type="fas-arrow-down-wide-short" className="ml-2 h-4 w-4"/>
+      props = {
+        aria_label: `${name} sorted descending`,
+        sortIcon: <Icon type="fas-arrow-down-wide-short" className="ml-2 h-4 w-4"/>
+      }
       break;
     default:
-      aria_label = `${name} sorting disabled`;
-      sortIcon = <Icon type="fas-arrow-down-up-across-line" className="ml-2 h-4 w-4"/>
+      props= {
+        aria_label:`${name} sorting disabled`,
+        sortIcon: <Icon type="fas-arrow-down-up-across-line" className="ml-2 h-4 w-4"/>
+      }
       break;
   }
   
@@ -70,10 +75,10 @@ function getSortButton(
     <Button
       variant="ghost"
       onClick={() => onClickFn(isSortedObj === "asc")}
-      aria-label={aria_label}
+/*       aria-label={props.aria_label} */
     >
       {name}
-      {sortIcon}
+      {props.sortIcon}
     </Button>
   );
 }
@@ -84,6 +89,6 @@ export const columns: ColumnDef<Company>[] = columnKeys.map((col)=> {
     accessorKey: col.key,
     header: ({ column }) => {
       return getSortButton(column.toggleSorting, column.getIsSorted(), col.title);
-    },
+    }
   }
 });

@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
   const tableRowModel = table.getRowModel();
   const tableRef = useRef<HTMLTableElement>(null);
 
-  const tableNavigationHandler = (event: KeyboardEvent, index: number, row?: Row<TData>, header?: Header<TData, unknown>) => {
+/*   const tableNavigationHandler = (event: KeyboardEvent, index: number, row?: Row<TData>, header?: Header<TData, unknown>) => {
     event.stopPropagation();
 
     const isCtrlAlt = event.ctrlKey && event.altKey;
@@ -112,6 +112,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
             targetCell?.focus();
           } else {
             const nextRow = tbody?.children[0] as HTMLTableRowElement | null;
+            console.log(nextRow);
             if (nextRow) {
               const targetCell = nextRow.children[index] as HTMLElement | null;
               targetCell?.focus();
@@ -124,24 +125,24 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
         if (isCtrlAlt) {
           const nextCell = currentCell.nextElementSibling as HTMLElement | null;
           if (nextCell) {
-              nextCell.focus();
+            nextCell.focus();
           }
         }
         break;
       }
       case "ArrowLeft": {
         if (isCtrlAlt) {
-          const previousCell = currentCell.previousElementSibling as HTMLElement | null;
+          const previousCell = currentCell.previousElementSibling as HTMLElement | null; 
           if (previousCell) {
-              previousCell.focus();
+            previousCell.focus();
           }
         }
         break;
       }
-      // Checks to see if the element has a button component -- if it does, click it. 
+      // Checks to see if the element has a button component -- if it does, click it.
       case "Enter": {
         if (currentCell.children[0].nodeName.toLowerCase() === "button") {
-          const sortButton = currentCell.children[0] as HTMLElement | null;
+          const sortButton = currentCell as HTMLElement | null;
           if (sortButton) {
             sortButton.click();
           }
@@ -152,11 +153,11 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
         break;
       }
     }
-  };
+  }; */
 
   return (
     <div className="rounded-md border">
-      <div className="flex items-center p-4 justify-end" role="presentation">
+      <div className="flex items-center p-4 justify-end">
         <label className="flex text-md items-center">
           Search
           <Input
@@ -168,10 +169,10 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
       </div>
 
       <Table role="grid" aria-colcount={tableHeaderGroups?.length ?? 0} aria-rowcount={tableRowModel.rows?.length ?? 0} ref={tableRef}>
-        <caption className="caption-top text-lg" aria-label={tableCaption}>
+        <caption className="caption-top text-lg">
           {tableCaption}
         </caption>
-        <TableHeader aria-label="Table Header">
+        <TableHeader>
           {tableHeaderGroups.map((headerGroup) => (
             <TableRow id="header-row" key={headerGroup.id}>
               {headerGroup.headers.map((header, i: number) => {
@@ -179,14 +180,11 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
                 return (
                   <TableHead
                     id={header.column.id}
-                    key={header.id}
-                    scope="col"
-                    role="columnheader"
+                    key={i}
                     aria-sort={columnIsSorted ? (columnIsSorted == "desc" ? "descending" : "ascending") : "none"}
                     aria-colindex={i}
                     aria-rowindex={0}
-                    tabIndex={-1}
-                    onKeyDown={(e) => tableNavigationHandler(e, i, undefined, header)}
+                    // onKeyDown={(e) => tableNavigationHandler(e, i, undefined, header)}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
@@ -200,28 +198,24 @@ export function DataTable<TData, TValue>({ columns, data, initialState, tableCap
             tableRowModel.rows.map((row, i: number) => {
               const tableVisibleCells = row.getVisibleCells();
               return (
-                <TableRow
-                  id={(row.original as Company).slug}
-                  key={i}
-                  className={`${styles.data_table_row}`}
-                  aria-rowindex={i + 1}
-                  role="rowgroup"
-                  tabIndex={-1}
-                >
-                  {tableVisibleCells.map((cell, j: number) => (
-                    <TableCell
-                      key={cell.id}
-                      aria-rowindex={i + 1}
-                      aria-colindex={j + 1}
-                      tabIndex={-1}
-                      aria-labelledby={cell.column.id}
-                      className="focus:ring"
-                      role="cell"
-                      onKeyDown={(e) => tableNavigationHandler(e, j, row)}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                <TableRow id={(row.original as Company).slug} key={i} className={`${styles.data_table_row}`} aria-rowindex={i} role="rowgroup">
+                  {tableVisibleCells.map((cell, j: number) => {
+                    // console.log(cell);
+                    return (
+                      <TableCell
+                        key={j}
+                        aria-colindex={j}
+                        aria-rowindex={i+1}
+                        className="focus:ring"
+                        role="cell"
+                        {...(i == 0 ? {tabIndex: -1} : undefined)}
+                        aria-labelledby={`${cell.id.slice(2)}`}
+                        // onKeyDown={(e) => tableNavigationHandler(e, j, row)}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               );
             })
