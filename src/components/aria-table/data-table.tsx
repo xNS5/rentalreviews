@@ -21,6 +21,9 @@ export default function DataTable({
   tableCaption: string;
   paginationValue?: number;
 }>) {
+
+  if(!data) return;
+
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
@@ -42,7 +45,7 @@ export default function DataTable({
 
   return (
     <div className="relative w-full overflow-auto border border-solid border-slate-500 rounded-lg">
-      <Table aria-label="Rental Review Table" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}>
+      <Table aria-label={tableCaption} sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}>
         <TableHeader>
           <Row>
             {columns.map((column, i: number) => (
