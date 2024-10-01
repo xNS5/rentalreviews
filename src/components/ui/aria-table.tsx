@@ -9,8 +9,8 @@ import {
   TableHeader as TableHeaderComp,
   Group as GroupComp,
 } from "react-aria-components";
-import type { CellProps, ColumnProps, RowProps, SortDescriptor } from "react-aria-components";
 import Icon from "../icons/icon";
+import { Button } from "./button";
 
 const Table = ({
   className,
@@ -48,38 +48,54 @@ const TableBody = ({
   children: React.ReactNode;
   className?: string;
   [key: string]: any;
-}>) => <TableBodyComp className={cn("p-5", className)} {...props}>{children}</TableBodyComp>;
+}>) => (
+  <TableBodyComp className={cn("p-5", className)} {...props}>
+    {children}
+  </TableBodyComp>
+);
 
-const Column = ({className, children, ...props} : Readonly<{
-  className?: string,
-  children: React.ReactNode,
-  [key: string]: any
+const Column = ({
+  className,
+  children,
+  ...props
+}: Readonly<{
+  className?: string;
+  children: React.ReactNode;
+  [key: string]: any;
 }>) => {
-  const {column, direction} = props.sortDescriptor;
+  const { column, direction } = props.sortDescriptor;
+
+  const sortDirection = direction && column === props.id ? direction : "disabled"
 
   return (
     <ColumnComp
       {...props}
-      className="sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default first:rounded-tl-lg last:rounded-tr-lg whitespace-nowrap "
+      className={cn(
+        "sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default first:rounded-tl-lg last:rounded-tr-lg whitespace-nowrap ",
+        className
+      )}
+      aria-sort={`${sortDirection}`}
     >
       {({ allowsSorting }) => {
         return (
-          <div className="flex items-center pl-4 py-1">
+          <div className="flex items-center py-1 px-2">
             <GroupComp
               role="presentation"
               tabIndex={-1}
-              className="flex flex-1 items-center text-center overflow-hidden outline-none rounded focus-visible:ring-2 ring-slate-600"
+              className="flex flex-1 justify-center text-center overflow-hidden outline-none rounded focus-visible:ring-2 ring-slate-600"
             >
-              <span className="flex-1 truncate">{children}</span>
-              {allowsSorting && (
-                <span className={`ml-1 w-4 h-4 px-8 flex items-center justify-center transition`} aria-hidden={true}>
-                  {direction && column === props.id ? (
-                    <Icon type={`${direction === "ascending" ? "fas-arrow-up-short-wide" : "fas-arrow-down-wide-short"}`} className="ml-2 h-4 w-4" />
-                  ) : (
-                    <Icon type="fas-arrow-down-up-across-line" className="ml-2 h-4 w-4" />
-                  )}
-                </span>
-              )}
+              {allowsSorting ? (
+                  <Button className="flex bg-slate-200 text-black hover:text-white" aria-label={`${props.id} column sorted ${sortDirection}`}>
+                    {children}
+                    <span className={`px-1 w-4 h-4 flex items-center justify-center transition`} aria-hidden={true}>
+                      {sortDirection !== "disabled" ? (
+                        <Icon type={`${direction === "ascending" ? "fas-arrow-up-short-wide" : "fas-arrow-down-wide-short"}`} className="ml-2 h-4 w-4" />
+                      ) : (
+                        <Icon type="fas-arrow-down-up-across-line" className="ml-2 h-4 w-4" />
+                      )}
+                    </span>
+                  </Button>
+              ) : (<span>{children}</span>)}
             </GroupComp>
           </div>
         );
@@ -97,7 +113,7 @@ const Row = ({
   className?: string;
   [key: string]: any;
 }>) => (
-  <RowComp className={cn("border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted text-center", className)} {...props}>
+  <RowComp className={cn("border-b transition-colors hover:bg-muted/50 text-center", className)} {...props}>
     {children}
   </RowComp>
 );
@@ -125,7 +141,7 @@ const Cell = ({
   className?: string;
   [key: string]: any;
 }>) => (
-  <CellComp className={cn("p-4 align-middle ", className)} {...props}>
+  <CellComp className={cn("p-4 align-middle text-center", className)} {...props}>
     {children}
   </CellComp>
 );
