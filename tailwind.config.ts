@@ -7,7 +7,7 @@ require("tailwindcss-animate"),nextui()
 
 const config = {
   darkMode: ["class"],
-  plugins: [nextui()],
+  plugins: [nextui(), require('tailwindcss-react-aria-components')],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',

@@ -55,6 +55,7 @@ export function ReviewsTableWrapper({
       },
     ],
   };
+  
 
   return <DataTable columns={columns} data={data} tableCaption={"Rental Reviews Data"} alt={alt} initialState={initialState} />;
 }

@@ -1,6 +1,6 @@
 import Icon from "@/components/icons/icon";
 import { Button } from "@/components/ui/button";
-import { ColumnDef, ColumnSort } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { DocumentData } from "firebase/firestore";
 
 export interface Company extends DocumentData {
@@ -18,7 +18,12 @@ export interface Company extends DocumentData {
   [key: string]: any | any[];
 }
 
-const columnKeys = [
+export type ColumnType = {
+  key: string,
+  title: string
+}
+
+export const ColumnKeys = [
   {
     key: "name",
     title: "Name",
@@ -84,7 +89,7 @@ function getSortButton(
 }
 
 
-export const columns: ColumnDef<Company>[] = columnKeys.map((col)=> {
+export const columns: ColumnDef<Company>[] = ColumnKeys.map((col)=> {
   return {
     accessorKey: col.key,
     header: ({ column }) => {
@@ -92,3 +97,5 @@ export const columns: ColumnDef<Company>[] = columnKeys.map((col)=> {
     }
   }
 });
+
+
