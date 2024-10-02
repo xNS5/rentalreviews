@@ -65,7 +65,7 @@ const Column = ({
 }>) => {
   const { column, direction } = props.sortDescriptor;
 
-  const sortDirection = direction && column === props.id ? direction : "disabled"
+  const sortDirection = direction && column === props.id ? direction : "disabled";
 
   return (
     <ColumnComp
@@ -84,18 +84,22 @@ const Column = ({
               tabIndex={-1}
               className="flex flex-1 justify-center text-center overflow-hidden outline-none rounded focus-visible:ring-2 ring-slate-600"
             >
-              {allowsSorting ? (
-                  <Button className="flex bg-slate-200 text-black hover:text-white" aria-label={`${props.id} column sorted ${sortDirection}`}>
+              <Button variant={"ghost"} className="flex flex-1 flex-row bg-slate-200 hover:text-white hover:bg-slate-500 basis-full">
+                {allowsSorting ? (
+                  <span className="flex" aria-label={`${props.id} column sorted ${sortDirection}`}>
                     {children}
-                    <span className={`px-1 w-4 h-4 flex items-center justify-center transition`} aria-hidden={true}>
+                    <span className={`mt-0.5 w-4 h-4 flex items-center justify-center transition`} aria-hidden={true}>
                       {sortDirection !== "disabled" ? (
                         <Icon type={`${direction === "ascending" ? "fas-arrow-up-short-wide" : "fas-arrow-down-wide-short"}`} className="ml-2 h-4 w-4" />
                       ) : (
                         <Icon type="fas-arrow-down-up-across-line" className="ml-2 h-4 w-4" />
                       )}
                     </span>
-                  </Button>
-              ) : (<span>{children}</span>)}
+                  </span>
+                ) : (
+                  <span>{children}</span>
+                )}
+              </Button>
             </GroupComp>
           </div>
         );
