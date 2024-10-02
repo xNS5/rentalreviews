@@ -28,7 +28,7 @@ export default function DataTable({
 }>) {
   const rowKeys = ["name", "company_type", "average_rating", "adjusted_average_rating", "review_count"];
   const [currentPage, setCurrentPage] = useState(1);
-  const [hoverStates, setHoverStates] = useState<{[key: string]: boolean}>({});
+  const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>({});
   const pageCount = Math.ceil(data.length / paginationValue);
 
   let [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -62,7 +62,6 @@ export default function DataTable({
     return sortedItems.slice((currentPage - 1) * paginationValue, currentPage * paginationValue);
   }, [sortedItems, currentPage, sortDescriptor]);
 
-
   const handleMouseEnter = (key: any) => {
     setHoverStates((prev) => ({ ...prev, [key]: true }));
   };
@@ -74,7 +73,7 @@ export default function DataTable({
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setHoverStates({});
-  }
+  };
 
   return (
     <div className="relative w-full overflow-auto border-2 border-solid border-slate-500 rounded-lg">
@@ -94,43 +93,33 @@ export default function DataTable({
           ))}
         </TableHeader>
         <TableBody>
-          {currentPageData.map((item, i: number) => {
-            const currRow: React.ReactNode[] = rowKeys.map((key: string, j: number) => {
-              const className = j < rowKeys.length ? "border-black border-r-1" : "";
-              const isHover = hoverStates[item.slug];
-              return (
-                <Cell key={j} className={`${className}`}>
+          {currentPageData.map((item, i: number) => (
+            <Row key={i}>
+              {rowKeys.map((key: string, j: number) => (
+                <Cell key={j} className={`${j < rowKeys.length - 1 ? "border-black border-r-1" : ""}`}>
                   {j == 0 ? (
-                  <Link
-                    id={`${key}-link`}
-                    href={`/reviews/${item.slug}`}
-                    className={`flex mx-3 font-medium items-center justify-center`}
-                    onMouseEnter={() => handleMouseEnter(item.slug)}
-                    onMouseLeave={() =>  handleMouseLeave(item.slug)}
-                  >
-                    {`${item[key]}`}
-                    <Icon type="fas-link" ariahidden={true} className={`${hoverStates[item.slug] ? "visible" : "invisible" } mx-1 h-4 w-4`} />
-                  </Link>
-
-                  ): (
+                    <Link
+                      id={`${key}-link`}
+                      href={`/reviews/${item.slug}`}
+                      className={`flex mx-3 font-medium items-center justify-center`}
+                      onMouseEnter={() => handleMouseEnter(item.slug)}
+                      onMouseLeave={() => handleMouseLeave(item.slug)}
+                    >
+                      {`${item[key]}`}
+                      <Icon type="fas-link" ariahidden={true} className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`} />
+                    </Link>
+                  ) : (
                     <>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</>
                   )}
                 </Cell>
-              );
-            });
-
-            return <Row key={i}>{currRow}</Row>;
-          })}
+              ))}
+            </Row>
+          ))}
         </TableBody>
       </Table>
       <span className="py-2 flex flex-col justify-center text-center">
         <span className="flex flex-row justify-center text-center">
-          <Button 
-          variant={"ghost"} 
-          aria-label="last page" 
-          disabled={currentPage === 1} 
-          aria-disabled={currentPage === 1} 
-          onClick={() => handlePageChange(1)}>
+          <Button variant={"ghost"} aria-label="last page" disabled={currentPage === 1} aria-disabled={currentPage === 1} onClick={() => handlePageChange(1)}>
             {"<<"}
           </Button>
           <Button
