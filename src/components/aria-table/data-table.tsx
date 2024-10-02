@@ -35,8 +35,14 @@ export default function DataTable({
     direction: "ascending",
   });
 
+  const filteredData = useMemo(() => {
+    return data.filter((item) => item["name"].includes(searchTerm));
+  }, [searchTerm]);
+
   const sortedData = useMemo(() => {
-    const sortedDataArr = data.sort((a, b) => {
+    let inputData = searchTerm.length > 0 ? filteredData : data;
+
+    return inputData.sort((a, b) => {
       let first = a[sortDescriptor.column as keyof Company];
       let second = b[sortDescriptor.column as keyof Company];
 
@@ -52,15 +58,11 @@ export default function DataTable({
       }
       return cmp;
     });
-    if (searchTerm.length > 0) {
-      return sortedDataArr.filter((item) => item["name"].includes(searchTerm));
-    }
-    return sortedDataArr;
   }, [sortDescriptor, searchTerm]);
 
   const pageCount = useMemo(() => {
     return Math.ceil(sortedData.length / paginationValue);
-  }, [searchTerm]);
+  }, [sortedData]);
 
   const paginatedPageData = useMemo(() => {
     let currData = sortedData;
