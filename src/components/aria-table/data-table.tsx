@@ -85,6 +85,12 @@ export default function DataTable({
     setHoverStates({});
   };
 
+  function getAltString(index: string, value: any){
+    const {prefix, postfix} = alt[index];
+    return `${prefix} ${value} ${postfix}`
+
+  }
+
   return (
     <div className="relative overflow-auto border-2 border-solid border-slate-500 rounded-lg">
       <div className="flex flex-row flex-nowrap items-center gap-3 justify-end m-2">
@@ -123,7 +129,7 @@ export default function DataTable({
                         <Icon type="fas-link" ariahidden={true} className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`} />
                       </Link>
                     ) : (
-                      <>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</>
+                      <span aria-label={`${getAltString(key, item[key])}`}>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</span>
                     )}
                   </Cell>
                 ))}
