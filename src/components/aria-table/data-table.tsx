@@ -27,7 +27,7 @@ export default function DataTable({
   paginationValue?: number;
 }>) {
   const colKeys = ["name", "company_type", "average_rating", "adjusted_average_rating", "review_count"];
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageNumber, setcurrentPageNumberNumber] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>({});
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -66,11 +66,11 @@ export default function DataTable({
 
   const paginatedPageData = useMemo(() => {
     let currData = sortedData;
-    if (currentPage === pageCount) {
-      return currData.slice((currentPage - 1) * paginationValue);
+    if (currentPageNumber === pageCount) {
+      return currData.slice((currentPageNumber - 1) * paginationValue);
     }
-    return currData.slice((currentPage - 1) * paginationValue, currentPage * paginationValue);
-  }, [searchTerm, currentPage, sortDescriptor, sortedData]);
+    return currData.slice((currentPageNumber - 1) * paginationValue, currentPageNumber * paginationValue);
+  }, [searchTerm, currentPageNumber, sortDescriptor, sortedData]);
 
   const handleMouseEnter = (key: any) => {
     setHoverStates((prev) => ({ ...prev, [key]: true }));
@@ -81,14 +81,13 @@ export default function DataTable({
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setcurrentPageNumberNumber(page);
     setHoverStates({});
   };
 
   function getAltString(index: string, value: any){
     const {prefix, postfix} = alt[index];
     return `${prefix} ${value} ${postfix}`
-
   }
 
   return (
@@ -119,7 +118,7 @@ export default function DataTable({
                   <Cell key={j} className={`${j < colKeys.length - 1 ? "border-black border-r-1" : ""}`}>
                     {j == 0 ? (
                       <Link
-                        id={`${key}-link`}
+                        id={`${item.slug}`}
                         href={`/reviews/${item.slug}`}
                         className={`flex mx-3 font-medium items-center justify-center`}
                         onMouseEnter={() => handleMouseEnter(item.slug)}
@@ -139,39 +138,39 @@ export default function DataTable({
         </Table>
         <span className="py-2 flex flex-col justify-center text-center">
           <span className="flex flex-row justify-center text-center">
-            <Button variant={"ghost"} aria-label="last page" disabled={currentPage === 1} aria-disabled={currentPage === 1} onClick={() => handlePageChange(1)}>
+            <Button variant={"ghost"} aria-label="last page" disabled={currentPageNumber === 1} aria-disabled={currentPageNumber === 1} onClick={() => handlePageChange(1)}>
               {"<<"}
             </Button>
             <Button
               variant={"ghost"}
               aria-label="previous page"
-              disabled={currentPage === 1}
-              aria-disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPageNumber === 1}
+              aria-disabled={currentPageNumber === 1}
+              onClick={() => handlePageChange(currentPageNumber - 1)}
             >
               {"<"}
             </Button>
             <Button
               variant={"ghost"}
               aria-label="next page"
-              disabled={currentPage === pageCount}
-              aria-disabled={currentPage === pageCount}
-              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPageNumber === pageCount}
+              aria-disabled={currentPageNumber === pageCount}
+              onClick={() => handlePageChange(currentPageNumber + 1)}
             >
               {">"}
             </Button>
             <Button
               variant={"ghost"}
               aria-label="last page"
-              disabled={currentPage === pageCount}
-              aria-disabled={currentPage === pageCount}
+              disabled={currentPageNumber === pageCount}
+              aria-disabled={currentPageNumber === pageCount}
               onClick={() => handlePageChange(pageCount)}
             >
               {">>"}
             </Button>
           </span>
           <p>
-            Page {currentPage} of {pageCount}
+            Page {currentPageNumber} of {pageCount}
           </p>
         </span>
       </div>
