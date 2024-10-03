@@ -65,11 +65,10 @@ export default function DataTable({
   }, [sortedData]);
 
   const paginatedPageData = useMemo(() => {
-    let currData = sortedData;
     if (currentPageNumber === pageCount) {
-      return currData.slice((currentPageNumber - 1) * paginationValue);
+      return sortedData.slice((currentPageNumber - 1) * paginationValue);
     }
-    return currData.slice((currentPageNumber - 1) * paginationValue, currentPageNumber * paginationValue);
+    return sortedData.slice((currentPageNumber - 1) * paginationValue, currentPageNumber * paginationValue);
   }, [searchTerm, currentPageNumber, sortDescriptor, sortedData]);
 
   const handleMouseEnter = (key: any) => {
