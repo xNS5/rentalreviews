@@ -35,10 +35,12 @@ export default function DataTable({
     direction: "ascending",
   });
 
+  // Filters data based on searchTerm
   const filteredData = useMemo(() => {
     return data.filter((item) => item["name"].includes(searchTerm));
   }, [searchTerm]);
 
+  // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
     let inputData = searchTerm.length > 0 ? filteredData : data;
 
@@ -60,10 +62,12 @@ export default function DataTable({
     });
   }, [sortDescriptor, searchTerm]);
 
+  // Memoizes page count. Might not need to.
   const pageCount = useMemo(() => {
     return Math.ceil(sortedData.length / paginationValue);
   }, [sortedData]);
 
+  // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
     if (currentPageNumber === pageCount) {
       return sortedData.slice((currentPageNumber - 1) * paginationValue);
@@ -71,21 +75,24 @@ export default function DataTable({
     return sortedData.slice((currentPageNumber - 1) * paginationValue, currentPageNumber * paginationValue);
   }, [searchTerm, currentPageNumber, sortDescriptor, sortedData]);
 
+  // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
     setHoverStates((prev) => ({ ...prev, [key]: true }));
   };
 
+  // Handles mouse leave link
   const handleMouseLeave = (key: any) => {
     setHoverStates((prev) => ({ ...prev, [key]: false }));
   };
 
+  // Handles page change, sets current page number and resets the hover state object
   const handlePageChange = (page: number) => {
     setcurrentPageNumberNumber(page);
     setHoverStates({});
   };
 
-  function getAltString(index: string, value: any){
-    const {prefix, postfix} = alt[index];
+  function getAltString(index: string, value: any) {
+    const { prefix, postfix } = alt[index];
     return `${prefix} ${value} ${postfix}`
   }
 
@@ -127,9 +134,7 @@ export default function DataTable({
                         <Icon type="fas-link" ariahidden={true} className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`} />
                       </Link>
                     ) : (
-                      <Fragment>
-                        <span>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</span>
-                      </Fragment>
+                      <span>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</span>
                     )}
                   </Cell>
                 ))}
