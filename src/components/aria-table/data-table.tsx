@@ -1,6 +1,6 @@
 "use client";
 
-import { Table, TableHeader, TableBody, TableHead, Row, Cell, Caption, Column } from "../ui/aria-table";
+import { Table, TableHeader, TableBody, Row, Cell, Caption, Column } from "../ui/aria-table";
 
 import Icon from "../icons/icon";
 import { Input } from "@/components/ui/input";
@@ -127,7 +127,9 @@ export default function DataTable({
                         <Icon type="fas-link" ariahidden={true} className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`} />
                       </Link>
                     ) : (
-                      <span aria-label={`${getAltString(key, item[key])}`}>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</span>
+                      <Fragment>
+                        <span>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</span>
+                      </Fragment>
                     )}
                   </Cell>
                 ))}

@@ -117,7 +117,7 @@ const Row = ({
   className?: string;
   [key: string]: any;
 }>) => (
-  <RowComp className={cn("border-b transition-colors hover:bg-muted/50 text-center", className)} {...props}>
+  <RowComp className={cn("border-b transition-colors hover:bg-muted/50 text-center focus-visible:outline focus-visible:outline-2", className)} {...props}>
     {children}
   </RowComp>
 );
@@ -145,7 +145,7 @@ const Cell = ({
   className?: string;
   [key: string]: any;
 }>) => (
-  <CellComp className={cn("p-4 align-middle text-center", className)} {...props}>
+  <CellComp className={cn("p-4 align-middle text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-slate-600 focus-visible:-outline-offset-4 group-selected:focus-visible:outline-white", className)} {...props}>
     {children}
   </CellComp>
 );
@@ -163,5 +163,5 @@ const Caption = ({
     {children}
   </caption>
 );
-export { Table, TableHeader, TableBody, TableHead, Row, Cell, Caption, Column };
+export { Table, TableHeader, TableBody, Row, Cell, Caption, Column };
 
