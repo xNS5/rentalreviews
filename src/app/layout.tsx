@@ -8,9 +8,8 @@ import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import "./globals.css";
 import Loading from "./loading";
+import Head from "next/head";
 import type { Metadata } from "next";
-import Logo from "@/components/logo/logo";
-import Link from "next/link";
 
 const inter = FontSans({
   subsets: ["latin"],
@@ -52,9 +51,9 @@ export default async function RootLayout({
   const footerData = await getDocument<Config>("config", "footer", 2592000);
   return (
     <html lang="en">
-      <head>
+      <Head>
         <title>{title as string}</title>
-      </head>
+      </Head>
       <body className={cn("bg-white h-screen")}>
         <header>
           <Navbar data={navbarConfig?.nav} title={title as string} description={description as string} />

@@ -5,7 +5,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  RowSelection,
   SortingState,
   getSortedRowModel,
   getPaginationRowModel,
@@ -13,20 +12,15 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
   Row,
+  Header,
 } from "@tanstack/react-table";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import { useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
 import { Input } from "@/components/ui/input";
 import styles from "./data-table.module.css";
+import { Company } from "@/app/reviews/columns";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -38,14 +32,7 @@ interface DataTableProps<TData, TValue> {
   [key: string]: any;
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  initialState,
-  tableCaption,
-  paginationValue,
-  alt,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, initialState, tableCaption, paginationValue }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(initialState.sorting);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -73,42 +60,40 @@ export function DataTable<TData, TValue>({
 
   const tableHeaderGroups = table.getHeaderGroups();
   const tableRowModel = table.getRowModel();
+  const tableRef = useRef<HTMLTableElement>(null);
 
   return (
     <div className="rounded-md border">
-      <div className="flex items-center p-4 justify-end" role="presentation">
+      <div className="flex items-center p-4 justify-end">
         <label className="flex text-md items-center">
           Search
           <Input
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
+            onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
             className="max-w-sm ml-2 shadow-lg"
           />
         </label>
       </div>
 
-      <Table
-        role="grid"
-        aria-colcount={tableHeaderGroups?.length ?? 0}
-        aria-rowcount={tableRowModel.rows?.length ?? 0}
-      >
-        <caption className="caption-top text-lg" aria-label={tableCaption}>
+      <Table role="grid" aria-colcount={tableHeaderGroups?.length ?? 0} aria-rowcount={tableRowModel.rows?.length ?? 0} ref={tableRef}>
+        <caption className="caption-top text-lg">
           {tableCaption}
         </caption>
-        <TableHeader aria-label="Table Header">
+        <TableHeader>
           {tableHeaderGroups.map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+            <TableRow id="header-row" key={headerGroup.id}>
+              {headerGroup.headers.map((header, i: number) => {
+                const columnIsSorted = header.column.getIsSorted();
                 return (
-                  <TableHead key={header.id} scope="col" role="columnheader">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                  <TableHead
+                    id={header.column.id}
+                    key={i}
+                    aria-sort={columnIsSorted ? (columnIsSorted == "desc" ? "descending" : "ascending") : "none"}
+                    aria-colindex={i}
+                    aria-rowindex={0}
+                    // onKeyDown={(e) => tableNavigationHandler(e, i, undefined, header)}
+                  >
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 );
               })}
@@ -120,33 +105,21 @@ export function DataTable<TData, TValue>({
             tableRowModel.rows.map((row, i: number) => {
               const tableVisibleCells = row.getVisibleCells();
               return (
-                <TableRow
-                  key={row.id}
-                  className={`${styles.data_table_row}`}
-                  role="rowgroup"
-                >
+                <TableRow id={(row.original as Company).slug} key={i} className={`${styles.data_table_row}`} aria-rowindex={i} role="rowgroup">
                   {tableVisibleCells.map((cell, j: number) => {
-                    // Gets the alt object ID from the cell ID, and uses it as the key for the alt object.
-                    const altKey: string = cell.id.slice(2);
-                    let ariaLabel = cell.getValue() as string;
-
-                    if (alt[altKey]) {
-                      const { prefix, postfix } = alt[altKey];
-                      ariaLabel = `${prefix} ${cell.getValue()} ${postfix}`;
-                    }
-
+                    // console.log(cell);
                     return (
                       <TableCell
-                        key={cell.id}
-                        aria-label={ariaLabel}
+                        key={j}
                         aria-colindex={j}
+                        aria-rowindex={i+1}
+                        className="focus:ring"
                         role="cell"
-                        // tabIndex={0}
+                        {...(i == 0 ? {tabIndex: -1} : undefined)}
+                        aria-labelledby={`${cell.id.slice(2)}`}
+                        // onKeyDown={(e) => tableNavigationHandler(e, j, row)}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     );
                   })}
@@ -155,7 +128,7 @@ export function DataTable<TData, TValue>({
             })
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className="h-24 text-center" tabIndex={-1}>
                 No results.
               </TableCell>
             </TableRow>
@@ -165,12 +138,7 @@ export function DataTable<TData, TValue>({
       {data.length > DEFAULT_PAGINATION_VALUE && (
         <>
           <div className="flex items-center gap-2 justify-center py-1">
-            <button
-              className={styles.data_table_nav_button}
-              onClick={() => table.firstPage()}
-              disabled={!table.getCanPreviousPage()}
-              aria-label="First page"
-            >
+            <button className={styles.data_table_nav_button} onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()} aria-label="First page">
               {"<<"}
             </button>
             <button
@@ -181,28 +149,17 @@ export function DataTable<TData, TValue>({
             >
               {"<"}
             </button>
-            <button
-              className={styles.data_table_nav_button}
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              aria-label="Next page"
-            >
+            <button className={styles.data_table_nav_button} onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} aria-label="Next page">
               {">"}
             </button>
-            <button
-              className={styles.data_table_nav_button}
-              onClick={() => table.lastPage()}
-              disabled={!table.getCanNextPage()}
-              aria-label="Last page"
-            >
+            <button className={styles.data_table_nav_button} onClick={() => table.lastPage()} disabled={!table.getCanNextPage()} aria-label="Last page">
               {">>"}
             </button>
           </div>
           <span className="flex items-center gap-1 justify-center py-1">
             <div>Page</div>
             <strong>
-              {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount().toLocaleString()}
+              {table.getState().pagination.pageIndex + 1} of {table.getPageCount().toLocaleString()}
             </strong>
           </span>
         </>
@@ -210,3 +167,4 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+

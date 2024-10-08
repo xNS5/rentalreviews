@@ -4,7 +4,6 @@ import { getDocument } from "../db/db";
 import type { Config, Text as TextType } from "@/lib/config-provider";
 import { Suspense } from "react";
 import Loading from "./loading";
-
 export default async function Home() {
   
   const data: Config | undefined = await getDocument<Config>("config", "home")

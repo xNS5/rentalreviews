@@ -5,71 +5,58 @@ import { DataTable } from "@/components/table/data-table";
 import { Company, columns } from "./columns";
 import { AltRecord } from "@/lib/altprovider";
 import Icon from "@/components/icons/icon";
+import { useState } from "react";
 
 export function ReviewsTableWrapper({
   data,
-  alt
+  alt,
 }: Readonly<{
   data: Company[];
   alt: AltRecord;
 }>) {
-  
   columns[0].cell = ({ cell, row }) => {
+    const [isHover, setIsHover] = useState(false);
+    const cellValue: string = cell.getValue() as string;
     return (
       <Link
+        id={cell.id}
         href={`/reviews/${row.original.slug}`}
         className={`flex mx-3 font-medium items-center justify-center`}
+        onMouseEnter={() => setIsHover((prev) => !prev)}
+        onMouseLeave={() => setIsHover((prev) => !prev)}
       >
-        {`${cell.getValue()}`}
-        <Icon type="fas-arrow-up-right-from-square" ariahidden={true} className="mx-1 !h-3 w-auto"/>
+        {`${cellValue}`}
+        <Icon type="fas-link" ariahidden={true} className={`${isHover ? "visible" : "invisible"} mx-1 h-4 w-4`} />
       </Link>
     );
   };
 
-  for(let i = 1; i < columns.length; i++){
+  for (let i = 1; i < columns.length; i++) {
     let column = columns[i];
-    column.cell = ({cell, row}) => {
+    column.cell = ({ cell, row }) => {
       const altKey = cell.column.id;
-      if(alt[altKey] != undefined){
-        const {prefix, postfix} = alt[altKey];
-        return (
-          <span
-          aria-label={`${prefix} ${cell.getValue()} ${postfix}`}
-          >
-            {`${cell.getValue()}`}
-          </span>
-        )
+      let ret: React.ReactNode;
+      if (alt[altKey] != undefined) {
+        const { prefix, postfix } = alt[altKey];
+        const aria_label_string = `${prefix} ${cell.getValue()} ${postfix}`;
+        ret = <p id={cell.id}>{`${cell.getValue()}${["average_rating", "adjusted_average_rating"].includes(altKey) ? "/5" : ""}`}</p>;
+      } else {
+        ret = <p id={cell.id}>{cell.getValue() as string}</p>;
       }
-      return (
-        <span>{cell.getValue() as string}</span>
-      )
-    }
+      return ret;
+    };
   }
-  
+
   const initialState = {
     sorting: [
       {
-        id: 'name',
-        desc: false
+        id: "name",
+        desc: false,
       },
-      {
-        id: 'company_type',
-        desc: false
-      },
-      {
-        id: 'average_rating',
-        desc: false
-      },
-      {
-        id: 'adjusted_average_rating',
-        desc: false
-      },
-      {
-        id: 'review_count',
-        desc: false
-      },
-    ]
-  }
+    ],
+  };
+  
 
-  return <DataTable columns={columns} data={data} tableCaption={"Rental Reviews Data"} alt={alt} initialState={initialState}/>;
+  return <DataTable columns={columns} data={data} tableCaption={"Rental Reviews Data"} alt={alt} initialState={initialState} />;
 }
+

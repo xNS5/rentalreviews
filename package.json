@@ -32,9 +32,13 @@
     "mongodb": "^6.7.0",
     "next": "^14.2.3",
     "node-cache": "^5.1.2",
+    "react-aria": "^3.34.3",
+    "react-aria-components": "^1.3.3",
     "react-dom": "^18.2.0",
+    "react-stately": "^3.33.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-react-aria-components": "^1.1.5",
     "view-json-react": "^1.1.1"
   },
   "devDependencies": {

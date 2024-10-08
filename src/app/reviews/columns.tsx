@@ -1,7 +1,7 @@
+import Icon from "@/components/icons/icon";
 import { Button } from "@/components/ui/button";
-import { ColumnDef, ColumnSort } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { DocumentData } from "firebase/firestore";
-import { ArrowUpDown } from "lucide-react";
 
 export interface Company extends DocumentData {
   name: string;
@@ -18,7 +18,12 @@ export interface Company extends DocumentData {
   [key: string]: any | any[];
 }
 
-const columnKeys = [
+export type ColumnType = {
+  key: string,
+  title: string
+}
+
+export const ColumnKeys = [
   {
     key: "name",
     title: "Name",
@@ -46,26 +51,51 @@ function getSortButton(
   isSortedObj: string | boolean,
   name: string
 ) {
+
+  let props: {[key: string]: any} = {}
+
+  switch(isSortedObj){
+    case "asc":
+      props = {
+        aria_label: `${name} sorted ascending`,
+        sortIcon: <Icon type="fas-arrow-up-short-wide" className="ml-2 h-4 w-4"/>
+      }
+      break;
+    case "desc":
+      props = {
+        aria_label: `${name} sorted descending`,
+        sortIcon: <Icon type="fas-arrow-down-wide-short" className="ml-2 h-4 w-4"/>
+      }
+      break;
+    default:
+      props= {
+        aria_label:`${name} sorting disabled`,
+        sortIcon: <Icon type="fas-arrow-down-up-across-line" className="ml-2 h-4 w-4"/>
+      }
+      break;
+  }
+  
+
   return (
     <Button
       variant="ghost"
       onClick={() => onClickFn(isSortedObj === "asc")}
-      aria-label={`${name} sorted ${
-        isSortedObj === "asc" ? "ascending" : "descending"
-      }`}
+/*       aria-label={props.aria_label} */
     >
       {name}
-      <ArrowUpDown className="ml-2 h-4 w-4" />
+      {props.sortIcon}
     </Button>
   );
 }
 
 
-export const columns: ColumnDef<Company>[] = columnKeys.map((col)=> {
+export const columns: ColumnDef<Company>[] = ColumnKeys.map((col)=> {
   return {
     accessorKey: col.key,
     header: ({ column }) => {
       return getSortButton(column.toggleSorting, column.getIsSorted(), col.title);
-    },
+    }
   }
 });
+
+
