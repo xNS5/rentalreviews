@@ -89,6 +89,10 @@ a[href]:hover {
   text-decoration: underline;
 }
 
+p > a[href] {
+  font-weight: bold;
+}
+
 article {
   margin: 1em;
 }
