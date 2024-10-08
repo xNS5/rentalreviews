@@ -16,13 +16,13 @@ const DEFAULT_PAGINATION_VALUE = 10;
 export default function DataTable({
   columns,
   data,
-  alt,
+  // alt,
   tableCaption,
   paginationValue = DEFAULT_PAGINATION_VALUE,
 }: Readonly<{
   columns: ColumnType[];
   data: Company[];
-  alt: AltRecord;
+  // alt: AltRecord;
   tableCaption: string;
   paginationValue?: number;
 }>) {
@@ -91,10 +91,10 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  function getAltString(index: string, value: any) {
-    const { prefix, postfix } = alt[index];
-    return `${prefix} ${value} ${postfix}`
-  }
+  // function getAltString(index: string, value: any) {
+  //   const { prefix, postfix } = alt[index];
+  //   return `${prefix} ${value} ${postfix}`
+  // }
 
   return (
     <div className="relative overflow-auto border-2 border-solid border-slate-500 rounded-lg">
@@ -113,7 +113,7 @@ export default function DataTable({
                 allowsSorting
                 className={`border-black ${i < columns.length - 1 ? "border-r-1" : ""}`}
               >
-                {column.title}
+                <p>{column.title}</p>
               </Column>
             ))}
           </TableHeader>
@@ -130,11 +130,11 @@ export default function DataTable({
                         onMouseEnter={() => handleMouseEnter(item.slug)}
                         onMouseLeave={() => handleMouseLeave(item.slug)}
                       >
-                        <span className="px-2">{`${item[key]}`}</span>
+                        <p className="px-2">{`${item[key]}`}</p>
                         <Icon type="fas-link" ariahidden={true} className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`} />
                       </Link>
                     ) : (
-                      <span>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</span>
+                      <p>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</p>
                     )}
                   </Cell>
                 ))}
