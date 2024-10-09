@@ -10,6 +10,7 @@ import "./globals.css";
 import Loading from "./loading";
 import Head from "next/head";
 import type { Metadata } from "next";
+import SkipToContent from "@/components/skip-to-content/skip";
 
 const inter = FontSans({
   subsets: ["latin"],
@@ -55,11 +56,12 @@ export default async function RootLayout({
         <title>{title as string}</title>
       </Head>
       <body className={cn("bg-white h-screen")}>
+        <SkipToContent className="bg-white" url="#main-content"/>
         <header>
           <Navbar data={navbarConfig?.nav} title={title as string} description={description as string} />
         </header>
         <Suspense key={Math.random()} fallback={<Loading />}>
-          <main role="main" className={`${inter.variable}`}>
+          <main id="main-content" role="main" className={`${inter.variable}`}>
             <Providers>{children}</Providers>
           </main>
         </Suspense>

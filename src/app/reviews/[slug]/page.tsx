@@ -1,23 +1,27 @@
 import { notFound } from "next/navigation";
 import { Review } from "./review";
-import { Suspense } from "react";
 import getCompanyData from "@/lib/getCompanyData";
 import type { Company } from "../columns";
-import Loading from "@/app/loading";
 import { isValidSlug } from "@/lib/utils";
+import Article from "@/components/article/article";
 
-export default async function Page({ params }: Readonly<{
-    params: { [key: string]: string }
+export default async function Page({
+  params,
+}: Readonly<{
+  params: { [key: string]: string };
 }>) {
-    const { slug } = params;
+  const { slug } = params;
 
-    if (slug == undefined || !isValidSlug(slug)) {
-        notFound();
-    }
+  if (slug == undefined || !isValidSlug(slug)) {
+    notFound();
+  }
 
-    const companyObj: Company | undefined = await getCompanyData(slug);
+  const companyObj: Company | undefined = await getCompanyData(slug);
 
-    return (
-                <Review {...companyObj as Company} />
-        )
+  return (
+    <Article>
+      <Review {...(companyObj as Company)} />
+    </Article>
+  );
 }
+
