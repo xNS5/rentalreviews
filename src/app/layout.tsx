@@ -1,6 +1,6 @@
 import { Inter as FontSans } from "next/font/google";
 import { Suspense } from "react";
-import { getDocument } from "../db/db";
+import { getCollection, getDocument } from "../db/db";
 import { Config } from "../lib/config-provider";
 import { cn } from "@/lib/utils";
 import { Providers } from "./providers";
@@ -20,7 +20,7 @@ const inter = FontSans({
 export let metadata: Metadata;
 
 export async function getMetadata() {
-  const config: Config | undefined = await getDocument<Config>("config", "metadata", 2592000);
+  const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
   metadata = {
     title: config?.metadata.title,
     description: config?.metadata.description,
@@ -48,8 +48,9 @@ export default async function RootLayout({
 }>) {
   await getMetadata();
   const { title, description } = metadata;
-  const navbarConfig = await getDocument<Config>("config", "navigation", 2592000);
-  const footerData = await getDocument<Config>("config", "footer", 2592000);
+  const config = await getDocument<Config>("config", "config", 2592000);
+  const {navbar, footer} = config;
+
   return (
     <html lang="en">
       <Head>
@@ -58,14 +59,14 @@ export default async function RootLayout({
       <body className={cn("bg-white h-screen")}>
         <SkipToContent className="bg-white" url="#main-content"/>
         <header>
-          <Navbar data={navbarConfig?.nav} title={title as string} description={description as string} />
+          <Navbar data={navbar} title={title as string} description={description as string} />
         </header>
         <Suspense key={Math.random()} fallback={<Loading />}>
           <main id="main-content" role="main" className={`${inter.variable}`}>
             <Providers>{children}</Providers>
           </main>
         </Suspense>
-        <Footer footer={footerData?.footer} />
+        <Footer data={footer} />
       </body>
     </html>
   );

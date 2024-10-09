@@ -11,24 +11,7 @@ import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
-function NavItem({
-  name,
-  ...rest
-}: Readonly<{
-  name: string;
-  [key: string]: any;
-}>) {
-  // Hacky way to get the active class props
-  const { href } = rest;
-  const activeClassProps = getActiveClassProps(href);
-  const activeClassPropsCount = Object.keys(activeClassProps).length;
-  return (
-    <Link href={"/"} {...activeClassProps} {...rest} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
-      {name}
-      {activeClassPropsCount > 1 && <span className="sr-only">current page</span>}
-    </Link>
-  );
-}
+
 
 function IsMobileWidth(): boolean {
   if (typeof window !== "undefined") {
@@ -50,6 +33,25 @@ export function getActiveClassProps(url: string) {
       className: `${baseStyle} hover:underline hover:text-slate-500`,
     };
   }
+} 
+
+function NavItem({
+  name,
+  ...rest
+}: Readonly<{
+  name: string;
+  [key: string]: any;
+}>) {
+  // Hacky way to get the active class props
+  const { href } = rest;
+  const activeClassProps = getActiveClassProps(href);
+  const activeClassPropsCount = Object.keys(activeClassProps).length;
+  return (
+    <Link href={"/"} {...activeClassProps} {...rest} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
+      {name}
+      {activeClassPropsCount > 1 && <span className="sr-only">current page</span>}
+    </Link>
+  );
 }
 
 export default function Navbar({
