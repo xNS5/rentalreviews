@@ -11,13 +11,13 @@ export default async function FAQ() {
   const data: FaqType | undefined = await getDocument<FaqType>("config", "faq");
 
   return (
-    <Article className="container mx-auto py-10">
-      <h1 className="text-center mb-5">{data.description}</h1>
+    <Article className="flex flex-col container mx-auto py-10">
+      <h1 className="md:text-4xl self-center mb-5">{data.description}</h1>
      <Suspense key={Math.random()} fallback={<Loading/>}>
      <ol>
         {data?.questions.map((questionObj, i: number) => (
           <li key={i}>
-            <section className="m-2">
+            <section className="m-2 flex flex-col">
               <h2 className="font-semibold !text-xl !md:text-2xl no-underline text-start">
                 {questionObj.question}
               </h2>

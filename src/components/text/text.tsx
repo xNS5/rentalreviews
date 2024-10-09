@@ -3,16 +3,11 @@ import parse from "html-react-parser/lib/index";
 
 export default function Text({
   text,
-  className
+  className = "",
 }: Readonly<{
   text: string;
   className?: string;
 }>) {
-  if(className !== undefined){
-    return <div className={className}>
-      {parse(text)}
-    </div>
-  }
-
-  return <>{parse(text)}</>;
+  return <div className={`${className} focus:ring`}>{parse(text)}</div>;
 }
+
