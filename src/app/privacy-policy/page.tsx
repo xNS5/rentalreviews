@@ -5,7 +5,6 @@ import type { Config, Text as TextType } from "@/lib/config-provider";
 
 import "./privacy_policy.css";
 
-// TODO fix this so it gets the config page instead of the individual document
 export default async function PrivacyPolicy() {
   const { privacy_policy }: Config | undefined = await getDocument<Config>("config", "config");
 
