@@ -13,10 +13,8 @@ export default async function FAQ() {
 
   return (
     <Article className="container">
-      <header className="my-2 self-center text-center">
-        <h1 className="md:text-4xl">{faqObj.title}</h1>
-        <h2 className="md:text-2xl no-underline font-normal">{faqObj.description}</h2>
-      </header>
+      <h1 className="md:text-4xl">{faqObj.title}</h1>
+      <h2 className="md:text-2xl no-underline font-normal">{faqObj.description}</h2>
       <ol>
         {faqObj?.questions.map((questionObj: FaqQuestion, i: number) => (
           <section key={i}>
