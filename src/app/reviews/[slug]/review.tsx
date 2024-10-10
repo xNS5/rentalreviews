@@ -9,6 +9,7 @@ import "./review.css";
 const adjustedReviewDisclaimerString = "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
 
 export async function Review(data: Company) {
+  // Note to self: this is to display the adjusted data, the disclaimer object is different. E.g. Son-Rise -> PURE
   const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
 
   return (
@@ -109,13 +110,13 @@ export async function Review(data: Company) {
       </div>
 
       {/* Conditionally display disclaimer */}
-      {data.article.disclaimer && (
+      {data.summary.disclaimer && (
         <section id="disclaimer">
-          <h2>Disclaimer</h2>
-          {data.article.disclaimer}
+          <h2 className="md:text-2xl font-bold underline">Disclaimer</h2>
+          {data.summary.disclaimer}
         </section>
       )}
-      <Text text={data.article.text} />
+      <Text text={data.summary.text} />
     </Article>
   );
 }
