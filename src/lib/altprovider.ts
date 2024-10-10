@@ -1,4 +1,5 @@
 import { getDocument } from "@/db/db";
+import { Config } from "tailwindcss";
 
 export type Alt = {
   [key: string]: AltRecord;
@@ -14,7 +15,7 @@ export type PrefixPostfix = {
 };
 
 async function getAlt() {
-  const alt: Alt = await getDocument<Alt>("config", "alt");
+  const { alt }: Config = await getDocument<Config>("config", "config");
   return alt;
 }
 
@@ -23,15 +24,12 @@ export async function getAltObj(page: string) {
   return alt[page];
 }
 
-export async function getAltStringAsync(
-  value: string | number,
-  page: string,
-  key: string
-) {
+export async function getAltStringAsync(value: string | number, page: string, key: string) {
   const alt: AltRecord = await getAltObj(page);
   if (alt[key]) {
     const { prefix, postfix } = alt[key];
     return `${prefix} ${value} ${postfix}`;
   }
-  return "undefined"
+  return "undefined";
 }
+
