@@ -5,14 +5,14 @@ import { Table, TableHeader, TableBody, Row, Cell, Caption, Column } from "../ui
 import Icon from "../icons/icon";
 import { Input } from "@/components/ui/input";
 import { Company, ColumnType } from "@/app/reviews/columns";
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { SortDescriptor, SortDirection } from "react-stately";
+import { useMemo, useState } from "react";
+import { SortDescriptor } from "react-stately";
 import { Button } from "../ui/button";
 import { AltRecord } from "@/lib/altprovider";
 import Link from "next/link";
 
 const DEFAULT_PAGINATION_VALUE = 10;
-
+// TODO fix this such that it iterates over the keys of "data" instead of an array
 export default function DataTable({
   columns,
   data,
@@ -21,7 +21,7 @@ export default function DataTable({
   paginationValue = DEFAULT_PAGINATION_VALUE,
 }: Readonly<{
   columns: ColumnType[];
-  data: Company[];
+  data: Company;
   // alt: AltRecord;
   tableCaption: string;
   paginationValue?: number;
@@ -37,14 +37,14 @@ export default function DataTable({
 
   // Filters data based on searchTerm
   const filteredData = useMemo(() => {
-    return data.filter((item) => item["name"].includes(searchTerm));
+    return data.filter((item: Company) => item["name"].includes(searchTerm));
   }, [searchTerm]);
 
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
     let inputData = searchTerm.length > 0 ? filteredData : data;
 
-    return inputData.sort((a, b) => {
+    return inputData.sort((a: Company, b: Company) => {
       let first = a[sortDescriptor.column as keyof Company];
       let second = b[sortDescriptor.column as keyof Company];
 
@@ -118,7 +118,7 @@ export default function DataTable({
             ))}
           </TableHeader>
           <TableBody>
-            {paginatedPageData.map((item, i: number) => (
+            {paginatedPageData.map((item: Company, i: number) => (
               <Row key={i}>
                 {colKeys.map((key: string, j: number) => (
                   <Cell key={j} className={`${j < colKeys.length - 1 ? "border-black border-r-1" : ""}`}>
