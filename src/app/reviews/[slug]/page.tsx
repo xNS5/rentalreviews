@@ -5,6 +5,8 @@ import type { Company } from "../columns";
 import { isValidSlug } from "@/lib/utils";
 import Article from "@/components/article/article";
 
+// TODO troubleshoot review page
+
 export default async function Page({
   params,
 }: Readonly<{

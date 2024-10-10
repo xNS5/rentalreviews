@@ -12,7 +12,6 @@ import { AltRecord } from "@/lib/altprovider";
 import Link from "next/link";
 
 const DEFAULT_PAGINATION_VALUE = 10;
-// TODO fix this such that it iterates over the keys of "data" instead of an array
 export default function DataTable({
   columns,
   data,

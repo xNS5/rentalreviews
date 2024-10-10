@@ -8,6 +8,7 @@ import type { Link as LinkType } from "@/lib/linktype";
 import Loading from "../loading";
 
 export default async function FAQ() {
+  // TODO update config path
   const data: FaqType | undefined = await getDocument<FaqType>("config", "faq");
 
   return (

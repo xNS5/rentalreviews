@@ -3,6 +3,7 @@ import Text from "@/components/text/text";
 import Article from "@/components/article/article";
 import type { Text as TextType } from "@/lib/config-provider";
 
+// TODO fix this so it gets the config page instead of the individual document
 export default async function PrivacyPolicy() {
   const data: TextType | undefined = await getDocument<TextType>(
     "config",
