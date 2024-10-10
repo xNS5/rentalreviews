@@ -10,7 +10,7 @@ export default async function PrivacyPolicy() {
   const { privacy_policy }: Config | undefined = await getDocument<Config>("config", "config");
 
   return (
-    <Article className="flex flex-col px-4">
+    <Article className="container">
       <Text text={privacy_policy?.text ?? ""} />
     </Article>
   );
