@@ -98,7 +98,7 @@ export default function DataTable({
   return (
     <div className="relative overflow-auto border-2 border-solid border-slate-500 rounded-lg">
       <div className="flex flex-row flex-nowrap items-center gap-3 justify-end m-2">
-        Search <Input value={searchTerm} placeholder="Company Name" onChange={(e) => setSearchTerm(e.target.value)} />
+       <label htmlFor="searchBox">Search</label> <Input id={"searchBox"} value={searchTerm} placeholder="Company Name" onChange={(e) => setSearchTerm(e.target.value)} />
       </div>
       <div className="relative overflow-auto border-t-1 border-x-0.5 border-solid border-slate-500 rounded-lg">
         <Table aria-label={tableCaption} sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor} className="w-full">
@@ -174,9 +174,11 @@ export default function DataTable({
               {">>"}
             </Button>
           </span>
-          <p>
+        <div aria-live="polite" aria-atomic="true">
+        <p id="page-announcement">
             Page {currentPageNumber} of {pageCount}
           </p>
+        </div>
         </span>
       </div>
     </div>
