@@ -33,3 +33,11 @@ export async function getAltStringAsync(value: string | number, page: string, ke
   return "undefined";
 }
 
+export function getAltString(altObj: AltRecord, key: string, value: any){
+  if (altObj[key]) {
+    const { prefix, postfix } = altObj[key];
+    return `${prefix} ${value} ${postfix}`;
+  }
+  return "undefined";
+}
+
