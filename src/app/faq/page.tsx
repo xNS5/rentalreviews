@@ -13,8 +13,10 @@ export default async function FAQ() {
 
   return (
     <Article className="container">
-      <h1 className="md:text-4xl">{faqObj.title}</h1>
-      <h2 className="md:text-2xl no-underline font-normal">{faqObj.description}</h2>
+     <div className="flex flex-col text-center py-2">
+     <h1 className="md:text-4xl">{faqObj.title}</h1>
+     <h2 className="md:text-2xl no-underline font-normal">{faqObj.description}</h2>
+     </div>
       <ol>
         {faqObj?.questions.map((questionObj: FaqQuestion, i: number) => (
           <section key={i}>
