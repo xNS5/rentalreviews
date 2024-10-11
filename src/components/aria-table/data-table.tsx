@@ -90,11 +90,6 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  // function getAltString(index: string, value: any) {
-  //   const { prefix, postfix } = alt[index];
-  //   return `${prefix} ${value} ${postfix}`
-  // }
-
   return (
     <div className="relative overflow-auto border-2 border-solid border-slate-500 rounded-lg">
       <div className="flex flex-row flex-nowrap items-center gap-3 justify-end m-2">
@@ -125,6 +120,8 @@ export default function DataTable({
                       <Link
                         id={`${item.slug}`}
                         href={`/reviews/${item.slug}`}
+                        aria-label={`Link to ${item[key]}`}
+                        tabIndex={-1}
                         className={`flex mx-3 font-medium items-center justify-center`}
                         onMouseEnter={() => handleMouseEnter(item.slug)}
                         onMouseLeave={() => handleMouseLeave(item.slug)}
