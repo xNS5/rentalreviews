@@ -15,8 +15,36 @@ function getResponse(message: any, code: STATUS) {
   );
 }
 
-export async function POST(){
-  return getResponse("POST not supported", STATUS.CLIENT_ERROR)
+export async function POST() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
+}
+
+export async function PUT() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
+}
+
+export async function DELETE() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
+}
+
+export async function PATCH() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
+}
+
+export async function HEAD() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
+}
+
+export async function OPTIONS() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
+}
+
+export async function TRACE() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
+}
+
+export async function CONNECT() {
+  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
 }
 
 export async function GET(

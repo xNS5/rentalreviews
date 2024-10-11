@@ -53,9 +53,6 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <Head>
-        <title>{title as string}</title>
-      </Head>
       <body className={cn("bg-white h-screen")}>
         <SkipToContent className="bg-white" url="#main-content"/>
         <header>
