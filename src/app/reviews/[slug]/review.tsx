@@ -3,29 +3,23 @@ import Article from "@/components/article/article";
 import { Company } from "../columns";
 import Text from "@/components/text/text";
 import Accordion from "@/components/accordion/accordion";
-import { AltRecord, getAltObj, getAltStringAsync } from "@/lib/altprovider";
+import { AltRecord, getAltObj, getAltString, getAltStringAsync } from "@/lib/altprovider";
 import "./review.css";
 
 const adjustedReviewDisclaimerString = "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
 
-function getAltString(altObj: AltRecord, key: string, value: any){
-  if (altObj[key]) {
-    const { prefix, postfix } = altObj[key];
-    return `${prefix} ${value} ${postfix}`;
-  }
-  return "undefined";
-}
+
 
 export async function Review(data: Company) {
   // Note to self: this is to display the adjusted data, the disclaimer object is different. E.g. Son-Rise -> PURE
   const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
-  const altObj = await getAltObj("review");
+  const altObj: AltRecord = await getAltObj("review");
 
   return (
     <Article className="container mx-auto py-10 review-summary">
       <h1 className="text-2xl md:text-3xl text-center font-bold my-1">{data.name}</h1>
       <div id="review-data-list" className="hidden md:flex flex-col items-center justify-center">
-        <ol className="flex flex-row  lg:text-lg sm:text-sm ">
+        <ol className="flex flex-row lg:text-lg sm:text-sm ">
           <li>
             <label className="sr-only">{getAltString(altObj, "review_count", data.review_count)}</label>
             <p className="m-1" aria-hidden={true}>
@@ -83,34 +77,38 @@ export async function Review(data: Company) {
           }}
         >
           <ol className="space-y-2 text-gray-500 list-none list-inside dark:text-gray-400 text-lg !text-black">
-            <li tabIndex={0}  aria-label={`${await getAltStringAsync(data.review_count, "review", "review_count")}`}>
-              <p className="m-1">
-                <b>Review Count: </b>
-                {data.review_count}
-              </p>
-            </li>
-            <li  tabIndex={0}  aria-label={`${await getAltStringAsync(data.average_rating, "review", "average_rating")}`}>
-              <p className="m-1">
-                <b>Average Rating: </b>
-                {data.average_rating}/5
-              </p>
-            </li>
-            {hasAdjustedReviewValue && (
-              <>
-                <li tabIndex={0}  aria-label={`${await getAltStringAsync(data.adjusted_review_count, "review", "adjusted_review_count")}`}>
-                  <p className="m-1">
-                    <b>Adjusted Review Count: </b>
-                    {data.adjusted_review_count}
-                  </p>
-                </li>
-                <li  tabIndex={0}  aria-label={`${await getAltStringAsync(data.adjusted_average_rating, "review", "adjusted_average_rating")}`}>
-                  <p className="m-1">
-                    <b>Adjusted Rating: </b>
-                    {data.adjusted_average_rating}/5
-                  </p>
-                </li>
-              </>
-            )}
+          <li>
+            <label className="sr-only">{getAltString(altObj, "review_count", data.review_count)}</label>
+            <p className="m-1" aria-hidden={true}>
+              <b>Review Count: </b>
+              {data.review_count}
+            </p>
+          </li>
+          <li>
+            <label className="sr-only">{getAltString(altObj, "average_rating", data.average_rating)}</label>
+            <p className="m-1" aria-hidden={true}>
+              <b>Average Rating: </b>
+              {data.average_rating}/5
+            </p>
+          </li>
+          {hasAdjustedReviewValue && (
+            <>
+              <li>
+                <label className="sr-only">{getAltString(altObj, "adjusted_review_count", data.adjusted_review_count)}</label>
+                <p className="m-1" aria-hidden={true}>
+                  <b>Adjusted Review Count: </b>
+                  {data.adjusted_review_count}
+                </p>
+              </li>
+              <li>
+                <label className="sr-only">{getAltString(altObj, "adjusted_average_rating", data.adjusted_average_rating)}</label>
+                <p className="m-1" aria-hidden={true}>
+                  <b>Adjusted Rating: </b>
+                  {data.adjusted_average_rating}/5
+                </p>
+              </li>
+            </>
+          )}
           </ol>
           <Link
             href={`/reviews/${data.slug}/data`}
