@@ -3,17 +3,14 @@ import Article from "@/components/article/article";
 import { Company } from "../columns";
 import Text from "@/components/text/text";
 import Accordion from "@/components/accordion/accordion";
-import { AltRecord, getAltObj, getAltString, getAltStringAsync } from "@/lib/altprovider";
+import { AltRecord, getAltString } from "@/lib/altprovider";
 import "./review.css";
 
 const adjustedReviewDisclaimerString = "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
 
-
-
-export async function Review(data: Company) {
+export function Review({data, altObj}: Readonly<{data: Company, altObj: AltRecord}>) {
   // Note to self: this is to display the adjusted data, the disclaimer object is different. E.g. Son-Rise -> PURE
   const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
-  const altObj: AltRecord = await getAltObj("review");
 
   return (
     <Article className="container mx-auto py-10 review-summary">

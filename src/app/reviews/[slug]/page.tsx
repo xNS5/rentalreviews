@@ -4,6 +4,7 @@ import getCompanyData from "@/lib/getCompanyData";
 import type { Company } from "../columns";
 import { isValidSlug } from "@/lib/utils";
 import Article from "@/components/article/article";
+import { AltRecord, getAltObj } from "@/lib/altprovider";
 
 export default async function Page({
   params,
@@ -17,10 +18,12 @@ export default async function Page({
   }
 
   const companyObj: Company | undefined = await getCompanyData(slug);
+  const altObj: AltRecord = await getAltObj("review");
+
 
   return (
     <Article>
-      <Review {...(companyObj as Company)} />
+      <Review data={companyObj} altObj={altObj} />
     </Article>
   );
 }
