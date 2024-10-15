@@ -39,14 +39,6 @@ export async function OPTIONS() {
   return getResponse("Bad Request", STATUS.CLIENT_ERROR)
 }
 
-export async function TRACE() {
-  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
-}
-
-export async function CONNECT() {
-  return getResponse("Bad Request", STATUS.CLIENT_ERROR)
-}
-
 export async function GET(
   req: NextRequest
 ) {
