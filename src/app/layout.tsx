@@ -8,8 +8,7 @@ import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import "./globals.css";
 import Loading from "./loading";
-import Head from "next/head";
-import type { Metadata } from "next";
+
 import SkipToContent from "@/components/skip-to-content/skip";
 
 const inter = FontSans({
@@ -17,11 +16,10 @@ const inter = FontSans({
   variable: "--font-sans",
 });
 
-export let metadata: Metadata;
 
-export async function getMetadata() {
+export async function generateMetadata(){
   const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
-  metadata = {
+  return {
     title: config?.metadata.title,
     description: config?.metadata.description,
     icons: [
@@ -45,18 +43,17 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
+  metadata: any;
 }>) {
-  await getMetadata();
-  const { title, description } = metadata;
   const config = await getDocument<Config>("config", "config", 2592000);
-  const {navbar, footer} = config;
+  const {navbar, footer, metadata} = config;
 
   return (
     <html lang="en">
       <body className={cn("bg-white h-screen")}>
         <SkipToContent className="bg-white" url="#main-content"/>
         <header>
-          <Navbar data={navbar} title={title as string} description={description as string} />
+          <Navbar data={navbar} title={metadata.title as string} description={metadata.description as string} />
         </header>
         <Suspense key={Math.random()} fallback={<Loading />}>
           <main id="main-content" role="main" className={`${inter.variable}`}>
