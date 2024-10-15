@@ -105,4 +105,16 @@ article > section {
   margin: 1em;
 }
 
+article {
+  margin: 1em;
+}
+
+article > header {
+  margin: 1em;
+}
+
+article > section {
+  margin: 1em;
+}
+
 }
