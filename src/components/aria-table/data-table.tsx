@@ -37,7 +37,7 @@ export default function DataTable({
   // Filters data based on searchTerm
   const filteredData = useMemo(() => {
     return data.filter((item: Company) => item["name"].includes(searchTerm));
-  }, [searchTerm]);
+  }, [searchTerm, data]);
 
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
@@ -59,12 +59,12 @@ export default function DataTable({
       }
       return cmp;
     });
-  }, [sortDescriptor, searchTerm]);
+  }, [sortDescriptor, searchTerm, filteredData, data]);
 
   // Memoizes page count. Might not need to.
   const pageCount = useMemo(() => {
     return Math.ceil(sortedData.length / paginationValue);
-  }, [sortedData]);
+  }, [sortedData, paginationValue]);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -72,7 +72,7 @@ export default function DataTable({
       return sortedData.slice((currentPageNumber - 1) * paginationValue);
     }
     return sortedData.slice((currentPageNumber - 1) * paginationValue, currentPageNumber * paginationValue);
-  }, [searchTerm, currentPageNumber, sortDescriptor, sortedData]);
+  }, [currentPageNumber, sortedData, pageCount, paginationValue]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
