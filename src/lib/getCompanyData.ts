@@ -3,8 +3,10 @@ import { Company } from "@/app/reviews/columns";
 import { development } from "./config-provider";
 
 export default async function getCompanyData(slug: string): Promise<Company> {
-  const company: Company | undefined = await getDocument<Company>("properties_and_companies", slug);
-  const review: Company | undefined = await getDocument<Company>("reviews", slug);
+  const companyPromise: Promise<Company> = getDocument<Company>("properties_and_companies", slug);
+  const reviewPromise: Promise<Company> = getDocument<Company>("reviews", slug);
+  
+  const [company, review] = await Promise.all([companyPromise, reviewPromise]);
 
   if (company) {
     delete company[development ? "_id" : "id"];
