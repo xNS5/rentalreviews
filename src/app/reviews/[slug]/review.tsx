@@ -16,7 +16,7 @@ export function Review({data, altObj}: Readonly<{data: Company, altObj: AltRecor
     <Article className="container mx-auto py-10 review-summary">
       <h1 className="text-3xl md:text-2xl text-center font-bold my-1">{data.name}</h1>
       <div id="review-data-list" className="container flex flex-col items-center justify-center border md:border-none max-w-md md:max-w-none border-slate-500 rounded">
-         <ol className="block md:flex md:flex-row  text-xl md:text-lg  whitespace-nowrap space-y-3 md:space-y-0 text-left last:ml-auto my-3">
+         <ol className="block md:flex md:flex-row  text-xl md:text-lg  whitespace-nowrap space-y-3 md:space-y-0 text-left">
           <li>
             <label className="sr-only">{getAltString(altObj, "review_count", data.review_count)}</label>
             <p className="mx-1" aria-hidden={true}>

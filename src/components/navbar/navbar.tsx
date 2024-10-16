@@ -30,7 +30,7 @@ export function getActiveClassProps(url: string) {
     };
   } else {
     return {
-      className: `${baseStyle} hover:underline hover:text-slate-500`,
+      className: `${baseStyle} hover:bg-slate-500 hover:text-white py-2`,
     };
   }
 } 
@@ -107,7 +107,7 @@ export default function Navbar({
       <FocusTrap
         id="navbar-menu"
         as="nav"
-        className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-3 px-5"}
+        className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-1 px-5"}
         features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}
       >
         <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
