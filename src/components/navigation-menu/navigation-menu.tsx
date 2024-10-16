@@ -38,7 +38,7 @@ export default function NavigationMenu({
           {data.name}
           <Icon
             type="fas-chevron-down"
-            className={`mt-2 h-3 w-3 ml-1 text-black transition-transform  ${isNavOpen ? "rotate-180 transform" : ""}`}
+            className={`mt-2 h-3 w-3 ml-1 text-inherit transition-transform ${isNavOpen ? "rotate-180 transform" : ""}`}
           />
         </Button>
       </DropdownTrigger>
