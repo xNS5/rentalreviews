@@ -1,11 +1,10 @@
 import Link from "next/link";
 import Article from "@/components/article/article";
-import { Company } from "../columns";
 import Text from "@/components/text/text";
-import Accordion from "@/components/accordion/accordion";
+import Icon from "@/components/icons/icon";
+import { Company } from "../columns";
 import { AltRecord, getAltString } from "@/lib/altprovider";
 import "./review.css";
-import Icon from "@/components/icons/icon";
 
 const adjustedReviewDisclaimerString = "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
 
