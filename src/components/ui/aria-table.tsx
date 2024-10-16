@@ -65,7 +65,7 @@ const Column = ({
 }>) => {
   const { column, direction } = props.sortDescriptor;
 
-  const sortDirection = direction && column === props.id ? direction : "disabled";
+  const sortDirection = direction && column === props.id ? direction : "none";
 
   return (
     <ColumnComp
@@ -74,7 +74,7 @@ const Column = ({
         "sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default first:rounded-tl-lg last:rounded-tr-lg whitespace-nowrap ",
         className
       )}
-      aria-sort={`${sortDirection}`}
+      aria-sort={sortDirection}
     >
       {({ allowsSorting }) => {
         return (

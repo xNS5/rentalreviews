@@ -4,6 +4,8 @@ import getCompanyData from "@/lib/getCompanyData";
 import type { Company } from "../columns";
 import { isValidSlug } from "@/lib/utils";
 import Article from "@/components/article/article";
+import { AltRecord, getAltObj } from "@/lib/altprovider";
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   params,
@@ -16,11 +18,14 @@ export default async function Page({
     notFound();
   }
 
-  const companyObj: Company | undefined = await getCompanyData(slug);
+  const companyPromise: Promise<Company> = getCompanyData(slug);
+  const altPromise: Promise<AltRecord> = getAltObj("review");
+
+  const [company, alt] = await Promise.all([companyPromise, altPromise]);
 
   return (
     <Article>
-      <Review {...(companyObj as Company)} />
+      <Review data={company} altObj={alt} />
     </Article>
   );
 }

@@ -5,14 +5,13 @@ import { Table, TableHeader, TableBody, Row, Cell, Caption, Column } from "../ui
 import Icon from "../icons/icon";
 import { Input } from "@/components/ui/input";
 import { Company, ColumnType } from "@/app/reviews/columns";
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { SortDescriptor, SortDirection } from "react-stately";
-import { Button } from "../ui/button";
+import { useMemo, useState } from "react";
+import { SortDescriptor } from "react-stately";
+import { Button } from "../button/button";
 import { AltRecord } from "@/lib/altprovider";
 import Link from "next/link";
 
 const DEFAULT_PAGINATION_VALUE = 10;
-
 export default function DataTable({
   columns,
   data,
@@ -21,7 +20,7 @@ export default function DataTable({
   paginationValue = DEFAULT_PAGINATION_VALUE,
 }: Readonly<{
   columns: ColumnType[];
-  data: Company[];
+  data: Company;
   // alt: AltRecord;
   tableCaption: string;
   paginationValue?: number;
@@ -37,14 +36,14 @@ export default function DataTable({
 
   // Filters data based on searchTerm
   const filteredData = useMemo(() => {
-    return data.filter((item) => item["name"].includes(searchTerm));
-  }, [searchTerm]);
+    return data.filter((item: Company) => item["name"].includes(searchTerm));
+  }, [searchTerm, data]);
 
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
     let inputData = searchTerm.length > 0 ? filteredData : data;
 
-    return inputData.sort((a, b) => {
+    return inputData.sort((a: Company, b: Company) => {
       let first = a[sortDescriptor.column as keyof Company];
       let second = b[sortDescriptor.column as keyof Company];
 
@@ -60,12 +59,12 @@ export default function DataTable({
       }
       return cmp;
     });
-  }, [sortDescriptor, searchTerm]);
+  }, [sortDescriptor, searchTerm, filteredData, data]);
 
   // Memoizes page count. Might not need to.
   const pageCount = useMemo(() => {
     return Math.ceil(sortedData.length / paginationValue);
-  }, [sortedData]);
+  }, [sortedData, paginationValue]);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -73,7 +72,7 @@ export default function DataTable({
       return sortedData.slice((currentPageNumber - 1) * paginationValue);
     }
     return sortedData.slice((currentPageNumber - 1) * paginationValue, currentPageNumber * paginationValue);
-  }, [searchTerm, currentPageNumber, sortDescriptor, sortedData]);
+  }, [currentPageNumber, sortedData, pageCount, paginationValue]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
@@ -91,15 +90,10 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  // function getAltString(index: string, value: any) {
-  //   const { prefix, postfix } = alt[index];
-  //   return `${prefix} ${value} ${postfix}`
-  // }
-
   return (
     <div className="relative overflow-auto border-2 border-solid border-slate-500 rounded-lg">
       <div className="flex flex-row flex-nowrap items-center gap-3 justify-end m-2">
-        Search <Input value={searchTerm} placeholder="Company Name" onChange={(e) => setSearchTerm(e.target.value)} />
+       <label htmlFor="searchBox">Search</label> <Input id={"searchBox"} value={searchTerm} placeholder="Company Name" onChange={(e) => setSearchTerm(e.target.value)} />
       </div>
       <div className="relative overflow-auto border-t-1 border-x-0.5 border-solid border-slate-500 rounded-lg">
         <Table aria-label={tableCaption} sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor} className="w-full">
@@ -118,7 +112,7 @@ export default function DataTable({
             ))}
           </TableHeader>
           <TableBody>
-            {paginatedPageData.map((item, i: number) => (
+            {paginatedPageData.map((item: Company, i: number) => (
               <Row key={i}>
                 {colKeys.map((key: string, j: number) => (
                   <Cell key={j} className={`${j < colKeys.length - 1 ? "border-black border-r-1" : ""}`}>
@@ -126,6 +120,8 @@ export default function DataTable({
                       <Link
                         id={`${item.slug}`}
                         href={`/reviews/${item.slug}`}
+                        aria-label={`Link to ${item[key]}`}
+                        tabIndex={-1}
                         className={`flex mx-3 font-medium items-center justify-center`}
                         onMouseEnter={() => handleMouseEnter(item.slug)}
                         onMouseLeave={() => handleMouseLeave(item.slug)}
@@ -143,7 +139,7 @@ export default function DataTable({
           </TableBody>
         </Table>
         <span className="py-2 flex flex-col justify-center text-center">
-          <span className="flex flex-row justify-center text-center">
+          <span className="flex flex-row justify-center text-center space-x-1">
             <Button variant={"ghost"} aria-label="last page" disabled={currentPageNumber === 1} aria-disabled={currentPageNumber === 1} onClick={() => handlePageChange(1)}>
               {"<<"}
             </Button>
@@ -175,9 +171,11 @@ export default function DataTable({
               {">>"}
             </Button>
           </span>
-          <p>
+        <div aria-live="polite" aria-atomic="true">
+        <p id="page-announcement">
             Page {currentPageNumber} of {pageCount}
           </p>
+        </div>
         </span>
       </div>
     </div>

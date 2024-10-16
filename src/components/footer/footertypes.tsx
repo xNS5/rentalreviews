@@ -8,4 +8,5 @@ export type FooterItem = {
     text?: string,
     title?: string,
     alt?: string
+    row?: number
 }

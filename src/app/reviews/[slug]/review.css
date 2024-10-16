@@ -3,7 +3,7 @@
 }
 
 /* Sub-Section heading */
-.review-summary > section > h2 {
+.review-summary > div > section > h2 {
     font-size: larger;
     font-weight: bold;
     margin: 1em 0 0.5em 0;
@@ -12,7 +12,7 @@
     text-underline-offset: 0.5rem;
 }
 
-.review-summary > section > p {
+.review-summary > div > section > p {
     margin: 1em 0 0.5em 0;
 }
 
