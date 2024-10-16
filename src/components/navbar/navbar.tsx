@@ -113,12 +113,12 @@ export default function Navbar({
         <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
           <Logo id="website-logo" className="py-2">
             <Link href="/" className="self-start rounded px-2 py-4 grid grid-rows-2" role="link">
-              <span className="text-lg md:text-2xl">{title}</span>
-              <span className="text-sm md:text-lg">{description}</span>
+              <p className="text-lg md:text-2xl">{title}</p>
+              <p className="text-sm md:text-lg">{description}</p>
             </Link>
           </Logo>
           <button
-            className={`min-[810px]:hidden self-end cursor-pointer z-20 text-gray-500 md:hidden transition-transform mb-4`}
+            className={`md:hidden self-end cursor-pointer z-20 text-gray-500 transition-transform mb-4`}
             onClick={() => setIsMobileNavOpen((prev) => !prev)}
             aria-controls="navbar-menu"
             aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}
@@ -130,7 +130,7 @@ export default function Navbar({
           {!isMobileNavOpen && (
             <ol className="hidden md:flex flex-row justify-center items-center">
               {data?.map((link: LinkType, i: number) => (
-                <li key={i} className="lg:text-2xl md:text-base mx-2">
+                <li key={i} className="text-xl mx-2">
                   {link.type == "link" ? (
                     <NavItem id={`headlessui-menu-button-${i}`} href={link.url} name={link.name} />
                   ) : (
