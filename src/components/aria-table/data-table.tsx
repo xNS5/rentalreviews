@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { useMemo, useState } from "react";
 import { SortDescriptor } from "react-stately";
-import { Button } from "../ui/button";
+import { Button } from "../button/button";
 import { AltRecord } from "@/lib/altprovider";
 import Link from "next/link";
 
@@ -139,7 +139,7 @@ export default function DataTable({
           </TableBody>
         </Table>
         <span className="py-2 flex flex-col justify-center text-center">
-          <span className="flex flex-row justify-center text-center">
+          <span className="flex flex-row justify-center text-center space-x-1">
             <Button variant={"ghost"} aria-label="last page" disabled={currentPageNumber === 1} aria-disabled={currentPageNumber === 1} onClick={() => handlePageChange(1)}>
               {"<<"}
             </Button>

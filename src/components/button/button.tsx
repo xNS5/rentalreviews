@@ -13,7 +13,7 @@ export const Button = ({
 }>) => {
   return (
     <span className={`${props.disabled ? "cursor-not-allowed" : ""}`}>
-      <ShadButton onClick={() => props.disabled === false ? onClick() : ""} className={`transition-colors ease-in-out duration-400 hover:bg-slate-300 disabled:bg-gray-200 ${className}`} {...props}>
+      <ShadButton onClick={() => props.disabled === false ? onClick() : ""} className={`transition-colors ease-in-out duration-400 hover:bg-slate-500 hover:text-white disabled:bg-gray-200 ${className}`} {...props}>
       {children}
     </ShadButton>
     </span>
