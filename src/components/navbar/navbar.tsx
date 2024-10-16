@@ -134,7 +134,7 @@ export default function Navbar({
                   {link.type == "link" ? (
                     <NavItem id={`headlessui-menu-button-${i}`} href={link.url} name={link.name} />
                   ) : (
-                    <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} lg:text-2xl md:text-base` }} props={{trigger: {id: `headlessui-menu-button-${i}`}}}/>
+                    <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} props={{trigger: {id: `headlessui-menu-button-${i}`}}}/>
                   )}
                 </li>
               ))}
