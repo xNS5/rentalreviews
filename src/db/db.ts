@@ -3,14 +3,16 @@ import { mongoGetCollection, mongoGetDocument } from "./mongo";
 import { development as isDevelopment } from "@/lib/config-provider";
 import type { RequestType } from "./requesttype";
 
-const CACHE_TTL: string = process.env.NEXT_PUBLIC_CACHE_TTL ?? "3600000"; // 1 hour if .env value isn't there.
+const CACHE_TTL: number = process.env.NEXT_PUBLIC_CACHE_TTL ? parseInt(process.env.NEXT_PUBLIC_CACHE_TTL) || 3600000 : 3600000; // 1 month if .env value isn't there.
 
 type TProps<T> = {
   [k: string]: string | number | T | T[keyof T];
 };
 
-export async function getCollection<T extends TProps<T>>(collection: string): Promise<T[]> {
+export async function getCollection<T extends TProps<T>>(collection: string, TTL: number = CACHE_TTL): Promise<T[]> {
   let collection_arr: T[] | undefined = global.collectionCache?.get(collection) ?? undefined;
+
+  collection = collection.trim();
 
   if (collection_arr === undefined) {
     if (isDevelopment) {
@@ -18,31 +20,24 @@ export async function getCollection<T extends TProps<T>>(collection: string): Pr
     } else {
       collection_arr = (await firestoreGetCollection<T[]>({ collection_name: collection } as RequestType)) ?? undefined;
     }
-    global.collectionCache?.set(collection, collection_arr, CACHE_TTL);
+    global.collectionCache?.set(collection, collection_arr, TTL);
   }
   return collection_arr as T[];
 }
 
-export async function getDocument<T extends TProps<T>>(collection: string, document_id: string): Promise<T> {
+export async function getDocument<T extends TProps<T>>(collection: string, document_id: string, TTL: number = CACHE_TTL): Promise<T> {
   let document: T | undefined = global.documentCache?.get(`${collection}/${document_id}`) ?? undefined;
-
+  collection = collection.trim();
+  document_id = document_id.trim();
+  
   if (document === undefined) {
-    const collection_arr: T[] | undefined = global.collectionCache?.get(collection) ?? undefined;
-    if (collection_arr !== undefined) {
       if (isDevelopment) {
-        document = collection_arr.find((doc: T) => doc._id == document_id);
+        document = await mongoGetDocument<T>(collection, document_id);
       } else {
-        document = collection_arr.find((doc: T) => doc.id == document_id);
+        document = await firestoreGetDocument<T>({ collection_name: collection, query_props: { id: document_id } } as RequestType)
       }
-    } else {
-      if (isDevelopment) {
-        document = (await mongoGetDocument<T>(collection, document_id)) ?? undefined;
-      } else {
-        document = (await firestoreGetDocument<T>({ collection_name: collection, query_props: { id: document_id } } as RequestType)) ?? undefined;
-      }
+      global.documentCache?.set(`${collection}/${document_id}`, document, TTL);
     }
-    global.documentCache?.set(`${collection}/${document_id}`, document, `${CACHE_TTL}`);
+    return document as T;
   }
-  return document as T;
-}
 

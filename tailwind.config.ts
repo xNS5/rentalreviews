@@ -1,17 +1,24 @@
+import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss"
 import {fontFamily} from "tailwindcss/defaultTheme";
 
+
+require("tailwindcss-animate"),nextui()
+
 const config = {
   darkMode: ["class"],
+  plugins: [nextui(), require('tailwindcss-react-aria-components')],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-    './src/app/**/*.{ts,tsx}'
+    './src/app/**/*.{ts,tsx}',
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
 	],
   prefix: "",
   theme: {
+    darkMode: "class",
     container: {
       center: true,
       padding: "2rem",
@@ -77,9 +84,12 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      screens: {
+        md: "940px",
+        xxs: "500px"
+      }
     },
   },
-  plugins: [require("tailwindcss-animate")],
 } satisfies Config
 
 export default config

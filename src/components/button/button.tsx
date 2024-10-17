@@ -1,20 +1,21 @@
-import { Button as ShadButton } from "@/components/ui/button"
+import { Button as ShadButton } from "@/components/ui/button";
 
-
-type ButtonProps = {
-    onClickFn: () => void,
-    className: string,
-    children: React.ReactNode
-}
-
-const defaultProps = {
-    className: ""
-}
-
-export const Button = ({onClickFn, className, children}: ButtonProps) => {
-    return (<ShadButton 
-    onClick={() => onClickFn()}
-    className={`bg-inherit hover:bg-inherit ${className}`}>
-        {children}
-    </ShadButton>)
-}
+export const Button = ({
+  onClick,
+  className = "",
+  children,
+  ...props
+}: Readonly<{
+  onClick: () => void;
+  className?: string;
+  children: React.ReactNode;
+  [key: string]: any;
+}>) => {
+  return (
+    <span className={`${props.disabled ? "cursor-not-allowed" : ""}`}>
+      <ShadButton onClick={() => props.disabled === false ? onClick() : ""} className={`transition-colors ease-in-out duration-400 hover:bg-slate-500 hover:text-white disabled:bg-gray-200 ${className}`} {...props}>
+      {children}
+    </ShadButton>
+    </span>
+  );
+};

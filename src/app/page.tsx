@@ -4,12 +4,11 @@ import { getDocument } from "../db/db";
 import type { Config, Text as TextType } from "@/lib/config-provider";
 import { Suspense } from "react";
 import Loading from "./loading";
-
 export default async function Home() {
   
-  const data: Config | undefined = await getDocument<Config>("config", "home")
+  const {home}: Config | undefined = await getDocument<Config>("config", "config");
 
-  if(data == undefined){
+  if(home == undefined){
     notFound();
   }
 
@@ -17,7 +16,7 @@ export default async function Home() {
     <div className="container mx-auto px-4">
      <Suspense key={Math.random()} fallback={<Loading/>}>
      <section className="my-20">
-        {data?.content?.map((elem: TextType, i: number) => (
+        {home?.content?.map((elem: TextType, i: number) => (
           <div key={i} role="article">
             <h1 className="text-center md:text-4xl py-5">{elem.title}</h1>
             <div className="md:px-15 py-10 border border-slate-400 rounded shadow-lg">

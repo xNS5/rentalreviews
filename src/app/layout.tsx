@@ -1,39 +1,39 @@
 import { Inter as FontSans } from "next/font/google";
 import { Suspense } from "react";
-import { getDocument } from "../db/db";
+import { getCollection, getDocument } from "../db/db";
 import { Config } from "../lib/config-provider";
 import { cn } from "@/lib/utils";
-import Logo from "@/components/logo/logo";
+import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";
-import { Footer } from "@/components/footer/footer";
+import Footer from "@/components/footer/footer";
 import "./globals.css";
 import Loading from "./loading";
-import type { Metadata } from "next";
+
+import SkipToContent from "@/components/skip-to-content/skip";
 
 const inter = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-export let metadata: Metadata;
 
-export async function getMetadata() {
-  const config: Config | undefined = await getDocument("config", "metadata");
-  metadata = {
+export async function generateMetadata(){
+  const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
+  return {
     title: config?.metadata.title,
     description: config?.metadata.description,
     icons: [
       {
-        rel: 'icon',
-        type: 'image/png',
-        url: '/images/building-icon-light.png',
-        media: '(prefers-color-scheme: light)',
+        rel: "icon",
+        type: "image/png",
+        url: "/images/building-icon-light.png",
+        media: "(prefers-color-scheme: light)",
       },
       {
-        rel: 'icon',
-        type: 'image/png',
-        url: '/images/building-icon-dark.png',
-        media: '(prefers-color-scheme: dark)',
+        rel: "icon",
+        type: "image/png",
+        url: "/images/building-icon-dark.png",
+        media: "(prefers-color-scheme: dark)",
       },
     ],
   };
@@ -43,35 +43,26 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
+  metadata: any;
 }>) {
-  await getMetadata();
-  const { title, description } = metadata;
-  const navbarConfig = await getDocument<Config>("config", "navigation");
-  const footerData = await getDocument<Config>("config", "footer");
+  const config = await getDocument<Config>("config", "config", 2592000);
+  const {navbar, footer, metadata} = config;
+
   return (
     <html lang="en">
-      <head>
-        <title>{title as string}</title>
-      </head>
       <body className={cn("bg-white h-screen")}>
+        <SkipToContent className="bg-white" url="#main-content"/>
         <header>
-          <nav className="flex justify-between items-center w-full px-4 py-4 border-b-2 shadow-sm bg-white">
-            <Logo>
-              <a href="/" className="rounded px-2 grid grid-rows-2" role="link">
-                <span className="text-lg md:text-2xl">{title as string}</span>
-                <span className="text-sm md:text-lg">{description as string}</span>
-              </a>
-            </Logo>
-            <Navbar nav={navbarConfig?.nav} />
-          </nav>
+          <Navbar data={navbar} title={metadata.title as string} description={metadata.description as string} />
         </header>
         <Suspense key={Math.random()} fallback={<Loading />}>
-          <main role="main" className={`${inter.variable}`}>
-            {children}
+          <main id="main-content" role="main" className={`${inter.variable}`}>
+            <Providers>{children}</Providers>
           </main>
         </Suspense>
-        <Footer footer={footerData?.footer} />
+        <Footer data={footer} />
       </body>
     </html>
   );
 }
+
