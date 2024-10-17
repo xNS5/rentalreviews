@@ -72,7 +72,7 @@ export default function DataTable({
       return sortedData.slice((currentPageNumber - 1) * paginationValue);
     }
     return sortedData.slice((currentPageNumber - 1) * paginationValue, currentPageNumber * paginationValue);
-  }, [currentPageNumber, sortedData, pageCount, paginationValue]);
+  }, [currentPageNumber, sortDescriptor, sortedData, pageCount, paginationValue]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
