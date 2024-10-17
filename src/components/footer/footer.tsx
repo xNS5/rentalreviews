@@ -1,7 +1,7 @@
 import Icon from "../icons/icon";
 import Link from "next/link";
 import type { FooterItem } from "./footertypes";
-import type { Config } from "@/lib/config-provider";
+import type { Config } from "@/lib/configProvider";
 
 function getConfigEntries(obj: Config[]) {
   return obj.reduce((acc, curr) => {

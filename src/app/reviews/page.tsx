@@ -1,6 +1,6 @@
 import { Company } from "./columns";
 import { getCollection, getDocument } from "../../db/db";
-import { getAltObj } from "@/lib/altprovider";
+import { getAltObj } from "@/lib/altProvider";
 import { ColumnKeys } from "./columns";
 import DataTable from "@/components/aria-table/data-table";
 import Article from "@/components/article/article";

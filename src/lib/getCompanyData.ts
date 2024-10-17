@@ -1,6 +1,6 @@
 import { getDocument, getCollection } from "@/db/db";
 import { Company } from "@/app/reviews/columns";
-import { development } from "./config-provider";
+import { development } from "./configProvider";
 
 export default async function getCompanyData(slug: string): Promise<Company> {
   const companyPromise: Promise<Company> = getDocument<Company>("properties_and_companies", slug);
