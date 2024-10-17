@@ -11,8 +11,6 @@ import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/config-provider";
 
-
-
 function IsMobileWidth(): boolean {
   if (typeof window !== "undefined") {
     return window.innerWidth < 750;
@@ -33,7 +31,7 @@ export function getActiveClassProps(url: string) {
       className: `${baseStyle} hover:bg-slate-500 hover:text-white py-2`,
     };
   }
-} 
+}
 
 function NavItem({
   name,
@@ -111,12 +109,14 @@ export default function Navbar({
         features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}
       >
         <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
-          <Logo id="website-logo" className="py-2">
-            <Link href="/" className="self-start rounded px-2 py-4 grid grid-rows-2" role="link">
-              <p className="text-lg md:text-2xl">{title}</p>
-              <p className="text-sm md:text-lg">{description}</p>
-            </Link>
-          </Logo>
+          <Link href="/" className="self-start flex flex-col rounded px-2 py-4" role="link">
+            <Logo id="website-logo" className="py-2">
+              <span className="hidden sm:flex sm:flex-col">
+                <p className="md:text-2xl sm:text-lg">{title}</p>
+                <p className="md:text-lg sm:text-sm">{description}</p>
+              </span>
+            </Logo>
+          </Link>
           <button
             className={`md:hidden self-end cursor-pointer z-20 text-gray-500 transition-transform mb-4`}
             onClick={() => setIsMobileNavOpen((prev) => !prev)}
@@ -134,7 +134,11 @@ export default function Navbar({
                   {link.type == "link" ? (
                     <NavItem id={`headlessui-menu-button-${i}`} href={link.url} name={link.name} />
                   ) : (
-                    <NavigationMenu data={link} className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }} props={{trigger: {id: `headlessui-menu-button-${i}`}}}/>
+                    <NavigationMenu
+                      data={link}
+                      className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }}
+                      props={{ trigger: { id: `headlessui-menu-button-${i}` } }}
+                    />
                   )}
                 </li>
               ))}
