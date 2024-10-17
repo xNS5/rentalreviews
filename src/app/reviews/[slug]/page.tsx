@@ -23,10 +23,6 @@ export default async function Page({
 
   const [company, alt] = await Promise.all([companyPromise, altPromise]);
 
-  return (
-    <Article>
-      <Review data={company} altObj={alt} />
-    </Article>
-  );
+  return <Review data={company} altObj={alt} />;
 }
 
