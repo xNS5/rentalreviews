@@ -1,7 +1,7 @@
 import Text from "@/components/text/text";
 import { notFound } from "next/navigation";
 import { getDocument } from "../db/db";
-import type { Config, Text as TextType } from "@/lib/config-provider";
+import type { Config, Text as TextType } from "@/lib/configProvider";
 import { Suspense } from "react";
 import Loading from "./loading";
 export default async function Home() {
