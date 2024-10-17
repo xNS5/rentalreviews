@@ -5,7 +5,7 @@ import Article from "@/components/article/article";
 import { getDocument } from "../../db/db";
 import type { FaqQuestion, FaqType } from "./faq-type";
 import type { Link as LinkType } from "@/lib/linktype";
-import { Config } from "@/lib/config-provider";
+import { Config } from "@/lib/configProvider";
 
 export default async function FAQ() {
   const config: Config | undefined = await getDocument<Config>("config", "config");

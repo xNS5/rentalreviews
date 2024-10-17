@@ -1,7 +1,7 @@
 import { Inter as FontSans } from "next/font/google";
 import { Suspense } from "react";
 import { getCollection, getDocument } from "../db/db";
-import { Config } from "../lib/config-provider";
+import { Config } from "../lib/configProvider";
 import { cn } from "@/lib/utils";
 import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";

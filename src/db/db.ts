@@ -1,6 +1,6 @@
 import { firestoreGetCollection, firestoreGetDocument } from "./firebase";
 import { mongoGetCollection, mongoGetDocument } from "./mongo";
-import { development as isDevelopment } from "@/lib/config-provider";
+import { development as isDevelopment } from "@/lib/configProvider";
 import type { RequestType } from "./requesttype";
 
 const CACHE_TTL: number = process.env.NEXT_PUBLIC_CACHE_TTL ? parseInt(process.env.NEXT_PUBLIC_CACHE_TTL) || 3600000 : 3600000; // 1 month if .env value isn't there.

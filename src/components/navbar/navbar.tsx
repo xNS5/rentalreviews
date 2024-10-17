@@ -9,7 +9,7 @@ import { usePathname as getPathname } from "next/navigation";
 import NavigationMenu from "../navigation-menu/navigation-menu";
 import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
-import type { Config } from "@/lib/config-provider";
+import type { Config } from "@/lib/configProvider";
 
 function IsMobileWidth(): boolean {
   if (typeof window !== "undefined") {
