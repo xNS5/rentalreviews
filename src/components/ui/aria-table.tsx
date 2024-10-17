@@ -65,7 +65,7 @@ const Column = ({
 }>) => {
   const { column, direction } = props.sortDescriptor;
 
-  const sortDirection = direction && column === props.id ? direction : "none";
+  const sortDirection = direction && column === props.id ? direction : "disabled";
 
   return (
     <ColumnComp
