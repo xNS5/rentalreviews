@@ -23,9 +23,8 @@ jobs:
 
       - name: Install Netlify
         run: |
-          npm install netlify-cli -g \
-          npm install @netlify/plugin-nextjs
-
+          npm install netlify-cli -g
+      
       - name: Install Dependencies
         run: npm ci
       
@@ -36,7 +35,7 @@ jobs:
         if: ${{ success() }}
         run: |
           netlify deploy \
-          --dir build \
+          --dir .next \
           --site ${{ secrets.NETLIFY_SITE_ID }} \
           --auth ${{ secrets.NETLIFY_DEPLOY_KEY }} \
           --prod
