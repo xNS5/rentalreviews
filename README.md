@@ -1,4 +1,8 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6c71a4d8-be3c-4e14-83a8-297f3ad68cb5/deploy-status)](https://app.netlify.com/sites/sunny-medovik-46ba23/deploys)
+
 # Bellingham Rental Reviews
+
+
 
 It's no secret that property management companies and landlords have a bad reputation. These entities are in a position of power, where they control the flow of housing. It is because of this power
 that many leverage their positions to take advantage of their tenants -- by raising prices, failing to ensure that the dwelling is habitable, or sometimes even violating state law. However, not all 
