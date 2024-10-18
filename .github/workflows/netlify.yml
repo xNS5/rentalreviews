@@ -28,10 +28,11 @@ jobs:
         run: npm ci
 
       - name: Build
+        if: ${{ success() }}
         run: npm run build
 
       - name: Deploy to Netlify
-        if: success()
+        if: ${{ success() }}
         run: |
           netlify deploy \
           --dir build \
