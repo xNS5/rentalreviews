@@ -12,7 +12,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.events.pull_request.merged }}
     steps:
       - name: Checkout
        uses: actions/checkout@v4
