@@ -1,10 +1,8 @@
 import { Company } from "./columns";
-import { getCollection, getDocument } from "../../db/db";
-import { getAltObj } from "@/lib/altProvider";
+import { getDocument } from "../../db/db";
 import { ColumnKeys } from "./columns";
 import DataTable from "@/components/aria-table/data-table";
 import Article from "@/components/article/article";
-export const dynamic = "force-dynamic";
 
 export default async function Reviews() {
   const reviewData: Company | undefined = await getDocument<Company>("index", "properties_and_companies_index");
