@@ -9,6 +9,8 @@ import Footer from "@/components/footer/footer";
 import "./globals.css";
 import Loading from "./loading";
 
+export const dynamic = "force-dynamic";
+
 import SkipToContent from "@/components/skip-to-content/skip";
 
 const inter = FontSans({

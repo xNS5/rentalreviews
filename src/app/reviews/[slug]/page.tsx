@@ -6,8 +6,6 @@ import Article from "@/components/article/article";
 import { AltRecord, getAltObj, getAltString } from "@/lib/altProvider";
 import type { Company } from "../columns";
 
-export const dynamic = "force-dynamic";
-
 import "./review.css";
 
 export default async function Page({
