@@ -34,7 +34,7 @@ jobs:
       - name: Deploy to Netlify
         if: ${{ success() }}
         run: |
-          netlify deploy \
+          netlify deploy --build \
           --dir build \
           --site ${{ secrets.NETLIFY_SITE_ID }} \
           --auth ${{ secrets.NETLIFY_DEPLOY_KEY }} \
