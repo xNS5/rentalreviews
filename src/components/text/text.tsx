@@ -8,6 +8,6 @@ export default function Text({
   text: string;
   className?: string;
 }>) {
-  return <div className={`${className} focus:ring`}>{parse(text ?? "undefined")}</div>;
+  return <div className={`${className} focus:ring`}>{parse(text ?? "undefined")}</div>
 }
 
