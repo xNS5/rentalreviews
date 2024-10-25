@@ -1,6 +1,6 @@
 import { Inter as FontSans } from "next/font/google";
 import { Suspense } from "react";
-import { getCollection, getDocument } from "../db/db";
+import { getDocument } from "../db/db";
 import { Config } from "../lib/configProvider";
 import { cn } from "@/lib/utils";
 import { Providers } from "./providers";
@@ -12,6 +12,7 @@ import Loading from "./loading";
 export const dynamic = "force-dynamic";
 
 import SkipToContent from "@/components/skip-to-content/skip";
+import { Alt } from "@/lib/altProvider";
 
 const inter = FontSans({
   subsets: ["latin"],
@@ -19,7 +20,7 @@ const inter = FontSans({
 });
 
 
-export async function generateMetadata(){
+export async function generateMetadata() {
   const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
   return {
     title: config?.metadata.title,
@@ -48,21 +49,25 @@ export default async function RootLayout({
   metadata: any;
 }>) {
   const config = await getDocument<Config>("config", "config", 2592000);
-  const {navbar, footer, metadata} = config;
+  const { navbar, footer, metadata } = config;
 
   return (
     <html lang="en">
       <body className={cn("bg-white h-screen")}>
-        <SkipToContent className="bg-white" url="#main-content"/>
+        <SkipToContent className="bg-white" url="#main-content" />
         <header>
           <Navbar data={navbar} title={metadata.title as string} description={metadata.description as string} />
         </header>
-        <Suspense key={Math.random()} fallback={<Loading />}>
-          <main id="main-content" role="main" className={`${inter.variable}`}>
-            <Providers>{children}</Providers>
-          </main>
-        </Suspense>
-        <Footer data={footer} />
+        <Config data={config}>
+          <Alt data={config.alt}>
+            <Suspense key={Math.random()} fallback={<Loading />}>
+              <main id="main-content" role="main" className={`${inter.variable}`}>
+                <Providers>{children}</Providers>
+              </main>
+            </Suspense>
+            <Footer data={footer} />
+          </Alt>
+        </Config>
       </body>
     </html>
   );

@@ -1,5 +1,9 @@
+"use client"
+
+import { createContext } from "react";
+
 import { getDocument } from "@/db/db";
-import { Config } from "tailwindcss";
+import { Config } from "./configProvider";
 
 export type Alt = {
   [key: string]: AltRecord;
@@ -41,3 +45,15 @@ export function getAltString(altObj: AltRecord, key: string, value: any){
   return "undefined";
 }
 
+export const AltContext = createContext({});
+
+export function Alt({ data, children }: Readonly<{
+  data: Alt;
+  children: React.ReactNode;
+}>) {
+  return (
+    <AltContext.Provider value={data}>
+      {children}
+    </AltContext.Provider>
+  )
+}
