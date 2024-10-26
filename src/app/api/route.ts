@@ -9,9 +9,8 @@ import { isValidSlug } from "@/lib/utils";
 }
 
 function getResponse(message: any, code: STATUS) {
-  return NextResponse.json(
-    code == STATUS.SUCCESS ? { data: message } : { error: message },
-    { status: code }
+   return NextResponse.json(
+    { body: (code == STATUS.SUCCESS ? { data: message } : { error: message }), status: code }
   );
 }
 

@@ -39,3 +39,6 @@ next-env.d.ts
 *.env.(local|production)
  
 *.code-workspace
+
+demo/
+.idea/

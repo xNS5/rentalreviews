@@ -1,6 +1,6 @@
 "use client";
 
-import { Table, TableHeader, TableBody, Row, Cell, Caption, Column } from "../ui/aria-table";
+import { Table, TableHead, TableBody, Row, Cell, Caption, Column } from "../ui/aria-table";
 
 import Icon from "../icons/icon";
 import { Input } from "@/components/ui/input";
@@ -8,25 +8,22 @@ import { Company, ColumnType } from "@/app/reviews/columns";
 import { useMemo, useState } from "react";
 import { SortDescriptor } from "react-stately";
 import { Button } from "../button/button";
-import { AltRecord } from "@/lib/altProvider";
 import Link from "next/link";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 export default function DataTable({
   columns,
   data,
-  // alt,
   tableCaption,
   paginationValue = DEFAULT_PAGINATION_VALUE,
 }: Readonly<{
   columns: ColumnType[];
   data: Company;
-  // alt: AltRecord;
   tableCaption: string;
   paginationValue?: number;
 }>) {
   const colKeys = ["name", "company_type", "average_rating", "adjusted_average_rating", "review_count"];
-  const [currentPageNumber, setcurrentPageNumberNumber] = useState(1);
+  const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>({});
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -44,8 +41,8 @@ export default function DataTable({
     let inputData = searchTerm.length > 0 ? filteredData : data;
 
     return inputData.sort((a: Company, b: Company) => {
-      let first = a[sortDescriptor.column as keyof Company];
-      let second = b[sortDescriptor.column as keyof Company];
+      let first: any = a[sortDescriptor.column as keyof Company]
+      let second: any = b[sortDescriptor.column as keyof Company];
 
       if (typeof first === "number" && typeof second === "number") {
         if (sortDescriptor.direction === "descending") {
@@ -86,7 +83,7 @@ export default function DataTable({
 
   // Handles page change, sets current page number and resets the hover state object
   const handlePageChange = (page: number) => {
-    setcurrentPageNumberNumber(page);
+    setCurrentPageNumberNumber(page);
     setHoverStates({});
   };
 
@@ -97,7 +94,7 @@ export default function DataTable({
       </div>
       <div className="relative overflow-auto border-t-1 border-x-0.5 border-solid border-slate-500 rounded-lg">
         <Table aria-label={tableCaption} sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor} className="w-full">
-          <TableHeader>
+          <TableHead>
             {columns.map((column, i: number) => (
               <Column
                 id={column.key}
@@ -110,7 +107,7 @@ export default function DataTable({
                 <p>{column.title}</p>
               </Column>
             ))}
-          </TableHeader>
+          </TableHead>
           <TableBody>
             {paginatedPageData.map((item: Company, i: number) => (
               <Row key={i}>

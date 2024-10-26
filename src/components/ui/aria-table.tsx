@@ -11,33 +11,23 @@ import {
 } from "react-aria-components";
 import Icon from "../icons/icon";
 import { Button } from "./button";
+import {SortDescriptor} from "react-stately";
+
 
 const Table = ({
   className,
   children,
-  ...props
+    sortDescriptor,
+  ...rest
 }: Readonly<{
-  children: React.ReactNode;
-  className?: string;
-  [key: string]: any;
+  sortDescriptor: SortDescriptor,
+  children: React.ReactNode,
+  className?: string,
+  [key: string]: any
 }>) => (
-  <TableComp className={cn("w-full caption-bottom text-sm", className)} {...props}>
+  <TableComp className={cn("w-full caption-bottom text-sm", className)} {...rest}>
     {children}
   </TableComp>
-);
-
-const TableHeader = ({
-  className,
-  children,
-  ...props
-}: Readonly<{
-  children: React.ReactNode;
-  className?: string;
-  [key: string]: any;
-}>) => (
-  <TableHeaderComp className={cn("[&_tr]:border-b", className)} {...props}>
-    {children}
-  </TableHeaderComp>
 );
 
 const TableBody = ({
@@ -45,9 +35,9 @@ const TableBody = ({
   children,
   ...props
 }: Readonly<{
-  children: React.ReactNode;
-  className?: string;
-  [key: string]: any;
+  children: React.ReactNode,
+  className?: string,
+//   [key: string]: any
 }>) => (
   <TableBodyComp className={cn("p-5", className)} {...props}>
     {children}
@@ -55,17 +45,21 @@ const TableBody = ({
 );
 
 const Column = ({
+    id,
   className,
   children,
+  sortDescriptor,
   ...props
 }: Readonly<{
-  className?: string;
-  children: React.ReactNode;
-  [key: string]: any;
+  id: string,
+  children: React.ReactNode,
+  sortDescriptor: SortDescriptor,
+  className?: string,
+  [key: string]: any
 }>) => {
-  const { column, direction } = props.sortDescriptor;
+  const { column, direction } = sortDescriptor;
 
-  const sortDirection = direction && column === props.id ? direction : "disabled";
+  const sortDirection = direction && column === id ? direction : "disabled";
 
   return (
     <ColumnComp
@@ -86,7 +80,7 @@ const Column = ({
             >
               <Button variant={"ghost"} className="flex flex-1 flex-row bg-slate-200 hover:text-white hover:bg-slate-500 basis-full">
                 {allowsSorting ? (
-                  <span className="flex" aria-label={`${props.id} column sorted ${sortDirection}`}>
+                  <span className="flex" aria-label={`${id} column sorted ${sortDirection}`}>
                     {children}
                     <span className={`mt-0.5 w-4 h-4 flex items-center justify-center transition`} aria-hidden={true}>
                       {sortDirection !== "disabled" ? (
@@ -115,7 +109,7 @@ const Row = ({
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-  [key: string]: any;
+//   [key: string]: any;
 }>) => (
   <RowComp className={cn("border-b transition-colors hover:bg-muted/50 text-center focus-visible:outline focus-visible:outline-2", className)} {...props}>
     {children}
@@ -129,7 +123,7 @@ const TableHead = ({
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-  [key: string]: any;
+//   [key: string]: any;
 }>) => (
   <TableHeaderComp className={cn("h-12 px-4 text-left align-middle font-medium text-muted-foreground text-center", className)} {...props}>
     {children}
@@ -143,7 +137,7 @@ const Cell = ({
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-  [key: string]: any;
+//   [key: string]: any;
 }>) => (
   <CellComp className={cn("p-4 align-middle text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-slate-600 focus-visible:-outline-offset-4 group-selected:focus-visible:outline-white", className)} {...props}>
     {children}
@@ -157,11 +151,11 @@ const Caption = ({
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-  [key: string]: any;
+//   [key: string]: any;
 }>) => (
   <caption className={cn("mt-4 text-sm text-muted-foreground", className)} {...props}>
     {children}
   </caption>
 );
-export { Table, TableHeader, TableBody, Row, Cell, Caption, Column };
+export { Table, TableHead, TableBody, Row, Cell, Caption, Column };
 
