@@ -12,7 +12,7 @@ import Loading from "./loading";
 export const dynamic = "force-dynamic";
 
 import SkipToContent from "@/components/skip-to-content/skip";
-import { Alt } from "@/lib/altProvider";
+import { Alt } from "@/lib/configProvider";
 
 const inter = FontSans({
   subsets: ["latin"],
@@ -59,14 +59,12 @@ export default async function RootLayout({
           <Navbar data={navbar} title={metadata.title as string} description={metadata.description as string} />
         </header>
         <Config data={config}>
-          <Alt data={config.alt}>
-            <Suspense key={Math.random()} fallback={<Loading />}>
-              <main id="main-content" role="main" className={`${inter.variable}`}>
-                <Providers>{children}</Providers>
-              </main>
-            </Suspense>
-            <Footer data={footer} />
-          </Alt>
+          <Suspense key={Math.random()} fallback={<Loading />}>
+            <main id="main-content" role="main" className={`${inter.variable}`}>
+              <Providers>{children}</Providers>
+            </main>
+          </Suspense>
+          <Footer data={footer} />
         </Config>
       </body>
     </html>

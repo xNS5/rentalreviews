@@ -8,7 +8,7 @@ import { Company, ColumnType } from "@/app/reviews/columns";
 import { useMemo, useState } from "react";
 import { SortDescriptor } from "react-stately";
 import { Button } from "../button/button";
-import { AltRecord } from "@/lib/altProvider";
+import { AltRecord } from "@/lib/configProvider";
 import Link from "next/link";
 
 const DEFAULT_PAGINATION_VALUE = 10;

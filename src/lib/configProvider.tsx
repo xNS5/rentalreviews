@@ -16,6 +16,28 @@ export type Text = {
   text: string
 }
 
+export type Alt = {
+  [key: string]: AltRecord;
+};
+
+export type AltRecord = {
+  [key: string]: PrefixPostfix;
+};
+
+export type PrefixPostfix = {
+  prefix: string;
+  postfix: string;
+};
+
+export function getAltString(altObj: AltRecord, key: string, value: any) {
+  if (altObj[key]) {
+    const { prefix, postfix } = altObj[key];
+    return `${prefix} ${value} ${postfix}`.trim();
+  }
+  return "undefined";
+}
+
+
 export const development: boolean = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 export const ConfigContext = createContext({});
