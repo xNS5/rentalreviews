@@ -1,24 +1,25 @@
-import React from "react";
+"use client"
+
+import {useContext} from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
 import Article from "@/components/article/article";
-import { getDocument } from "../../db/db";
-import type { FaqQuestion, FaqType } from "./faq-type";
+import {Config, ConfigContext} from "@/lib/configProvider";
+
+import type { FaqQuestion } from "./faq-type";
 import type { Link as LinkType } from "@/lib/linktype";
-import { Config } from "@/lib/configProvider";
 
 export default async function FAQ() {
-  const config: Config | undefined = await getDocument<Config>("config", "config");
-  const faqObj: FaqType = config.faq;
+    const {faq}: Config = useContext(ConfigContext);
 
   return (
     <Article className="container">
      <div className="flex flex-col text-center py-2">
-     <h1 className="md:text-4xl">{faqObj.title}</h1>
-     <h2 className="md:text-2xl no-underline font-normal">{faqObj.description}</h2>
+     <h1 className="md:text-4xl">{faq.title}</h1>
+     <h2 className="md:text-2xl no-underline font-normal">{faq.description}</h2>
      </div>
       <ol>
-        {faqObj?.questions.map((questionObj: FaqQuestion, i: number) => (
+        {faq?.questions.map((questionObj: FaqQuestion, i: number) => (
           <section key={i}>
             <li key={i}>
               <section className="m-2 flex flex-col">
