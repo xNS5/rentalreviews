@@ -2,6 +2,7 @@ import { Company } from "./columns";
 import { getDocument } from "@/db/db";
 import DataTable from "@/components/aria-table/data-table";
 import Article from "@/components/article/article";
+import DataList from "@/components/data-list/data-list";
 
 export default async function Reviews() {
   const reviewData: Company | undefined = await getDocument<Company>("index", "properties_and_companies_index");
@@ -33,7 +34,8 @@ export default async function Reviews() {
   return (
     <Article className="flex flex-col container justify-center text-center container mx-auto py-10">
       <h1 className=" md:text-4xl my-4">{tableCaption}</h1>
-      <DataTable data={reviewData.data} columns={ColumnKeys} tableCaption={tableCaption} />
+      {/*<DataTable data={reviewData.data} columns={ColumnKeys} tableCaption={tableCaption} />*/}
+        <DataList data={reviewData.data}/>
     </Article>
   );
 }
