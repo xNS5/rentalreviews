@@ -61,15 +61,23 @@ export default function DataList({data, className, paginationValue = DEFAULT_PAG
         <div>
             <ol className={"justify-center items-center first:pt-2 last:pb-2 px-10"}>
                 {
-                    paginatedPageData.map((data: Company, i: number) =>
-                        <li key={i} className={`bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}>
+                    paginatedPageData.map((item: Company, i: number) =>
+                        <li key={i} className={`flex flex-row flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}>
                             <span className={`text-start`}>
-                                <h2 className={'text-2xl'}>{data.name}</h2>
-                                <p><b>Company Type</b>: {data.company_type}</p>
-                                <p><b>Average Rating</b>: {data.average_rating}/5</p>
-                                <p><b>Adjusted Average Rating</b>: {data.adjusted_average_rating}/5</p>
-                                <p><b>Review Count</b>: {data.review_count}</p>
+                                                            <Link
+                                                                id={`${item.slug}`}
+                                                                href={`/reviews/${item.slug}`}
+                                                                aria-label={`Link to ${item.name} data page`}
+                                                                tabIndex={-1}
+                                                                className={`flex font-medium items-center justify-center`}>
+                                <h2 className={'text-2xl'}>{item.name}</h2>
+                            </Link>
+                                <p><b>Company Type</b>: {item.company_type}</p>
+                                <p><b>Average Rating</b>: {item.average_rating}/5</p>
+                                <p><b>Adjusted Average Rating</b>: {item.adjusted_average_rating}/5</p>
+                                <p><b>Review Count</b>: {item.review_count}</p>
                             </span>
+
                         </li>)
                 }
             </ol>
