@@ -65,7 +65,7 @@ const Column = ({
     <ColumnComp
       {...props}
       className={cn(
-        "sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default first:rounded-tl-lg last:rounded-tr-lg whitespace-nowrap ",
+        "sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default whitespace-nowrap ",
         className
       )}
       aria-sort={sortDirection}
@@ -76,7 +76,7 @@ const Column = ({
             <GroupComp
               role="presentation"
               tabIndex={-1}
-              className="flex flex-1 justify-center text-center overflow-hidden outline-none rounded focus-visible:ring-2 ring-slate-600"
+              className="flex flex-1 justify-center text-center overflow-hidden outline-none focus-visible:ring-2 ring-slate-600"
             >
               <Button variant={"ghost"} className="flex flex-1 flex-row bg-slate-200 hover:text-white hover:bg-slate-500 basis-full">
                 {allowsSorting ? (
