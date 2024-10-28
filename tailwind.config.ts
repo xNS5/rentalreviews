@@ -2,9 +2,6 @@ import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss"
 import {fontFamily} from "tailwindcss/defaultTheme";
 
-
-require("tailwindcss-animate"),nextui()
-
 const config = {
   darkMode: ["class"],
   plugins: [nextui(), require('tailwindcss-react-aria-components')],
@@ -14,7 +11,6 @@ const config = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
     './src/app/**/*.{ts,tsx}',
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
 	],
   prefix: "",
   theme: {

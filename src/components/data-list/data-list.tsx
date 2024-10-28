@@ -3,14 +3,16 @@
 import {Fragment, useMemo, useState} from "react";
 import {Input} from "@/components/ui/input";
 import Link from "next/link";
+import {cn} from "../../lib/utils";
 import {Company} from "@/app/reviews/columns";
 import {Button} from "@/components/button/button";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
-export default function DataList({data, paginationValue = DEFAULT_PAGINATION_VALUE}: Readonly<{
+export default function DataList({data, className, paginationValue = DEFAULT_PAGINATION_VALUE}: Readonly<{
     data: Company,
-    paginationValue?: number
+    paginationValue?: number,
+    className: string
 }>) {
     const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
@@ -48,21 +50,25 @@ export default function DataList({data, paginationValue = DEFAULT_PAGINATION_VAL
         setHoverStates({});
     };
 
-    return (<div className={`flex flex-col relative overflow-auto border-2 border-solid border-slate-500 rounded-lg bg-slate-200`}>
+    return (
+        <div className={cn(`flex flex-col border-2 border-solid border-slate-500 rounded-lg bg-slate-200 px-10 mx-32`, className)}>
         <div className="flex flex-row flex-nowrap items-center gap-3 justify-end m-2">
             <label htmlFor="searchBox">Search</label>
             <Input id={"searchBox"} value={searchTerm}
-                   placeholder="Company Name"
+                   // placeholder="Company Name"
                    onChange={(e) => setSearchTerm(e.target.value)}/>
         </div>
         <div>
-            <ol className={"grid grid-cols-1 justify-center items-center first:pt-2 last:pb-2 px-5 "}>
+            <ol className={"justify-center items-center first:pt-2 last:pb-2 px-10"}>
                 {
                     paginatedPageData.map((data: Company, i: number) =>
-                        <li key={i} className={`grid bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}>
+                        <li key={i} className={`bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}>
                             <span className={`text-start`}>
                                 <h2 className={'text-2xl'}>{data.name}</h2>
-                                <h3><b>Company Type</b>: {data.company_type}</h3>
+                                <p><b>Company Type</b>: {data.company_type}</p>
+                                <p><b>Average Rating</b>: {data.average_rating}/5</p>
+                                <p><b>Adjusted Average Rating</b>: {data.adjusted_average_rating}/5</p>
+                                <p><b>Review Count</b>: {data.review_count}</p>
                             </span>
                         </li>)
                 }

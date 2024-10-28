@@ -4,6 +4,7 @@ import { Table, TableHead, TableBody, Row, Cell, Caption, Column } from "../ui/a
 
 import Icon from "../icons/icon";
 import { Input } from "@/components/ui/input";
+import {cn} from "../../lib/utils";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { useMemo, useState } from "react";
 import { SortDescriptor } from "react-stately";
@@ -16,10 +17,12 @@ export default function DataTable({
   data,
   tableCaption,
   paginationValue = DEFAULT_PAGINATION_VALUE,
+    className,
 }: Readonly<{
   columns: ColumnType[];
   data: Company;
   tableCaption: string;
+  className: string;
   paginationValue?: number;
 }>) {
   const colKeys = ["name", "company_type", "average_rating", "adjusted_average_rating", "review_count"];
@@ -88,7 +91,7 @@ export default function DataTable({
   };
 
   return (
-    <div className="relative overflow-auto border-2 border-solid border-slate-500 rounded-lg">
+    <div className={cn("relative overflow-auto border-2 border-solid border-slate-500 rounded-lg", className)}>
       <div className="flex flex-row flex-nowrap items-center gap-3 justify-end m-2">
        <label htmlFor="searchBox">Search</label> <Input id={"searchBox"} value={searchTerm} placeholder="Company Name" onChange={(e) => setSearchTerm(e.target.value)} />
       </div>
