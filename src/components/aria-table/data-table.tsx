@@ -57,11 +57,10 @@ export default function DataTable({
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
     let inputData = searchTerm.length > 0 ? filteredData : data;
-    console.log(sortDescriptor.column, sortDescriptor.direction);
     return inputData.sort((a: Company, b: Company) => {
       try {
-        let first: string | number = a[sortDescriptor.column as string];
-        let second: string | number = b[sortDescriptor.column as string];
+        let first = a[sortDescriptor.column as string];
+        let second = b[sortDescriptor.column as string];
 
         if (typeof first === "number" && typeof second === "number") {
           if (sortDescriptor.direction === "descending") {
@@ -69,13 +68,13 @@ export default function DataTable({
           }
           return first - second;
         }
-        let cmp = (first as string).localeCompare(second as string);
+        let cmp = first.localeCompare(second);
         if (sortDescriptor.direction === "descending") {
           cmp *= -1;
         }
         return cmp;
       } catch (e) {
-        console.error(e);
+        console.error("Error sorting column: ", e);
       }
     });
   }, [sortDescriptor, searchTerm, filteredData, data]);
