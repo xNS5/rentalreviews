@@ -45,13 +45,11 @@ const TableBody = ({
 );
 
 const Column = ({
-    id,
   className,
   children,
   sortDescriptor,
   ...props
 }: Readonly<{
-  id: string,
   children: React.ReactNode,
   sortDescriptor: SortDescriptor,
   className?: string,
@@ -59,7 +57,7 @@ const Column = ({
 }>) => {
   const { column, direction } = sortDescriptor;
 
-  const sortDirection = direction && column === id ? direction : "disabled";
+  const sortDirection = direction && column === props.id ? direction : "disabled";
 
   return (
     <ColumnComp
@@ -80,7 +78,7 @@ const Column = ({
             >
               <Button variant={"ghost"} className="flex flex-1 flex-row bg-slate-200 hover:text-white hover:bg-slate-500 basis-full">
                 {allowsSorting ? (
-                  <span className="flex" aria-label={`${id} column sorted ${sortDirection}`}>
+                  <span className="flex" aria-label={`${props.textValue} column sorted ${sortDirection}`}>
                     {children}
                     <span className={`mt-0.5 w-4 h-4 flex items-center justify-center transition`} aria-hidden={true}>
                       {sortDirection !== "disabled" ? (
@@ -116,14 +114,14 @@ const Row = ({
   </RowComp>
 );
 
-const TableHead = ({
+const TableHeader = ({
   className,
   children,
   ...props
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-//   [key: string]: any;
+  [key: string]: any;
 }>) => (
   <TableHeaderComp className={cn("h-12 px-4 text-left align-middle font-medium text-muted-foreground text-center", className)} {...props}>
     {children}
@@ -157,5 +155,5 @@ const Caption = ({
     {children}
   </caption>
 );
-export { Table, TableHead, TableBody, Row, Cell, Caption, Column };
+export { Table, TableHeader, TableBody, Row, Cell, Caption, Column };
 
