@@ -2,6 +2,7 @@
 
 import {Fragment, useMemo, useState} from "react";
 import {Input} from "@/components/ui/input";
+import Icon from "../icons/icon";
 import Link from "next/link";
 import {cn} from "../../lib/utils";
 import {Company} from "@/app/reviews/columns";
@@ -62,22 +63,19 @@ export default function DataList({data, className, paginationValue = DEFAULT_PAG
             <ol className={"justify-center items-center first:pt-2 last:pb-2 px-10"}>
                 {
                     paginatedPageData.map((item: Company, i: number) =>
-                        <li key={i} className={`flex flex-row flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}>
-                            <span className={`text-start`}>
-                                                            <Link
-                                                                id={`${item.slug}`}
-                                                                href={`/reviews/${item.slug}`}
-                                                                aria-label={`Link to ${item.name} data page`}
-                                                                tabIndex={-1}
-                                                                className={`flex font-medium items-center justify-center`}>
-                                <h2 className={'text-2xl'}>{item.name}</h2>
+                        <li key={i} className={`flex flex-col text-start flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}>
+                            <Link
+                                id={`${item.slug}`}
+                                href={`/reviews/${item.slug}`}
+                                aria-label={`Link to ${item.name} data page`}
+                                tabIndex={-1}
+                                className={`text-start font-medium items-center justify-center`}>
+                                <span className={`flex flex-row`}><h2 className={'text-2xl underline'}>{item.name}</h2><Icon type={"fas-link"} ariahidden={true} className={`mx-1 h-4 w-4`}/></span>
                             </Link>
                                 <p><b>Company Type</b>: {item.company_type}</p>
                                 <p><b>Average Rating</b>: {item.average_rating}/5</p>
                                 <p><b>Adjusted Average Rating</b>: {item.adjusted_average_rating}/5</p>
                                 <p><b>Review Count</b>: {item.review_count}</p>
-                            </span>
-
                         </li>)
                 }
             </ol>
