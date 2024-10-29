@@ -10,7 +10,7 @@ import {
   Group as GroupComp,
 } from "react-aria-components";
 import Icon from "../icons/icon";
-import { Button } from "./button";
+import { Button } from "../ui/button";
 import {SortDescriptor} from "react-stately";
 
 

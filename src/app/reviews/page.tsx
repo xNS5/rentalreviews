@@ -1,6 +1,6 @@
 import { Company } from "./columns";
 import { getDocument } from "@/db/db";
-import DataTable from "@/components/aria-table/data-table";
+import DataTable from "@/app/reviews/data-table";
 import Article from "@/components/article/article";
 
 export default async function Reviews() {

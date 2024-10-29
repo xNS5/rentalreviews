@@ -7,16 +7,17 @@ import {
   Row,
   Cell,
   Column,
-} from "../ui/aria-table";
+} from "../../components/aria-table/aria-table";
 
-import Icon from "../icons/icon";
+import Icon from "../../components/icons/icon";
 import { Input } from "@/components/ui/input";
 import { cn } from "../../lib/utils";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { useMemo, useState } from "react";
 import { SortDescriptor } from "react-stately";
-import { Button } from "../button/button";
+import { Button } from "../../components/button/button";
 import Link from "next/link";
+import {Select} from "@/components/select/select";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 export default function DataTable({
@@ -63,16 +64,12 @@ export default function DataTable({
         let second = b[sortDescriptor.column as string];
 
         if (typeof first === "number" && typeof second === "number") {
-          if (sortDescriptor.direction === "descending") {
-            return second - first;
-          }
-          return first - second;
+          return sortDescriptor.direction === "descending"
+            ? second - first
+            : first - second;
         }
         let cmp = first.localeCompare(second);
-        if (sortDescriptor.direction === "descending") {
-          cmp *= -1;
-        }
-        return cmp;
+        return sortDescriptor.direction === "descending" ? cmp : cmp * -1;
       } catch (e) {
         console.error("Error sorting column: ", e);
       }
@@ -120,7 +117,8 @@ export default function DataTable({
   const handleSortChange = (newSortObj: SortDescriptor) => {
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
       column: newSortObj.column,
-      direction: prevSortObj.direction === "ascending" ? "descending" : "ascending",
+      direction:
+        prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
   };
 
@@ -198,49 +196,56 @@ export default function DataTable({
         </Table>
 
         {/* Mobile/Compact data view */}
-        <ol
-          className={
-            "visible md:hidden justify-center items-center px-10 space-y-3 py-5"
-          }
-        >
-          {paginatedPageData.map((item: Company, i: number) => (
-            <li
-              key={i}
-              className={`flex flex-col text-start flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}
-              onMouseEnter={() => handleMouseEnter(item.slug)}
-              onMouseLeave={() => handleMouseLeave(item.slug)}
-            >
-              <Link
-                id={`${item.slug}`}
-                href={`/reviews/${item.slug}`}
-                aria-label={`Link to ${item.name} data page`}
-                className={`text-start font-medium items-center justify-center hover:!no-underline`}
+        <div className={`visible md:hidden`}>
+          <div className={"flex flex-row justify-center items-center text-center"}>
+            <Select data={columns} label={"Column Name"} labelProps={{className: "bg-white"}}/>
+            <Select data={["ascending", "descending"]} label={"Sort Direction"} labelProps={{className: ""}}/>
+          </div>
+          <ol
+            className={
+              "justify-center items-center px-10 space-y-3 py-5"
+            }
+          >
+            {paginatedPageData.map((item: Company, i: number) => (
+              <li
+                key={i}
+                className={`flex flex-col text-start flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}
+                onMouseEnter={() => handleMouseEnter(item.slug)}
+                onMouseLeave={() => handleMouseLeave(item.slug)}
               >
-                <span className={`flex flex-row`}>
-                  <h2 className={"text-2xl underline"}>{item.name}</h2>
-                  <Icon
-                    type="fas-arrow-right"
-                    ariahidden={true}
-                    className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
-                  />
-                </span>
-                <p>
-                  <b>Company Type</b>: {item.company_type}
-                </p>
-                <p>
-                  <b>Average Rating</b>: {item.average_rating}/5
-                </p>
-                <p>
-                  <b>Adjusted Average Rating</b>: {item.adjusted_average_rating}
-                  /5
-                </p>
-                <p>
-                  <b>Review Count</b>: {item.review_count}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ol>
+                <Link
+                  id={`${item.slug}`}
+                  href={`/reviews/${item.slug}`}
+                  aria-label={`Link to ${item.name} data page`}
+                  className={`text-start font-medium items-center justify-center hover:!no-underline`}
+                >
+                  <span className={`flex flex-row`}>
+                    <h2 className={"text-2xl underline"}>{item.name}</h2>
+                    <Icon
+                      type="fas-arrow-right"
+                      ariahidden={true}
+                      className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
+                    />
+                  </span>
+                  <p>
+                    <b>Company Type</b>: {item.company_type}
+                  </p>
+                  <p>
+                    <b>Average Rating</b>: {item.average_rating}/5
+                  </p>
+                  <p>
+                    <b>Adjusted Average Rating</b>:{" "}
+                    {item.adjusted_average_rating}
+                    /5
+                  </p>
+                  <p>
+                    <b>Review Count</b>: {item.review_count}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </div>
         <span className="py-2 flex flex-col justify-center text-center">
           <span className="flex flex-row justify-center text-center space-x-1">
             <Button
