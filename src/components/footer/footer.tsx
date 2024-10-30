@@ -1,4 +1,4 @@
-import Icon from "../icons/icon";
+import {Icon} from "@/components/icon/icon";
 import Link from "next/link";
 import type { FooterItem } from "./footertypes";
 import type { Config } from "@/lib/configProvider";
@@ -32,7 +32,7 @@ export default function Footer({ data }: Config) {
               return (
                 <Link key={j} href={item?.url ?? ""} target={item.target} className={"mx-1"}>
                   {item.icon && item.icon.length > 0 ? (
-                    <Icon type={item.icon} altText={item.alt} className="!w-10 !h-10 px-3" />
+                    <Icon type={item.icon} alttext={item.alt} className="!w-10 !h-10 px-3" />
                   ) : (
                     <span className="rounded">{item.text}</span>
                   )}

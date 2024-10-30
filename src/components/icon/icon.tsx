@@ -29,13 +29,15 @@ const getIcon = (type: string, delimiter: string) => {
   });
 };
 
-export default function Icon({ type, className, tabIndex, ...rest }: Readonly<{  type: string;
-    className?: string;
-    ariahidden?: boolean | true;
-    altText?: string;
-    tabIndex?: number | -1;
-    [key: string]: any;
-}>) {
+export const Icon = ({
+  type,
+  className,
+  ...rest
+}: Readonly<{
+  type: string;
+  className?: string;
+  [key: string]: any;
+}>) => {
   const DynamicIcon = getIcon(type, "-");
 
   if (DynamicIcon == null) {
@@ -46,10 +48,10 @@ export default function Icon({ type, className, tabIndex, ...rest }: Readonly<{ 
     <FontAwesomeIcon
       icon={DynamicIcon}
       style={{ height: "inherit" }}
-      className={`rounded my-2 ${className ?? ""}`}
+      className={`rounded ${className ?? ""}`}
       title={rest.title}
-      ariahidden="true"
+      aria-hidden="true"
       {...rest}
     />
   );
-}
+};

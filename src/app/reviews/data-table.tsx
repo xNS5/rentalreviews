@@ -9,7 +9,7 @@ import {
   Column,
 } from "../../components/aria-table/aria-table";
 
-import Icon from "../../components/icons/icon";
+import { Icon } from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import { cn } from "../../lib/utils";
 import { Company, ColumnType } from "@/app/reviews/columns";
@@ -40,8 +40,10 @@ export default function DataTable({
     "adjusted_average_rating",
     "review_count",
   ];
-  const sortOptions = [{ key: "ascending", title: "Ascending" }, { key: "descending", title: "Descending" }];
-
+  const sortOptions = [
+    { key: "ascending", title: "Ascending" },
+    { key: "descending", title: "Descending" },
+  ];
 
   const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -118,7 +120,6 @@ export default function DataTable({
   };
 
   const handleSortChange = (newSortObj: SortDescriptor) => {
-
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
       column: newSortObj.column,
       direction:
@@ -185,7 +186,6 @@ export default function DataTable({
                         <p className="px-2">{`${item[key]}`}</p>
                         <Icon
                           type="fas-link"
-                          ariahidden={true}
                           className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
                         />
                       </Link>
@@ -204,25 +204,30 @@ export default function DataTable({
           <div
             className={"flex flex-row justify-center items-center text-center"}
           >
-            <p>Sort</p>
             <Select
+              label={"Sort Column"}
               data={columns}
-              label={"Column Name"}
-              labelProps={{ className: "bg-white" }}
               onSelectionChange={(val: string) =>
-                setSortDescriptor((prev) => ({ ...prev, column: val } as SortDescriptor))
+                setSortDescriptor(
+                  (prev) => ({ ...prev, column: val }) as SortDescriptor,
+                )
               }
               selectedKey={sortDescriptor.column}
+              defaultSelectedKey={sortDescriptor.column}
+              arialabel={"column name dropdown"}
             />
-            <p>by</p>
             <Select
-              data={sortOptions}
               label={"Sort Direction"}
-              labelProps={{ className: "" }}
+              data={sortOptions}
               onSelectionChange={(val: string) =>
-                setSortDescriptor((prev: SortDescriptor) => ({ ...prev, direction: val } as SortDescriptor))
+                setSortDescriptor(
+                  (prev: SortDescriptor) =>
+                    ({ ...prev, direction: val }) as SortDescriptor,
+                )
               }
               selectedKey={sortDescriptor.direction}
+              defaultSelectedKey={sortDescriptor.direction}
+              arialabel={"sort direction dropdown"}
             />
           </div>
           <ol className={"justify-center items-center px-10 space-y-3 py-5"}>
@@ -243,7 +248,6 @@ export default function DataTable({
                     <h2 className={"text-2xl underline"}>{item.name}</h2>
                     <Icon
                       type="fas-arrow-right"
-                      ariahidden={true}
                       className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
                     />
                   </span>

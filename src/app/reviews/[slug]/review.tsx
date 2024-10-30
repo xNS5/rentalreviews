@@ -4,7 +4,7 @@
 import { useContext } from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
-import Icon from "@/components/icons/icon";
+import {Icon} from "@/components/icon/icon";
 import { Company } from "../columns";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 
@@ -63,14 +63,14 @@ export function Review({ data }: Readonly<{ data: Company; }>) {
               className="hidden md:flex text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"
             >
               <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>
-              <Icon type="fas-link" ariahidden={true} className={`pr-4 h-4 w-4`} />
+              <Icon type="fas-link" className={`pr-4 h-4 w-4`} />
             </Link>
             <Link
               href={`/reviews/${data.slug}/data`}
               className="flex md:hidden text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"
             >
               <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>
-              <Icon type="fas-link" ariahidden={true} className={`pr-4 h-4 w-4`} />
+              <Icon type="fas-link" className={`pr-4 h-4 w-4`} />
             </Link>
           </li>
         </ol>
