@@ -134,16 +134,49 @@ export default function DataTable({
         className,
       )}
     >
-      <div className="flex flex-row flex-nowrap items-center gap-3 justify-end m-2">
-        <label htmlFor="searchBox">Search</label>{" "}
-        <Input
-          id={"searchBox"}
-          value={searchTerm}
-          placeholder="Company Name"
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
+        <div
+          className={
+            "visible md:hidden flex flex-col sm:flex-row justify-center items-center text-center"
+          }
+        >
+          <Select
+            label={"Sort Column"}
+            data={columns}
+            onSelectionChange={(val: string) =>
+              setSortDescriptor(
+                (prev) => ({ ...prev, column: val }) as SortDescriptor,
+              )
+            }
+            selectedKey={sortDescriptor.column}
+            defaultSelectedKey={sortDescriptor.column}
+            arialabel={"column name dropdown"}
+          />
+          <Select
+            label={"Sort Direction"}
+            data={sortOptions}
+            onSelectionChange={(val: string) =>
+              setSortDescriptor(
+                (prev: SortDescriptor) =>
+                  ({ ...prev, direction: val }) as SortDescriptor,
+              )
+            }
+            selectedKey={sortDescriptor.direction}
+            defaultSelectedKey={sortDescriptor.direction}
+            arialabel={"sort direction dropdown"}
+          />
+        </div>
+        <div className={`flex flex-row space-x-2 justify-center items-center`}>
+          <label htmlFor="searchBox">Search</label>{" "}
+          <Input
+            id={"searchBox"}
+            value={searchTerm}
+            placeholder="Company Name"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
-      <div className="flex flex-col relative overflow-auto border-t-1 border-x-0.5 border-solid border-slate-500">
+      <div className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">
         {/* Full-screen data view */}
         <Table
           aria-label={tableCaption}
@@ -200,37 +233,12 @@ export default function DataTable({
         </Table>
 
         {/* Mobile/Compact data view */}
-        <div className={`visible md:hidden`}>
-          <div
-            className={"flex flex-row justify-center items-center text-center"}
+        <div className={``}>
+          <ol
+            className={
+              "visible md:hidden justify-center items-center px-10 space-y-3 py-5 bg-slate-200 border border-slate-500 rounded"
+            }
           >
-            <Select
-              label={"Sort Column"}
-              data={columns}
-              onSelectionChange={(val: string) =>
-                setSortDescriptor(
-                  (prev) => ({ ...prev, column: val }) as SortDescriptor,
-                )
-              }
-              selectedKey={sortDescriptor.column}
-              defaultSelectedKey={sortDescriptor.column}
-              arialabel={"column name dropdown"}
-            />
-            <Select
-              label={"Sort Direction"}
-              data={sortOptions}
-              onSelectionChange={(val: string) =>
-                setSortDescriptor(
-                  (prev: SortDescriptor) =>
-                    ({ ...prev, direction: val }) as SortDescriptor,
-                )
-              }
-              selectedKey={sortDescriptor.direction}
-              defaultSelectedKey={sortDescriptor.direction}
-              arialabel={"sort direction dropdown"}
-            />
-          </div>
-          <ol className={"justify-center items-center px-10 space-y-3 py-5"}>
             {paginatedPageData.map((item: Company, i: number) => (
               <li
                 key={i}
