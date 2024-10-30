@@ -38,11 +38,11 @@ export default function NavigationMenu({
           {data.name}
           <Icon
             type="fas-chevron-down"
-            className={`mt-2 h-3 w-3 ml-1 text-inherit transition-transform ${isNavOpen ? "rotate-180 transform" : ""}`}
+            className={`h-4 w-4 ml-1 text-inherit transition-transform ${isNavOpen ? "rotate-180 transform" : ""}`}
           />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu variant="flat" className={`${className?.menu ?? ""}`} items={data.children} {...(props?.menu && props.menu)}>
+      <DropdownMenu variant="flat" className={`${className?.menu ?? ""} bg-white border border-slate-200 shadow rounded p-2`} items={data.children} {...(props?.menu && props.menu)}>
         {(child: LinkType) => (
           <DropdownItem key={`${child.name}`} value={child.name} variant="flat" className={`${className?.item ?? ""}`}>
             <Link href={child.url} onClick={() => setIsNavOpen(!isNavOpen)} target={child.target}>
