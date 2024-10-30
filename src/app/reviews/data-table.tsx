@@ -17,7 +17,7 @@ import { useMemo, useState } from "react";
 import { SortDescriptor } from "react-stately";
 import { Button } from "../../components/button/button";
 import Link from "next/link";
-import {Select} from "@/components/select/select";
+import { Select } from "@/components/select/select";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 export default function DataTable({
@@ -40,6 +40,9 @@ export default function DataTable({
     "adjusted_average_rating",
     "review_count",
   ];
+  const sortOptions = [{ key: "ascending", title: "Ascending" }, { key: "descending", title: "Descending" }];
+
+
   const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
@@ -69,7 +72,7 @@ export default function DataTable({
             : first - second;
         }
         let cmp = first.localeCompare(second);
-        return sortDescriptor.direction === "descending" ? cmp : cmp * -1;
+        return sortDescriptor.direction === "descending" ? cmp * -1 : cmp;
       } catch (e) {
         console.error("Error sorting column: ", e);
       }
@@ -115,6 +118,7 @@ export default function DataTable({
   };
 
   const handleSortChange = (newSortObj: SortDescriptor) => {
+
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
       column: newSortObj.column,
       direction:
@@ -197,15 +201,31 @@ export default function DataTable({
 
         {/* Mobile/Compact data view */}
         <div className={`visible md:hidden`}>
-          <div className={"flex flex-row justify-center items-center text-center"}>
-            <Select data={columns} label={"Column Name"} labelProps={{className: "bg-white"}}/>
-            <Select data={["ascending", "descending"]} label={"Sort Direction"} labelProps={{className: ""}}/>
-          </div>
-          <ol
-            className={
-              "justify-center items-center px-10 space-y-3 py-5"
-            }
+          <div
+            className={"flex flex-row justify-center items-center text-center"}
           >
+            <p>Sort</p>
+            <Select
+              data={columns}
+              label={"Column Name"}
+              labelProps={{ className: "bg-white" }}
+              onSelectionChange={(val: string) =>
+                setSortDescriptor((prev) => ({ ...prev, column: val } as SortDescriptor))
+              }
+              selectedKey={sortDescriptor.column}
+            />
+            <p>by</p>
+            <Select
+              data={sortOptions}
+              label={"Sort Direction"}
+              labelProps={{ className: "" }}
+              onSelectionChange={(val: string) =>
+                setSortDescriptor((prev: SortDescriptor) => ({ ...prev, direction: val } as SortDescriptor))
+              }
+              selectedKey={sortDescriptor.direction}
+            />
+          </div>
+          <ol className={"justify-center items-center px-10 space-y-3 py-5"}>
             {paginatedPageData.map((item: Company, i: number) => (
               <li
                 key={i}

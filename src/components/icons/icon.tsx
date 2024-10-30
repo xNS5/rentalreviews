@@ -1,40 +1,55 @@
-import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
-import { IconName, IconPrefix, findIconDefinition } from '@fortawesome/fontawesome-svg-core';
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconProps,
+} from "@fortawesome/react-fontawesome";
+import {
+  IconName,
+  IconPrefix,
+  findIconDefinition,
+} from "@fortawesome/fontawesome-svg-core";
 
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-import { library, config } from '@fortawesome/fontawesome-svg-core';
-import '@fortawesome/fontawesome-svg-core/styles.css'
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { fab } from "@fortawesome/free-brands-svg-icons";
+import { library, config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
-config.autoAddCss = true
+config.autoAddCss = true;
 
 library.add(fas, fab);
 
-type IconProps = {
-    type: string,
-    className?: string,
-    ariahidden?: boolean | true,
-    altText?: string,
-    accessibilityProps?: {},
-    tabIndex?: number | -1
-}
-
 const getIcon = (type: string, delimiter: string) => {
-    const index: number = type.indexOf("-");
-    const nameArr: string[] = [type.slice(0, index), type.slice(index + delimiter.length)];
-    const temp = findIconDefinition({ prefix: nameArr[0] as IconPrefix, iconName: nameArr[1] as IconName });
-    return temp;
-}
+  const index: number = type.indexOf("-");
+  const nameArr: string[] = [
+    type.slice(0, index),
+    type.slice(index + delimiter.length),
+  ];
+  return findIconDefinition({
+    prefix: nameArr[0] as IconPrefix,
+    iconName: nameArr[1] as IconName,
+  });
+};
 
-export default function Icon(props: IconProps){
-    if (props !== undefined) {
-        const DynamicIcon = getIcon(props.type, "-");
-       
-        if (DynamicIcon == null) {
-            return <FontAwesomeIcon title="X icon" icon={getIcon("fas-xmark", "-")} />;
-        }
-        return (
-            <FontAwesomeIcon icon={DynamicIcon} style={{height: "inherit"}} className={`rounded my-2 ${props?.className}`} aria-hidden={props.ariahidden} tabIndex={props.tabIndex} title={props.altText ?? ""} />
-        )
-    }
+export default function Icon({ type, className, tabIndex, ...rest }: Readonly<{  type: string;
+    className?: string;
+    ariahidden?: boolean | true;
+    altText?: string;
+    tabIndex?: number | -1;
+    [key: string]: any;
+}>) {
+  const DynamicIcon = getIcon(type, "-");
+
+  if (DynamicIcon == null) {
+    return <FontAwesomeIcon title="X icon" icon={getIcon("fas-xmark", "-")} />;
+  }
+
+  return (
+    <FontAwesomeIcon
+      icon={DynamicIcon}
+      style={{ height: "inherit" }}
+      className={`rounded my-2 ${className ?? ""}`}
+      title={rest.title}
+      ariahidden="true"
+      {...rest}
+    />
+  );
 }
