@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Icon from "../icons/icon";
+import {Icon} from "@/components/icon/icon";
 import Accordion from "../accordion/accordion";
 import Logo from "../logo/logo";
 import Link from "next/link";
@@ -18,7 +18,7 @@ function IsMobileWidth(): boolean {
   return false;
 }
 
-export function getActiveClassProps(url: string) {
+function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
   const urlArr: string[] = url.split("/");
   const baseStyle = "rounded underline-offset-8 px-2 focus-visible:!ring-1";
@@ -111,14 +111,14 @@ export default function Navbar({
         <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
           <Link href="/" className="self-start flex flex-col rounded px-2 py-4" role="link">
             <Logo id="website-logo" className="py-2">
-              <span className="hidden sm:flex sm:flex-col">
+              <span className="hidden sm:flex sm:flex-col justify-center content-center ml-2">
                 <p className="md:text-2xl sm:text-lg">{title}</p>
                 <p className="md:text-lg sm:text-sm">{description}</p>
               </span>
             </Logo>
           </Link>
           <button
-            className={`md:hidden self-end cursor-pointer z-20 text-gray-500 transition-transform mb-4`}
+            className={`md:hidden self-end cursor-pointer z-20 text-gray-500 transition-transform mb-7`}
             onClick={() => setIsMobileNavOpen((prev) => !prev)}
             aria-controls="navbar-menu"
             aria-label={`${isMobileNavOpen ? "Close" : "Open"} navigation menu`}

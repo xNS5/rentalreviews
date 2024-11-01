@@ -1,6 +1,6 @@
 import { Company } from "./columns";
 import { getDocument } from "@/db/db";
-import DataTable from "@/components/aria-table/data-table";
+import DataTable from "@/app/reviews/data-table";
 import Article from "@/components/article/article";
 
 export default async function Reviews() {
@@ -31,9 +31,9 @@ export default async function Reviews() {
     ];
 
   return (
-    <Article className="flex flex-col container justify-center text-center container mx-auto py-10">
-      <h1 className=" md:text-4xl my-4">{tableCaption}</h1>
-      <DataTable data={reviewData.data} columns={ColumnKeys} tableCaption={tableCaption} />
+    <Article className="flex flex-col justify-center text-center container mx-auto py-10">
+        <h1 className=" md:text-4xl my-4">{tableCaption}</h1>
+        <DataTable data={reviewData.data} columns={ColumnKeys} tableCaption={tableCaption}/>
     </Article>
   );
 }

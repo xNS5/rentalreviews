@@ -9,8 +9,8 @@ import {
   TableHeader as TableHeaderComp,
   Group as GroupComp,
 } from "react-aria-components";
-import Icon from "../icons/icon";
-import { Button } from "./button";
+import {Icon} from "@/components/icon/icon";
+import { Button } from "../ui/button";
 import {SortDescriptor} from "react-stately";
 
 
@@ -45,13 +45,11 @@ const TableBody = ({
 );
 
 const Column = ({
-    id,
   className,
   children,
   sortDescriptor,
   ...props
 }: Readonly<{
-  id: string,
   children: React.ReactNode,
   sortDescriptor: SortDescriptor,
   className?: string,
@@ -59,13 +57,13 @@ const Column = ({
 }>) => {
   const { column, direction } = sortDescriptor;
 
-  const sortDirection = direction && column === id ? direction : "disabled";
+  const sortDirection = direction && column === props.id ? direction : "disabled";
 
   return (
     <ColumnComp
       {...props}
       className={cn(
-        "sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default first:rounded-tl-lg last:rounded-tr-lg whitespace-nowrap ",
+        "sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default whitespace-nowrap ",
         className
       )}
       aria-sort={sortDirection}
@@ -76,11 +74,11 @@ const Column = ({
             <GroupComp
               role="presentation"
               tabIndex={-1}
-              className="flex flex-1 justify-center text-center overflow-hidden outline-none rounded focus-visible:ring-2 ring-slate-600"
+              className="flex flex-1 justify-center text-center overflow-hidden outline-none focus-visible:ring-2 ring-slate-600"
             >
-              <Button variant={"ghost"} className="flex flex-1 flex-row bg-slate-200 hover:text-white hover:bg-slate-500 basis-full">
+              <Button variant={"ghost"} className="flex flex-1 flex-row bg-slate-200 hover:text-white hover:bg-slate-500 basis-full text-black">
                 {allowsSorting ? (
-                  <span className="flex" aria-label={`${id} column sorted ${sortDirection}`}>
+                  <span className="flex" aria-label={`${props.textValue} column sorted ${sortDirection}`}>
                     {children}
                     <span className={`mt-0.5 w-4 h-4 flex items-center justify-center transition`} aria-hidden={true}>
                       {sortDirection !== "disabled" ? (
@@ -116,14 +114,14 @@ const Row = ({
   </RowComp>
 );
 
-const TableHead = ({
+const TableHeader = ({
   className,
   children,
   ...props
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-//   [key: string]: any;
+  [key: string]: any;
 }>) => (
   <TableHeaderComp className={cn("h-12 px-4 text-left align-middle font-medium text-muted-foreground text-center", className)} {...props}>
     {children}
@@ -157,5 +155,5 @@ const Caption = ({
     {children}
   </caption>
 );
-export { Table, TableHead, TableBody, Row, Cell, Caption, Column };
+export { Table, TableHeader, TableBody, Row, Cell, Caption, Column };
 
