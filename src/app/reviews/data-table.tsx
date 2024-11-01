@@ -137,7 +137,7 @@ export default function DataTable({
       <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
         <div
           className={
-            "visible md:hidden flex flex-col sm:flex-row justify-center items-center text-center"
+            "visible md:hidden flex flex-col items-start sm:flex-row justify-center sm:items-center text-center"
           }
         >
           <Select
