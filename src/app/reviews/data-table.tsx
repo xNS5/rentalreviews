@@ -176,89 +176,83 @@ export default function DataTable({
           />
         </div>
       </div>
-      <div className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">
+      <div
+          className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">
         {/* Full-screen data view */}
         <Table
-          aria-label={tableCaption}
-          sortDescriptor={sortDescriptor}
-          onSortChange={handleSortChange}
-          className="hidden md:table w-full"
+            aria-label={tableCaption}
+            sortDescriptor={sortDescriptor}
+            onSortChange={handleSortChange}
+            className="hidden md:table w-full"
         >
           <TableHeader>
             {columns.map((column, i: number) => (
-              <Column
-                id={column.key}
-                textValue={column.title}
-                key={i}
-                isRowHeader={i === 0}
-                sortDescriptor={sortDescriptor}
-                allowsSorting
-                className={`border-black ${i < columns.length - 1 ? "border-r-1" : ""}`}
-              >
-                <p>{column.title}</p>
-              </Column>
+                <Column
+                    id={column.key}
+                    textValue={column.title}
+                    key={i}
+                    isRowHeader={i === 0}
+                    sortDescriptor={sortDescriptor}
+                    allowsSorting
+                    className={`border-black ${i < columns.length - 1 ? "border-r-1" : ""}`}
+                >
+                  <p>{column.title}</p>
+                </Column>
             ))}
           </TableHeader>
           <TableBody>
             {paginatedPageData.map((item: Company, i: number) => (
-              <Row key={i}>
-                {colKeys.map((key: string, j: number) => (
-                  <Cell
-                    key={j}
-                    className={`${j < colKeys.length - 1 ? "border-black border-r-1" : ""}`}
-                  >
-                    {j == 0 ? (
-                      <Link
-                        id={`${item.slug}`}
-                        href={`/reviews/${item.slug}`}
-                        aria-label={`Link to ${item[key]}`}
-                        className={`flex mx-3 font-medium items-center justify-center`}
-                        onMouseEnter={() => handleMouseEnter(item.slug)}
-                        onMouseLeave={() => handleMouseLeave(item.slug)}
+                <Row key={i}>
+                  {colKeys.map((key: string, j: number) => (
+                      <Cell
+                          key={j}
+                          className={`${j < colKeys.length - 1 ? "border-black border-r-1" : ""}`}
                       >
-                        <p className="px-2">{`${item[key]}`}</p>
-                        <Icon
-                          type="fas-link"
-                          className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
-                        />
-                      </Link>
-                    ) : (
-                      <p>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</p>
-                    )}
-                  </Cell>
-                ))}
-              </Row>
+                        {j == 0 ? (
+                            <Link
+                                id={`${item.slug}`}
+                                href={`/reviews/${item.slug}`}
+                                aria-label={`Link to ${item[key]}`}
+                                className={`flex mx-3 font-medium items-center justify-center`}
+                                onMouseEnter={() => handleMouseEnter(item.slug)}
+                                onMouseLeave={() => handleMouseLeave(item.slug)}
+                            >
+                              <p className="px-2">{`${item[key]}`}</p>
+                              <Icon
+                                  type="fas-link"
+                                  className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
+                              />
+                            </Link>
+                        ) : (
+                            <p>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</p>
+                        )}
+                      </Cell>
+                  ))}
+                </Row>
             ))}
           </TableBody>
         </Table>
 
         {/* Mobile/Compact data view */}
-        <div className={``}>
-          <ol
+        <ol
             className={
               "visible md:hidden justify-center items-center px-10 space-y-3 py-5 bg-slate-200 border border-slate-500 rounded"
             }
-          >
-            {paginatedPageData.map((item: Company, i: number) => (
+        >
+          {paginatedPageData.map((item: Company, i: number) => (
               <li
-                key={i}
-                className={`flex flex-col text-start flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}
-                onMouseEnter={() => handleMouseEnter(item.slug)}
-                onMouseLeave={() => handleMouseLeave(item.slug)}
+                  key={i}
+                  className={`flex flex-col text-start flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}
+                  onMouseEnter={() => handleMouseEnter(item.slug)}
+                  onMouseLeave={() => handleMouseLeave(item.slug)}
               >
                 <Link
-                  id={`${item.slug}`}
-                  href={`/reviews/${item.slug}`}
-                  aria-label={`Link to ${item.name} data page`}
-                  className={`text-start font-medium items-center justify-center hover:!no-underline`}
+                    id={`${item.slug}`}
+                    href={`/reviews/${item.slug}`}
+                    aria-label={`Link to ${item.name} review page. Company Type ${item.company_type}. Average Rating ${item.average_rating} out of 5. Adjusted average rating ${item.adjusted_average_rating} out of 5. Review Count ${item.review_count}.`}
+                    className={`text-start font-medium items-center justify-center hover:!no-underline`}
                 >
-                  <span className={`flex flex-row`}>
-                    <h2 className={"text-2xl underline"}>{item.name}</h2>
-                    <Icon
-                      type="fas-arrow-right"
-                      className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
-                    />
-                  </span>
+                  <h2 className={"text-2xl underline"}>{item.name}</h2>
                   <p>
                     <b>Company Type</b>: {item.company_type}
                   </p>
@@ -266,53 +260,50 @@ export default function DataTable({
                     <b>Average Rating</b>: {item.average_rating}/5
                   </p>
                   <p>
-                    <b>Adjusted Average Rating</b>:{" "}
-                    {item.adjusted_average_rating}
-                    /5
+                    <b>Adjusted Average Rating</b>: {item.adjusted_average_rating}/5
                   </p>
                   <p>
                     <b>Review Count</b>: {item.review_count}
                   </p>
                 </Link>
               </li>
-            ))}
-          </ol>
-        </div>
+          ))}
+        </ol>
         <span className="py-2 flex flex-col justify-center text-center">
           <span className="flex flex-row justify-center text-center space-x-1">
             <Button
-              variant={"ghost"}
-              aria-label="last page"
-              disabled={currentPageNumber === 1}
-              aria-disabled={currentPageNumber === 1}
-              onClick={() => handlePageChange(1)}
+                variant={"ghost"}
+                aria-label="last page"
+                disabled={currentPageNumber === 1}
+                aria-disabled={currentPageNumber === 1}
+                onClick={() => handlePageChange(1)}
             >
               {"<<"}
             </Button>
             <Button
-              variant={"ghost"}
-              aria-label="previous page"
-              disabled={currentPageNumber === 1}
-              aria-disabled={currentPageNumber === 1}
-              onClick={() => handlePageChange(currentPageNumber - 1)}
+                variant={"ghost"}
+                aria-label="previous page"
+                disabled={currentPageNumber === 1}
+                aria-disabled={currentPageNumber === 1}
+                onClick={() => handlePageChange(currentPageNumber - 1)}
             >
               {"<"}
             </Button>
             <Button
-              variant={"ghost"}
-              aria-label="next page"
-              disabled={currentPageNumber === pageCount}
-              aria-disabled={currentPageNumber === pageCount}
-              onClick={() => handlePageChange(currentPageNumber + 1)}
+                variant={"ghost"}
+                aria-label="next page"
+                disabled={currentPageNumber === pageCount}
+                aria-disabled={currentPageNumber === pageCount}
+                onClick={() => handlePageChange(currentPageNumber + 1)}
             >
               {">"}
             </Button>
             <Button
-              variant={"ghost"}
-              aria-label="last page"
-              disabled={currentPageNumber === pageCount}
-              aria-disabled={currentPageNumber === pageCount}
-              onClick={() => handlePageChange(pageCount)}
+                variant={"ghost"}
+                aria-label="last page"
+                disabled={currentPageNumber === pageCount}
+                aria-disabled={currentPageNumber === pageCount}
+                onClick={() => handlePageChange(pageCount)}
             >
               {">>"}
             </Button>
