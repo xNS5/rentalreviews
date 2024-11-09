@@ -1,8 +1,9 @@
 "use client"
-import React from "react";
+import React, {useEffect} from "react";
 import Spinner from "@/components/spinner/spinner";
 
 
-export default function Loading(){    
+
+export default function Loading(){
     return <Spinner/>;
 }

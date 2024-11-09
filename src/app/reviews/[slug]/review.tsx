@@ -6,16 +6,20 @@ import Link from "next/link";
 import Text from "@/components/text/text";
 import {Icon} from "@/components/icon/icon";
 import { Company } from "../columns";
+import {announce} from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 
 const adjustedReviewDisclaimerString = "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
-
 
 export function Review({ data }: Readonly<{ data: Company; }>) {
   // Note to self: this is to display the adjusted data, the disclaimer object is different. E.g. Son-Rise -> PURE
   const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
   const { alt }: Config = useContext(ConfigContext)
-  const altObj: { [key: string]: string } = ["review_count", "average_rating", "adjusted_review_count", "adjusted_average_rating"].reduce((obj, curr) => ({ ...obj, [curr]: getAltString(alt, curr, data[curr]) }), {});
+  const altObj: { [key: string]: string } = ["review_count", "average_rating", "adjusted_review_count", "adjusted_average_rating"].reduce((obj, curr) => ({ ...obj, [curr]: getAltString(alt["review"], curr, data[curr]) }), {});
+
+  if(typeof window !== "undefined"){
+    announce("Main content contains headings, a list of text, and paragraph text.", "assertive", 500);
+  }
 
   return (
     <>

@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { getDocument } from "../db/db";
 import type { Config, Text as TextType } from "@/lib/configProvider";
 import { Suspense } from "react";
+import {announce} from "@react-aria/live-announcer";
+
+
 import Loading from "./loading";
 export default async function Home() {
   
