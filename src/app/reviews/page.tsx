@@ -2,6 +2,7 @@ import { Company } from "./columns";
 import { getDocument } from "@/db/db";
 import DataTable from "@/app/reviews/data-table";
 import Article from "@/components/article/article";
+import {notFound} from "next/navigation";
 
 export default async function Reviews() {
   const reviewData: Company | undefined = await getDocument<Company>("index", "properties_and_companies_index");
@@ -30,8 +31,13 @@ export default async function Reviews() {
         },
     ];
 
+    if(reviewData === undefined){
+        console.error("Data is undefined. Check DB connection.");
+        notFound();
+    }
+
   return (
-    <Article className="flex flex-col justify-center text-center container mx-auto py-10">
+    <Article className="flex flex-col justify-center text-center container mx-auto py-10" announcement={"Main content contains headings and text"}>
         <h1 className=" md:text-4xl my-4">{tableCaption}</h1>
         <DataTable data={reviewData.data} columns={ColumnKeys} tableCaption={tableCaption}/>
     </Article>

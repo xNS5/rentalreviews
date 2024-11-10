@@ -1,6 +1,5 @@
 "use client"
 
-
 import { useContext } from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
@@ -16,10 +15,6 @@ export function Review({ data }: Readonly<{ data: Company; }>) {
   const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
   const { alt }: Config = useContext(ConfigContext)
   const altObj: { [key: string]: string } = ["review_count", "average_rating", "adjusted_review_count", "adjusted_average_rating"].reduce((obj, curr) => ({ ...obj, [curr]: getAltString(alt["review"], curr, data[curr]) }), {});
-
-  if(typeof window !== "undefined"){
-    announce("Main content contains headings, a list of text, and paragraph text.", "assertive", 500);
-  }
 
   return (
     <>
