@@ -150,7 +150,8 @@ export default function DataTable({
       )}
     >
       <div className={"sr-only"} aria-live="assertive" aria-atomic="true">
-        <p>{`Current layout ${isMobileWidth ? "list" : "table"}`}</p>
+        <p>Current layout</p>
+        {isMobileWidth ? <p>list</p> : <p>table</p>}
       </div>
       <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
         <div

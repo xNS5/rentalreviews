@@ -37,7 +37,7 @@ export default async function Reviews() {
     }
 
   return (
-    <Article className="flex flex-col justify-center text-center container mx-auto py-10" announcement={"Main content contains headings and text"}>
+    <Article className="flex flex-col justify-center text-center container mx-auto py-10">
         <h1 className=" md:text-4xl my-4">{tableCaption}</h1>
         <DataTable data={reviewData.data} columns={ColumnKeys} tableCaption={tableCaption}/>
     </Article>

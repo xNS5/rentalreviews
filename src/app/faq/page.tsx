@@ -8,10 +8,9 @@ import {Config, ConfigContext} from "@/lib/configProvider";
 
 import type { FaqQuestion } from "./faq-type";
 import type { Link as LinkType } from "@/lib/linktype";
-import {announce} from "@react-aria/live-announcer";
 import {notFound} from "next/navigation";
 
-export default async function FAQ() {
+export default function FAQ() {
     const {faq}: Config = useContext(ConfigContext);
 
     if(faq === undefined){
@@ -20,7 +19,7 @@ export default async function FAQ() {
     }
 
   return (
-    <Article className="container" announcement={"Main content contains headings and text"}>
+    <Article className="container" announcement={"Main content contains a list of headings and text"}>
      <div className="flex flex-col text-center py-2">
      <h1 className="md:text-4xl">{faq.title}</h1>
      <h2 className="md:text-2xl no-underline font-normal">{faq.description}</h2>
