@@ -4,6 +4,8 @@ import DataTable from "@/app/reviews/data-table";
 import Article from "@/components/article/article";
 import {notFound} from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function Reviews() {
   const reviewData: Company | undefined = await getDocument<Company>("index", "properties_and_companies_index");
   const tableCaption = "Rental Reviews Data";

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { JsonWrapper } from "./json-wrapper";
 import Article from "@/components/article/article";
 
+export const dynamic = "force-dynamic";
 
 export default async function Data({params}: Readonly<{
     params: { [key: string]: string }
