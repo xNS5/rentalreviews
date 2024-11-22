@@ -38,9 +38,6 @@ export function getAltString(altObj: AltRecord, key: string, value: any) {
   return "undefined";
 }
 
-
-export const development: boolean = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
-
 export const ConfigContext = createContext({});
 
 export function Config({ data, children }: Readonly<{
