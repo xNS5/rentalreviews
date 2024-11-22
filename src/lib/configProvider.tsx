@@ -5,6 +5,7 @@ import React, { createContext } from "react";
 export type Config = {
   [key: string]: {
     name: string;
+    aria_announcement?:string;
     title?: string;
     description?: string;
     text?: Text[];

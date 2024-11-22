@@ -18,7 +18,7 @@ export default async function PrivacyPolicy() {
 
 
   return (
-    <Article className="container" announcement={"Main content contains headings and text"}>
+    <Article className="container" announcement={privacy_policy.aria_announcement ?? undefined}>
       <Text text={privacy_policy?.text ?? ""} />
     </Article>
   );

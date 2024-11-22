@@ -1,6 +1,7 @@
 "use client";
 
 import { announce } from "@react-aria/live-announcer";
+import React from "react";
 
 export default function Article({
   children,

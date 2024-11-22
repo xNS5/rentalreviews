@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import Article from "@/components/article/article";
 export default async function Home() {
-  const { home }: Config | undefined = await getDocument<Config>(
+  const { home }: Config = await getDocument<Config>(
     "config",
     "config",
   );
@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <div className="container mx-auto px-4">
       <Suspense key={Math.random()} fallback={<Loading />}>
-        <Article announcement={"Main content contains headings and paragraph text"}>
+        <Article announcement={home?.aria_announcement ?? undefined}>
           <section className="my-20">
             {home?.content?.map((elem: TextType, i: number) => (
               <div key={i} role="article">
