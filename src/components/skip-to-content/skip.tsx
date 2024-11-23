@@ -9,13 +9,19 @@ export default function SkipToContent({
   className?: string;
   [key: string]: any | any[];
 }>) {
+
   return (
     <Link
     id="skip-link"
     href={props.url}
     className={`transition left-0 bg-primary text-primary-content absolute p-3 m-3 -translate-y-16 focus:translate-y-0 ${className}`}
     onClick={e => {
-      e.currentTarget.blur();
+      e.preventDefault();
+      e.currentTarget?.blur();
+      const container: HTMLElement | null = document.querySelector(props.url);
+      if(container){
+        container.focus();
+      }
     }}
     {...props}
     >

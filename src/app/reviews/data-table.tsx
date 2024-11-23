@@ -18,12 +18,13 @@ import { SortDescriptor } from "react-stately";
 import { Button } from "@/components/button/button";
 import Link from "next/link";
 import { Select } from "@/components/select/select";
+import {announce} from "@react-aria/live-announcer";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
 function getIsMobileWidth() {
   if (typeof window !== "undefined") {
-    return window.innerWidth < 940;
+    return window.innerWidth <= 940;
   }
   return false;
 }
@@ -61,6 +62,7 @@ export default function DataTable({
     { key: "ascending", title: "Ascending" },
     { key: "descending", title: "Descending" },
   ];
+  let hasMadeAnnouncement = false;
 
   // Filters data based on searchTerm
   const filteredData = useMemo(() => {
@@ -134,10 +136,24 @@ export default function DataTable({
     }));
   };
 
+
   useEffect(() => {
-    function handleResize() {
-      setIsMobileWidth(getIsMobileWidth());
+    function announceHandler(){
+      if(isMobileWidth){
+        announce("Main content contains a heading and a list of links", "assertive", 500);
+      } else {
+        announce("Main content contains a heading and a data table", "assertive", 500);
+      }
     }
+    function handleResize() {
+      const isWindowMobileWidth = getIsMobileWidth();
+      if(isWindowMobileWidth != isMobileWidth){
+        setIsMobileWidth(isWindowMobileWidth);
+        announceHandler();
+      }
+    }
+    // To make the layout announcement on first load
+    announceHandler();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -149,10 +165,6 @@ export default function DataTable({
         className,
       )}
     >
-      <div className={"sr-only"} aria-live="assertive" aria-atomic="true">
-        <p>Current layout</p>
-        {isMobileWidth ? <p>list</p> : <p>table</p>}
-      </div>
       <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
         <div
           className={
