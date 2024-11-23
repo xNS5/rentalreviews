@@ -276,7 +276,7 @@ export default function DataTable({
           {paginatedPageData.map((item: Company, i: number) => (
             <li
               key={i}
-              className={`flex flex-col text-start flex-1 bg-white border border-black rounded-lg p-5 my-1 shadow-lg`}
+              className={`flex flex-col text-start flex-1 bg-white border border-slate-800 rounded-lg p-5 my-1 shadow hover:shadow-xl hover:border-2 hover:border-black`}
               onMouseEnter={() => handleMouseEnter(item.slug)}
               onMouseLeave={() => handleMouseLeave(item.slug)}
             >
@@ -286,7 +286,14 @@ export default function DataTable({
                 aria-label={`Link to ${item.name} review page. Company Type ${item.company_type}. Average Rating ${item.average_rating} out of 5. Adjusted average rating ${item.adjusted_average_rating} out of 5. Review Count ${item.review_count}.`}
                 className={`text-start font-medium items-center justify-center hover:!no-underline`}
               >
-                <h2 className={"text-2xl underline"}>{item.name}</h2>
+                <h2 className={"text-2xl underline"}>
+                  <b>{item.name}</b>
+                  <Icon
+                      type="fas-link"
+                      className={`${hoverStates[item.slug] ? "visible" : "invisible"} m-1 h-5 w-5`}
+                  />
+                </h2>
+
                 <p>
                   <b>Company Type</b>: {item.company_type}
                 </p>
