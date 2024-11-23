@@ -1,9 +1,15 @@
 import { firestoreGetCollection, firestoreGetDocument } from "./firebase";
 import { mongoGetCollection, mongoGetDocument } from "./mongo";
-import { development as isDevelopment } from "@/lib/configProvider";
 import type { RequestType } from "./requesttype";
 
 const CACHE_TTL: number = process.env.NEXT_PUBLIC_CACHE_TTL ? parseInt(process.env.NEXT_PUBLIC_CACHE_TTL) || 3600000 : 3600000; // 1 month if .env value isn't there.
+export const DB_ENV = process.env.NEXT_PUBLIC_DB_ENV ?? "local";
+
+export enum DB_ENVS {
+  LOCAL = "local",
+  TEST = "test",
+  PRODUCTION = "production"
+}
 
 type TProps<T> = {
   [k: string]: string | number | T | T[keyof T];
@@ -15,7 +21,7 @@ export async function getCollection<T extends TProps<T>>(collection: string, TTL
   collection = collection.trim();
 
   if (collection_arr === undefined) {
-    if (isDevelopment) {
+    if (process.env.NEXT_PUBLIC_DB_ENV === "local") {
       collection_arr = (await mongoGetCollection<T[]>(collection)) ?? undefined;
     } else {
       collection_arr = (await firestoreGetCollection<T[]>({ collection_name: collection } as RequestType)) ?? undefined;
@@ -29,9 +35,9 @@ export async function getDocument<T extends TProps<T>>(collection: string, docum
   let document: T | undefined = global.documentCache?.get(`${collection}/${document_id}`) ?? undefined;
   collection = collection.trim();
   document_id = document_id.trim();
-  
+
   if (document === undefined) {
-      if (isDevelopment) {
+      if (process.env.NEXT_PUBLIC_DB_ENV === "local") {
         document = await mongoGetDocument<T>(collection, document_id);
       } else {
         document = await firestoreGetDocument<T>({ collection_name: collection, query_props: { id: document_id } } as RequestType)

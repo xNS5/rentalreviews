@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { JsonWrapper } from "./json-wrapper";
 import Article from "@/components/article/article";
 
+export const dynamic = "force-dynamic";
 
 export default async function Data({params}: Readonly<{
     params: { [key: string]: string }
@@ -18,7 +19,7 @@ export default async function Data({params}: Readonly<{
 
   return (
     <div className="container mx-auto py-10">
-       <Article>
+       <Article announcement={"Main content contains collapsed elements and text in key-value pairs"}>
        <h1 className="text-center text-lg my-2">Raw Data for {companyData.name}</h1>
             <div className="rounded border border-slate-500 p-5 shadow-lg">
                 <JsonWrapper data={companyData}/>

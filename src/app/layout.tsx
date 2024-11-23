@@ -9,10 +9,7 @@ import Footer from "@/components/footer/footer";
 import "./globals.css";
 import Loading from "./loading";
 
-export const dynamic = "force-dynamic";
-
 import SkipToContent from "@/components/skip-to-content/skip";
-import { Alt } from "@/lib/configProvider";
 
 const inter = FontSans({
   subsets: ["latin"],
@@ -60,7 +57,7 @@ export default async function RootLayout({
         </header>
         <Config data={config}>
           <Suspense key={Math.random()} fallback={<Loading />}>
-            <main id="main-content" role="main" className={`${inter.variable}`}>
+            <main id="main-content" role="main" className={`${inter.variable}`} tabIndex={-1}>
               <Providers>{children}</Providers>
             </main>
           </Suspense>

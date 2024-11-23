@@ -7,6 +7,9 @@ import type { Company } from "../columns";
 
 import "./review.css";
 
+
+export const dynamic = "force-dynamic";
+
 export default async function Page({
   params,
 }: Readonly<{
@@ -21,7 +24,7 @@ export default async function Page({
   const company: Company = await getCompanyData(slug);
 
   return (
-    <Article className="container mx-auto py-10 review-summary">
+    <Article className="container mx-auto py-10 review-summary" announcement={"Main content contains headings, a list containing text, and paragraph text"}>
       <Review data={company} />
     </Article>
   );

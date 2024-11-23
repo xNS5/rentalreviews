@@ -1,10 +1,11 @@
 "use client"
 
-import { createContext } from "react";
+import React, { createContext } from "react";
 
 export type Config = {
   [key: string]: {
     name: string;
+    aria_announcement?:string;
     title?: string;
     description?: string;
     text?: Text[];
@@ -36,9 +37,6 @@ export function getAltString(altObj: AltRecord, key: string, value: any) {
   }
   return "undefined";
 }
-
-
-export const development: boolean = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 export const ConfigContext = createContext({});
 

@@ -1,4 +1,4 @@
-import type NodeCache from 'node-cache';
+import type NodeCache from '@cacheable/node-cache';
 
 declare global {
   var collectionCache: NodeCache;
