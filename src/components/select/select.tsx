@@ -45,7 +45,7 @@ export const Select = ({
       </Button>
       <Popover
         className={`bg-white border border-solid border-slate-500 shadow rounded`}
-        aria-labeledby={rest.id}
+        aria-labelledby={rest.id}
       >
         <ListBox items={data} selectionMode="single" className={`p-3`}>
           {data.map((elem: any, i: number) => (
