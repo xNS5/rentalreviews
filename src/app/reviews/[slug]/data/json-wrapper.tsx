@@ -1,3 +1,4 @@
+"use client"
 import { JsonViewer } from 'view-json-react';
 
 export function JsonWrapper({data}: Readonly<{
