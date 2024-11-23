@@ -270,13 +270,13 @@ export default function DataTable({
         {/* Mobile/Compact data view */}
         <ol
           className={
-            "visible md:hidden justify-center items-center px-10 space-y-3 py-5 bg-slate-200 border border-slate-500 rounded"
+            "visible md:hidden justify-center items-center px-10 space-y-2 py-5 bg-slate-200 border border-slate-500 rounded"
           }
         >
           {paginatedPageData.map((item: Company, i: number) => (
             <li
               key={i}
-              className={`flex flex-col text-start flex-1 bg-white border border-slate-800 rounded-lg p-5 my-1 shadow hover:shadow-xl hover:border-2 hover:border-black`}
+              className={`flex flex-col text-start flex-1 bg-white border border-slate-500 rounded-lg p-5 my-1 shadow hover:shadow-xl hover:border-black`}
               onMouseEnter={() => handleMouseEnter(item.slug)}
               onMouseLeave={() => handleMouseLeave(item.slug)}
             >
