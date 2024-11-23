@@ -21,7 +21,7 @@ export async function getCollection<T extends TProps<T>>(collection: string, TTL
   collection = collection.trim();
 
   if (collection_arr === undefined) {
-    if (DB_ENV == DB_ENVS.LOCAL) {
+    if (process.env.NEXT_PUBLIC_DB_ENV === "local") {
       collection_arr = (await mongoGetCollection<T[]>(collection)) ?? undefined;
     } else {
       collection_arr = (await firestoreGetCollection<T[]>({ collection_name: collection } as RequestType)) ?? undefined;
@@ -37,7 +37,7 @@ export async function getDocument<T extends TProps<T>>(collection: string, docum
   document_id = document_id.trim();
 
   if (document === undefined) {
-      if (DB_ENV == DB_ENVS.LOCAL) {
+      if (process.env.NEXT_PUBLIC_DB_ENV === "local") {
         document = await mongoGetDocument<T>(collection, document_id);
       } else {
         document = await firestoreGetDocument<T>({ collection_name: collection, query_props: { id: document_id } } as RequestType)

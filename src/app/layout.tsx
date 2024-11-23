@@ -10,7 +10,6 @@ import "./globals.css";
 import Loading from "./loading";
 
 import SkipToContent from "@/components/skip-to-content/skip";
-import { Alt } from "@/lib/configProvider";
 
 const inter = FontSans({
   subsets: ["latin"],
