@@ -1,13 +1,20 @@
+"use client"
+
+import { useContext } from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
-import Icon from "@/components/icons/icon";
+import {Icon} from "@/components/icon/icon";
 import { Company } from "../columns";
+import {announce} from "@react-aria/live-announcer";
+import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 
 const adjustedReviewDisclaimerString = "Note: The Adjusted Review Count and Rating reflect only reviews with both text and a rating.";
 
-export function Review({ data, altObj }: Readonly<{ data: Company; altObj: { [key: string]: string } }>) {
+export function Review({ data }: Readonly<{ data: Company; }>) {
   // Note to self: this is to display the adjusted data, the disclaimer object is different. E.g. Son-Rise -> PURE
   const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
+  const { alt }: Config = useContext(ConfigContext)
+  const altObj: { [key: string]: string } = ["review_count", "average_rating", "adjusted_review_count", "adjusted_average_rating"].reduce((obj, curr) => ({ ...obj, [curr]: getAltString(alt["review"], curr, data[curr]) }), {});
 
   return (
     <>
@@ -55,14 +62,14 @@ export function Review({ data, altObj }: Readonly<{ data: Company; altObj: { [ke
               className="hidden md:flex text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"
             >
               <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>
-              <Icon type="fas-link" ariahidden={true} className={`pr-4 h-4 w-4`} />
+              <Icon type="fas-link" className={`pr-4 h-4 w-4`} />
             </Link>
             <Link
               href={`/reviews/${data.slug}/data`}
               className="flex md:hidden text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"
             >
               <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>
-              <Icon type="fas-link" ariahidden={true} className={`pr-4 h-4 w-4`} />
+              <Icon type="fas-link" className={`pr-4 h-4 w-4`} />
             </Link>
           </li>
         </ol>

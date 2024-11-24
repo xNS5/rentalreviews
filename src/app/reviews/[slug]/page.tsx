@@ -3,10 +3,12 @@ import { Review } from "./review";
 import getCompanyData from "@/lib/getCompanyData";
 import { isValidSlug } from "@/lib/utils";
 import Article from "@/components/article/article";
-import { AltRecord, getAltObj, getAltString } from "@/lib/altProvider";
 import type { Company } from "../columns";
 
 import "./review.css";
+
+
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   params,
@@ -19,16 +21,11 @@ export default async function Page({
     notFound();
   }
 
-  const companyPromise: Promise<Company> = getCompanyData(slug);
-  const altPromise: Promise<AltRecord> = getAltObj("review");
-
-  const [company, alt] = await Promise.all([companyPromise, altPromise]);
-
-  const altObj = ["review_count", "average_rating", "adjusted_review_count", "adjusted_average_rating"].reduce((obj, curr) => ({...obj, [curr]: getAltString(alt, curr, company[curr])}), {})
+  const company: Company = await getCompanyData(slug);
 
   return (
-    <Article className="container mx-auto py-10 review-summary">
-      <Review data={company} altObj={altObj} />;
+    <Article className="container mx-auto py-10 review-summary" announcement={"Main content contains headings, a list containing text, and paragraph text"}>
+      <Review data={company} />
     </Article>
   );
 }

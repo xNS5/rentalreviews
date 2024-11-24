@@ -17,7 +17,7 @@ export const mongoGetCollection = async <T>(collection: string) => {
   } catch (err) {
     console.error("Error getting data: ", err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 
@@ -32,6 +32,6 @@ export const mongoGetDocument = async <T>(collection: string, document_id: strin
   } catch (err) {
     console.error("Error getting data: ", err);
   } finally {
-    client.close();
+    await client.close();
   }
 };

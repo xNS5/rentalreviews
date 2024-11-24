@@ -6,14 +6,14 @@ export const Button = ({
   children,
   ...props
 }: Readonly<{
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
   children: React.ReactNode;
   [key: string]: any;
 }>) => {
   return (
     <span className={`${props.disabled ? "cursor-not-allowed" : ""}`}>
-      <ShadButton onClick={() => props.disabled === false ? onClick() : ""} className={`transition-colors ease-in-out duration-400 hover:bg-slate-500 hover:text-white disabled:bg-gray-200 ${className}`} {...props}>
+      <ShadButton onClick={() => props.disabled === false && onClick ? onClick() : ""} className={`transition-colors ease-in-out duration-400 hover:bg-slate-500 hover:text-white disabled:bg-gray-200 ${className}`} {...props}>
       {children}
     </ShadButton>
     </span>
