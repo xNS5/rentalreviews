@@ -17,7 +17,7 @@ export default function Article({
   }
 
   return (
-    <article className={`flex flex-col ${className}`} {...props}>
+    <article className={`flex flex-col ${className}`} tabIndex={-1} {...props}>
       {children}
     </article>
   );
