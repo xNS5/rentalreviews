@@ -11,9 +11,9 @@ import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 export function Review({ data }: Readonly<{ data: Company; }>) {
   // Note to self: this is to display the adjusted data, the disclaimer object is different. E.g. Son-Rise -> PURE
   const hasAdjustedReviewValue: boolean = data.review_count != data.adjusted_review_count;
+  const timestamp = data.timestamp;
   const { alt, reviews }: Config = useContext(ConfigContext)
   const altObj: { [key: string]: string } = useMemo(() => ["review_count", "average_rating", "adjusted_review_count", "adjusted_average_rating"].reduce((obj, curr) => ({ ...obj, [curr]: getAltString(alt["review"], curr, data[curr]) }), {}), []);
-
   return (
       <>
         <h1 className="text-3xl md:text-2xl text-center font-bold my-1">{data.name}</h1>
@@ -21,6 +21,11 @@ export function Review({ data }: Readonly<{ data: Company; }>) {
             id="review-data-list"
             className="container flex flex-col items-center justify-center border md:border-none max-w-xxs md:max-w-none border-slate-500 rounded py-2"
         >
+          {timestamp && (
+              <p className="text-sm lg:text-lg mb-2">
+                <b>Last Updated:</b> {data.timestamp}
+              </p>
+          )}
           {hasAdjustedReviewValue && (
               <p className="text-sm lg:text-lg mb-2">
                 {reviews.disclaimer}
