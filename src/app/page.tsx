@@ -1,8 +1,12 @@
+"use client"
+
+import React, { Suspense, useContext } from "react";
 import Text from "@/components/text/text";
 import { notFound } from "next/navigation";
 import { getDocument } from "@/db/db";
-import type { Config, Text as TextType } from "@/lib/configProvider";
-import { Suspense } from "react";
+import {Config, ConfigContext} from "@/lib/configProvider";
+import type { Text as TextType } from "@/lib/configProvider";
+
 
 import Loading from "./loading";
 import Article from "@/components/article/article";

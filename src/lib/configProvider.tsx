@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext } from "react";
+import React, { createContext, useContext } from "react";
 
 export type Config = {
   [key: string]: {
