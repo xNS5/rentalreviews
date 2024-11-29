@@ -19,7 +19,7 @@ import { Button } from "@/components/button/button";
 import Link from "next/link";
 import { Select } from "@/components/select/select";
 import {announce} from "@react-aria/live-announcer";
-import {Config, ConfigContext} from "@/lib/configProvider";
+import {Config, ConfigContext, getAltString} from "@/lib/configProvider";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -50,18 +50,13 @@ export default function DataTable({
     direction: "ascending",
   });
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
-  const colKeys = [
-    "name",
-    "company_type",
-    "average_rating",
-    "adjusted_average_rating",
-    "review_count",
-  ];
   const sortOptions = [
     { key: "ascending", title: "Ascending" },
     { key: "descending", title: "Descending" },
   ];
-  let hasMadeAnnouncement = false;
+
+  const { reviews, alt }: Config = useContext(ConfigContext);
+  const altObj = alt['reviews'];
 
   // Filters data based on searchTerm
   const filteredData = useMemo(() => {
@@ -157,12 +152,11 @@ export default function DataTable({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const { reviews }: Config = useContext(ConfigContext);
 
   return (
       <>
         <h1 className=" md:text-4xl my-4">{reviews.description}</h1>
-        <h2 className={"md:text-2xl my-2"}>{reviews.disclaimer}</h2>
+        <h2 className={"md:text-lg my-2"}>{reviews.disclaimer}</h2>
         <div
             className={cn(
                 "relative overflow-auto border-2 border-solid border-slate-500 rounded-lg",
@@ -232,8 +226,8 @@ export default function DataTable({
                         key={i}
                         isRowHeader={i === 0}
                         sortDescriptor={sortDescriptor}
-                        allowsSorting
                         className={`border-black ${i < columns.length - 1 ? "border-r-1" : ""}`}
+                        allowsSorting
                     >
                       <p>{column.title}</p>
                     </Column>
@@ -242,28 +236,33 @@ export default function DataTable({
               <TableBody>
                 {paginatedPageData.map((item: Company, i: number) => (
                     <Row key={i}>
-                      {colKeys.map((key: string, j: number) => (
+                      {columns.map((column:{key: string, title: string}, j: number) => (
                           <Cell
                               key={j}
-                              className={`${j < colKeys.length - 1 ? "border-black border-r-1" : ""}`}
+                              className={`${j < columns.length - 1 ? "border-black border-r-1" : ""}`}
                           >
                             {j == 0 ? (
                                 <Link
                                     id={`${item.slug}`}
                                     href={`/reviews/${item.slug}`}
-                                    aria-label={`Link to ${item[key]}`}
+                                    aria-label={`Link to ${item[column.key]}`}
                                     className={`flex mx-3 font-medium items-center justify-center`}
                                     onMouseEnter={() => handleMouseEnter(item.slug)}
                                     onMouseLeave={() => handleMouseLeave(item.slug)}
                                 >
-                                  <p className="px-2">{`${item[key]}`}</p>
+                                  <p className="px-2">{`${item[column.key]}`}</p>
                                   <Icon
                                       type="fas-link"
                                       className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
                                   />
                                 </Link>
                             ) : (
-                                <p>{`${item[key]}${key.includes("rating") ? "/5" : ""}`}</p>
+                                <>
+                                  {altObj[column.key] !== undefined && <label className={"sr-only"}>
+                                    {getAltString(altObj, column.key, item[column.key])}
+                                  </label>}
+                                  <p aria-hidden={altObj[column.key] !== undefined}>{`${item[column.key]}${column.key.includes("rating") ? "/5" : ""}`}</p>
+                                </>
                             )}
                           </Cell>
                       ))}

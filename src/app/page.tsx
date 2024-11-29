@@ -3,18 +3,14 @@
 import React, { Suspense, useContext } from "react";
 import Text from "@/components/text/text";
 import { notFound } from "next/navigation";
-import { getDocument } from "@/db/db";
 import {Config, ConfigContext} from "@/lib/configProvider";
+import Loading from "./loading";
+import Article from "@/components/article/article";
 import type { Text as TextType } from "@/lib/configProvider";
 
 
-import Loading from "./loading";
-import Article from "@/components/article/article";
-export default async function Home() {
-  const { home }: Config = await getDocument<Config>(
-    "config",
-    "config",
-  );
+export default function Home() {
+  const { home }: Config = useContext(ConfigContext);
 
   if (home == undefined) {
     console.error("Data is undefined. Check DB connection.");
