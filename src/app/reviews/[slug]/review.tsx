@@ -4,7 +4,7 @@ import React, { useContext, useMemo } from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
 import {Icon} from "@/components/icon/icon";
-import { Company, getColumnKeys } from "../columns";
+import { Company } from "../columns";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 
 
@@ -16,16 +16,18 @@ export function Review({ data }: Readonly<{ data: Company; }>) {
   const altObj: { [key: string]: string } = useMemo(() => ["review_count", "average_rating", "adjusted_review_count", "adjusted_average_rating"].reduce((obj, curr) => ({ ...obj, [curr]: getAltString(alt["review"], curr, data[curr]) }), {}), []);
   return (
       <>
+        {timestamp && (
+            <div className={"flex flex-row justify-end"}>
+              <p className="text-base md:text-lg">
+                <b>Last Updated:</b> {data.timestamp}
+              </p>
+            </div>
+        )}
         <h1 className="text-3xl md:text-2xl text-center font-bold my-1">{data.name}</h1>
         <div
             id="review-data-list"
             className="container flex flex-col items-center justify-center border md:border-none max-w-xxs md:max-w-none border-slate-500 rounded py-2"
         >
-          {timestamp && (
-              <p className="text-sm lg:text-lg mb-2">
-                <b>Last Updated:</b> {data.timestamp}
-              </p>
-          )}
           {hasAdjustedReviewValue && (
               <p className="text-sm lg:text-lg mb-2">
                 {reviews.disclaimer}
