@@ -1,4 +1,4 @@
-import { Company } from "./columns";
+import {Company, getColumnKeys} from "./columns";
 import { getDocument } from "@/db/db";
 import DataTable from "@/app/reviews/data-table";
 import Article from "@/components/article/article";
@@ -8,30 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Reviews() {
   const reviewData: Company | undefined = await getDocument<Company>("index", "properties_and_companies_index");
-  const tableCaption = "Rental Reviews Data";
-
-    const ColumnKeys = [
-        {
-            key: "name",
-            title: "Name",
-        },
-        {
-            key: "company_type",
-            title: "Company Type",
-        },
-        {
-            key: "average_rating",
-            title: "Average Rating",
-        },
-        {
-            key: "adjusted_average_rating",
-            title: "Adjusted Average Rating",
-        },
-        {
-            key: "review_count",
-            title: "Review Count",
-        },
-    ];
+  const ColumnKeys = getColumnKeys();
 
     if(reviewData === undefined){
         console.error("Data is undefined. Check DB connection.");
@@ -40,8 +17,7 @@ export default async function Reviews() {
 
   return (
     <Article className="flex flex-col justify-center text-center container mx-auto py-10">
-        <h1 className=" md:text-4xl my-4">{tableCaption}</h1>
-        <DataTable data={reviewData.data} columns={ColumnKeys} tableCaption={tableCaption}/>
+        <DataTable data={reviewData.data} columns={ColumnKeys}/>
     </Article>
   );
 }
