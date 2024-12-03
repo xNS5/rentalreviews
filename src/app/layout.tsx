@@ -58,7 +58,7 @@ export default async function RootLayout({
         <Config data={config}>
           <Suspense key={Math.random()} fallback={<Loading />}>
             <main id="main-content" role="main" className={`${inter.variable}`} tabIndex={-1}>
-              <Providers>{children}</Providers>
+              {children}
             </main>
           </Suspense>
           <Footer data={footer} />

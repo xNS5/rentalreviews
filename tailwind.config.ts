@@ -53,8 +53,8 @@ const config = {
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "hsl(var(--table-filter-popover))",
+          foreground: "hsl(var(--table-filter-popover-foreground))",
         },
         card: {
           DEFAULT: "hsl(var(--card))",
