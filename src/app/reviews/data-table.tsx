@@ -9,10 +9,9 @@ import {
   Column,
 } from "@/components/aria-table/aria-table";
 
-
-import { useEffect, useMemo, useState, useContext } from "react";
+import React, { useEffect, useMemo, useState, useContext } from "react";
 import { Icon } from "@/components/icon/icon";
-import {Input} from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { SortDescriptor } from "react-stately";
@@ -21,6 +20,7 @@ import Link from "next/link";
 import { Select } from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
+import {Filter} from "@/app/reviews/filter";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -30,6 +30,7 @@ function getIsMobileWidth() {
   }
   return false;
 }
+
 export default function DataTable({
   columns,
   data,
@@ -46,6 +47,10 @@ export default function DataTable({
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [filter, setFilter] = useState<{
+    [key: string]: string | number | null;
+  }>({});
+
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
@@ -164,7 +169,6 @@ export default function DataTable({
     <>
       <h1 className={"md:text-4xl my-4"}>{reviews.description}</h1>
       <h2 className={"md:text-lg my-2"}>{reviews.disclaimer}</h2>
-
       <div
         className={cn(
           "relative overflow-auto border-2 border-solid border-slate-500 rounded-lg",
@@ -172,6 +176,7 @@ export default function DataTable({
         )}
       >
         <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
+          {/* Filter Component */}
           <div
             className={
               "visible md:hidden flex flex-col items-start sm:flex-row justify-center sm:items-center text-center"
@@ -214,6 +219,7 @@ export default function DataTable({
               placeholder="Company Name"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <Filter filter={filter} setFilter={setFilter}/>
           </div>
         </div>
         <div className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">

@@ -47,12 +47,12 @@ export const Select = ({
         className={`bg-white border border-solid border-slate-500 shadow rounded`}
         aria-labelledby={rest.id}
       >
-        <ListBox items={data} selectionMode="single" className={`p-3`}>
+        <ListBox items={data} selectionMode="single" className={`p-2`}>
           {data.map((elem: any, i: number) => (
             <ListBoxItem
               id={elem.key}
               key={i}
-              className={({ isSelected }) => isSelected ? 'bg-blue-500 text-white border border-black p-1 rounded' : 'hover:!bg-blue-500 hover:text-white p-1 rounded'}
+              className={({ isSelected }) => `text-black text-center my-1 p-2 ${isSelected ? 'bg-blue-500 text-white border border-black' : 'hover:!bg-blue-500 hover:text-white'} rounded`}
               textValue={elem.title}
             >
               {({isSelected}) => (
