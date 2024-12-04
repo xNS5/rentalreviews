@@ -62,6 +62,7 @@ export default function DataTable({
   ];
 
   const { reviews, alt }: Config = useContext(ConfigContext);
+  const { filter_props } = reviews;
   const altObj = alt["reviews"];
 
   // Filters data based on searchTerm

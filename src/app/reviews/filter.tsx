@@ -41,7 +41,9 @@ export function Filter(props: any) {
 
   return (
     <Popover
-      className={{ popover: "transform -translate-x-1/3 mt-6" }}
+      className={{
+        popover: "transform -translate-x-[89%] sm:-translate-x-full mt-6",
+      }}
       toggle={<Icon className={"h-4 w-4 px-1"} type={"fas-filter"} />}
     >
       {filter_props.map((prop: FilterProps) =>
