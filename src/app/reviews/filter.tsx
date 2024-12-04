@@ -37,12 +37,13 @@ export function Filter(props: any) {
       ...prev,
       [key]: props.filter[key] === value ? null : value,
     }));
+
   };
 
   return (
     <Popover
       className={{
-        popover: "transform -translate-x-[89%] sm:-translate-x-full mt-6",
+        popover: "transform -translate-x-[89%] sm:-translate-x-full mt-6 !z-99",
       }}
       toggle={<Icon className={"h-4 w-4 px-1"} type={"fas-filter"} />}
     >

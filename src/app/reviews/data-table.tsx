@@ -20,7 +20,7 @@ import Link from "next/link";
 import { Select } from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
-import {Filter} from "@/app/reviews/filter";
+import { Filter } from "@/app/reviews/filter";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -62,17 +62,42 @@ export default function DataTable({
   ];
 
   const { reviews, alt }: Config = useContext(ConfigContext);
-  const { filter_props } = reviews;
   const altObj = alt["reviews"];
 
   // Filters data based on searchTerm
   const filteredData = useMemo(() => {
-    return data.filter((item: Company) => item["name"].includes(searchTerm));
-  }, [searchTerm, data]);
+    const hasFilters = Object.values(filter).some(f => f);
+    if(!hasFilters) return data;
+
+    return data.filter((item: Company) =>
+      Object.entries(filter).some(
+        ([key, value]) => {
+          if(value !== null){
+            switch(typeof value){
+              case "string":
+                console.log("string");
+
+                return item[key] === filter[key];
+              case "number":
+                console.log("number");
+                return item[key] >= filter[key];
+            }
+          }
+        },
+      ),
+    );
+  }, [filter]);
+
+  const dataFromSearch = useMemo(() => {
+    return filteredData.filter((item: Company) =>
+      item["name"].includes(searchTerm),
+    );
+  }, [searchTerm]);
 
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
-    let inputData = searchTerm.length > 0 ? filteredData : data;
+    let inputData = searchTerm.length > 0 ? dataFromSearch : filteredData;
+
     return inputData.sort((a: Company, b: Company) => {
       try {
         let first = a[sortDescriptor.column as string];
@@ -89,7 +114,7 @@ export default function DataTable({
         console.error("Error sorting column: ", e);
       }
     });
-  }, [sortDescriptor, searchTerm, filteredData, data]);
+  }, [sortDescriptor, searchTerm, filter, data]);
 
   // Memoizes page count. Might not need to.
   const pageCount = useMemo(() => {
@@ -111,6 +136,7 @@ export default function DataTable({
     sortedData,
     pageCount,
     paginationValue,
+    filter,
   ]);
 
   // Handles mouse enter link
@@ -220,7 +246,7 @@ export default function DataTable({
               placeholder="Company Name"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Filter filter={filter} setFilter={setFilter}/>
+            <Filter filter={filter} setFilter={setFilter} />
           </div>
         </div>
         <div className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">
@@ -254,6 +280,7 @@ export default function DataTable({
                       <Cell
                         key={j}
                         className={`${j < columns.length - 1 ? "border-black border-r-1" : ""}`}
+                        value={item[column.key]}
                       >
                         {j == 0 ? (
                           <Link
