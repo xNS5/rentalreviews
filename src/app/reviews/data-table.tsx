@@ -20,7 +20,8 @@ import Link from "next/link";
 import { Select } from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
-import { Filter } from "@/app/reviews/filter";
+import { Filter } from "@/components/filter/filter";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -50,7 +51,6 @@ export default function DataTable({
   const [filter, setFilter] = useState<{
     [key: string]: string | number | null;
   }>({});
-
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
@@ -64,30 +64,30 @@ export default function DataTable({
   const { reviews, alt }: Config = useContext(ConfigContext);
   const altObj = alt["reviews"];
 
-  // Filters data based on searchTerm
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Filters data based on filter component
   const filteredData = useMemo(() => {
-    const hasFilters = Object.values(filter).some(f => f);
-    if(!hasFilters) return data;
+    const hasFilters = Object.values(filter).some((f) => f);
+    if (!hasFilters) return data;
 
     return data.filter((item: Company) =>
-      Object.entries(filter).some(
-        ([key, value]) => {
-          if(value !== null){
-            switch(typeof value){
-              case "string":
-                console.log("string");
-
-                return item[key] === filter[key];
-              case "number":
-                console.log("number");
-                return item[key] >= filter[key];
-            }
+      Object.entries(filter).some(([key, value]) => {
+        if (value !== null) {
+          switch (typeof value) {
+            case "string":
+              return item[key] === value;
+            case "number":
+              return item[key] >= value;
           }
-        },
-      ),
+        }
+        return false;
+      }),
     );
   }, [filter]);
 
+  // Filters data based on searchTerm
   const dataFromSearch = useMemo(() => {
     return filteredData.filter((item: Company) =>
       item["name"].includes(searchTerm),
@@ -163,6 +163,28 @@ export default function DataTable({
     }));
   };
 
+  const handleFilterChange = (key: string, value: string | number | null) => {
+    setFilter((prev) => {
+      const currQuery = new URLSearchParams(searchParams.toString());
+      /*
+      * if currQuery has [key] -> check if duplicate. If duplicate, remove. If not duplicate, replace.
+      * If currQuery doesn't have [key] -> add to URL.
+      * **/
+
+      if(prev[key] === value){
+        currQuery.delete(key);
+      } else {
+        currQuery.set(key, `${value}`);
+      }
+      router.replace(`?${currQuery.toString()}`);
+
+      return {
+        ...prev,
+        [key]: prev[key] === value ? null : value,
+      };
+    });
+  };
+
   useEffect(() => {
     function announceHandler() {
       if (isMobileWidth) {
@@ -203,7 +225,6 @@ export default function DataTable({
         )}
       >
         <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
-          {/* Filter Component */}
           <div
             className={
               "visible md:hidden flex flex-col items-start sm:flex-row justify-center sm:items-center text-center"
@@ -246,7 +267,14 @@ export default function DataTable({
               placeholder="Company Name"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Filter filter={filter} setFilter={setFilter} />
+            {/* Filter Component */}
+            <Filter
+              filter={filter}
+              onSelectCallbackFn={(
+                key: string,
+                value: string | number | null,
+              ) => handleFilterChange(key, value)}
+            />
           </div>
         </div>
         <div className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">
