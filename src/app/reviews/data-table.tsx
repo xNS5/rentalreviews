@@ -166,10 +166,6 @@ export default function DataTable({
   const handleFilterChange = (key: string, value: string | number | null) => {
     setFilter((prev) => {
       const currQuery = new URLSearchParams(searchParams.toString());
-      /*
-      * if currQuery has [key] -> check if duplicate. If duplicate, remove. If not duplicate, replace.
-      * If currQuery doesn't have [key] -> add to URL.
-      * **/
 
       if(prev[key] === value){
         currQuery.delete(key);
