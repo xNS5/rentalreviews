@@ -32,23 +32,30 @@ function getIsMobileWidth() {
   return false;
 }
 
+function isNumeric(val: any){
+  return !isNaN(val) && !isNaN(parseFloat(val));
+}
+
 function compareData(a: any, b: any, type: string) {
   switch (type) {
     case ">":
-      return a > b;
+      return parseFloat(a) > parseFloat(b);
     case ">=":
-      return a >= b;
+      return parseFloat(a) >= parseFloat(b);
     case "<":
-      return a < b;
+      return parseFloat(a) < parseFloat(b);
     case "<=":
-      return a <= b;
+      return parseFloat(a) <= parseFloat(b);
     case "==":
+      return a == b;
     case "===":
       return a === b;
     case "!=":
+      return a != b;
     case "!==":
       return a !== b;
-    default: return false;
+    default:
+      return false;
   }
 }
 
@@ -71,9 +78,6 @@ export default function DataTable({
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
-  const [filter, setFilter] = useState<{
-    [key: string]: string | number | null;
-  }>({});
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
@@ -88,34 +92,45 @@ export default function DataTable({
   const { filter_props } = reviews;
   const altObj = alt["reviews"];
 
-  const urlParamObj = useMemo(
-    () =>
-      columns.reduce((acc, curr) => ({
+  const urlQueryProps = useMemo(() => columns.reduce(
+      (acc, curr) => ({
         ...acc,
         ...(searchParams.has(curr.key)
-          ? { [curr.key]: searchParams.get(curr.key) }
-          : {}),
-      })),
-    [],
-  );
+            ? { [curr.key]: (isNumeric(searchParams.get(curr.key)) ? parseFloat(`${searchParams.get(curr.key)}`) : searchParams.get(curr.key))}
+            : undefined),
+      }),
+      {},
+  ), [searchParams]);
 
-  // Filters data based on filter component
+  const [filter, setFilter] = useState<{
+    [key: string]: string | number | null;
+  }>(Object.keys(urlQueryProps).length > 0 ? urlQueryProps : {} );
+
+  const hasFilters = () => Object.values(filter).some((f) => f);
+
+  // Filters data based on filter component properties
   const filteredData = useMemo(() => {
-    const hasFilters = Object.values(filter).some((f) => f);
-    if (!hasFilters) return data;
+    if (!hasFilters()) return data;
+
+    const filterComparisonObj = filter_props.reduce(
+      (acc: any, curr: any) => ({ ...acc, [curr.key]: curr.comparison }),
+      {},
+    );
 
     return data.filter((item: Company) =>
-        Object.entries(filter).some(([key, value]) => {
-          if (value !== null) {
-            switch (typeof value) {
-              case "string":
-                return item[key] === value;
-              case "number":
-                return item[key] >= value;
-            }
+      Object.entries(filter).every(([key, value]) => {
+        if (value !== null) {
+          const compareDataResult = compareData(
+            item[key],
+            value,
+            filterComparisonObj[key],
+          );
+          if (!compareDataResult) {
+            return false
           }
-          return false;
-        })
+        }
+        return true;
+      }),
     );
   }, [filter]);
 
@@ -162,14 +177,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [
-    currentPageNumber,
-    sortDescriptor,
-    sortedData,
-    pageCount,
-    paginationValue,
-    filter,
-  ]);
+  }, [currentPageNumber, sortDescriptor, pageCount, paginationValue, filter]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
@@ -195,6 +203,7 @@ export default function DataTable({
     }));
   };
 
+  // Callback that sets URL query params before executing the state changes
   const handleFilterChange = (key: string, value: string | number | null) => {
     setFilter((prev) => {
       const currQuery = new URLSearchParams(searchParams.toString());
@@ -240,13 +249,6 @@ export default function DataTable({
     announceHandler();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    // Setting filter parameters based on search params at first load.
-    if (searchParams.size > 0) {
-      setFilter((prev) => ({ ...prev, ...urlParamObj }));
-    }
   }, []);
 
   return (
@@ -304,7 +306,8 @@ export default function DataTable({
             />
             {/* Filter Component */}
             <Filter
-              filter={filter}
+              filter={structuredClone(filter)}
+              filterProps={structuredClone(filter_props)}
               onSelectCallbackFn={(
                 key: string,
                 value: string | number | null,

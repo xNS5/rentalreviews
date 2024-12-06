@@ -1,5 +1,5 @@
 import { Inter as FontSans } from "next/font/google";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { getDocument } from "../db/db";
 import { Config } from "../lib/configProvider";
 import { cn } from "@/lib/utils";

@@ -1,20 +1,17 @@
-"use client";
-
-import React, { useContext } from "react";
+import React from "react";
 import Popover from "@/components/popover/popover";
 import { Icon } from "@/components/icon/icon";
-import { Config, ConfigContext } from "@/lib/configProvider";
 import { Select } from "@/components/select/select";
 
 export type FilterProps = {
   title: string;
-  key: string;
+  key: string | number | null;
   compare: string;
   type: string;
   value: any;
 };
 
-function getFilterComp(type: string, key: any, props: any) {
+const getFilterComp = (type: string, key: any, props: any) => {
   if (type.toLowerCase() === "select") {
     const { data, selectedKey, onSelectCallbackFn, callbackFn, callbackKey } =
       props;
@@ -33,12 +30,10 @@ function getFilterComp(type: string, key: any, props: any) {
       />
     );
   }
-}
+};
 
 export function Filter(props: any) {
-  const { reviews }: Config = useContext(ConfigContext);
-  const { filter_props } = reviews;
-  const { filter, onSelectCallbackFn, callbackFn } = props;
+  const { filter, onSelectCallbackFn, filterProps, callbackFn } = props;
 
   return (
     <Popover
@@ -48,15 +43,16 @@ export function Filter(props: any) {
       }}
       toggle={<Icon className={"h-5 w-5"} type={"fas-filter"} />}
     >
-      {filter_props.map((prop: FilterProps) =>
-        getFilterComp(prop.type, Math.random(), {
+      {filterProps?.map((prop: FilterProps, i: number) =>
+        getFilterComp(prop.type, i + 1, {
           label: prop.title,
+          value: filter[prop.key ?? ""],
           data: prop.value,
-          selectedKey: filter[prop.key],
+          selectedKey: filter[prop.key ?? ""],
           onSelectCallbackFn: onSelectCallbackFn,
           callbackFn: callbackFn,
           callbackKey: prop.key,
-        }),
+        })
       )}
     </Popover>
   );

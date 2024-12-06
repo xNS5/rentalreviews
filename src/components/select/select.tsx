@@ -3,7 +3,8 @@
 import { useState } from "react";
 import {Icon} from "@/components/icon/icon";
 import {
-  Button, Key,
+  Button,
+  Key,
   Label,
   ListBox,
   ListBoxItem,
@@ -22,7 +23,7 @@ export const Select = ({
   labelProps?: { [key: string]: any },
   label?: string,
   data: any,
-  selectedKey: Key | undefined,
+  selectedKey: number | string | undefined,
   [key: string]: any
 }>) => {
   const [isSelectExpanded, setIsSelectExpanded] = useState(false);
