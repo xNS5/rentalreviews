@@ -20,7 +20,7 @@ import Link from "next/link";
 import { Select } from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
-import { Filter } from "@/components/filter/filter";
+import { Filter, FilterProps } from "@/components/filter/filter";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const DEFAULT_PAGINATION_VALUE = 10;
@@ -30,6 +30,26 @@ function getIsMobileWidth() {
     return window.innerWidth <= 940;
   }
   return false;
+}
+
+function compareData(a: any, b: any, type: string) {
+  switch (type) {
+    case ">":
+      return a > b;
+    case ">=":
+      return a >= b;
+    case "<":
+      return a < b;
+    case "<=":
+      return a <= b;
+    case "==":
+    case "===":
+      return a === b;
+    case "!=":
+    case "!==":
+      return a !== b;
+    default: return false;
+  }
 }
 
 export default function DataTable({
@@ -43,6 +63,9 @@ export default function DataTable({
   className?: string;
   paginationValue?: number;
 }>) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
@@ -62,10 +85,19 @@ export default function DataTable({
   ];
 
   const { reviews, alt }: Config = useContext(ConfigContext);
+  const { filter_props } = reviews;
   const altObj = alt["reviews"];
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const urlParamObj = useMemo(
+    () =>
+      columns.reduce((acc, curr) => ({
+        ...acc,
+        ...(searchParams.has(curr.key)
+          ? { [curr.key]: searchParams.get(curr.key) }
+          : {}),
+      })),
+    [],
+  );
 
   // Filters data based on filter component
   const filteredData = useMemo(() => {
@@ -73,17 +105,17 @@ export default function DataTable({
     if (!hasFilters) return data;
 
     return data.filter((item: Company) =>
-      Object.entries(filter).some(([key, value]) => {
-        if (value !== null) {
-          switch (typeof value) {
-            case "string":
-              return item[key] === value;
-            case "number":
-              return item[key] >= value;
+        Object.entries(filter).some(([key, value]) => {
+          if (value !== null) {
+            switch (typeof value) {
+              case "string":
+                return item[key] === value;
+              case "number":
+                return item[key] >= value;
+            }
           }
-        }
-        return false;
-      }),
+          return false;
+        })
     );
   }, [filter]);
 
@@ -167,7 +199,7 @@ export default function DataTable({
     setFilter((prev) => {
       const currQuery = new URLSearchParams(searchParams.toString());
 
-      if(prev[key] === value){
+      if (prev[key] === value) {
         currQuery.delete(key);
       } else {
         currQuery.set(key, `${value}`);
@@ -208,6 +240,13 @@ export default function DataTable({
     announceHandler();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    // Setting filter parameters based on search params at first load.
+    if (searchParams.size > 0) {
+      setFilter((prev) => ({ ...prev, ...urlParamObj }));
+    }
   }, []);
 
   return (

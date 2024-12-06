@@ -6,9 +6,10 @@ import { Icon } from "@/components/icon/icon";
 import { Config, ConfigContext } from "@/lib/configProvider";
 import { Select } from "@/components/select/select";
 
-type FilterProps = {
+export type FilterProps = {
   title: string;
   key: string;
+  compare: string;
   type: string;
   value: any;
 };
