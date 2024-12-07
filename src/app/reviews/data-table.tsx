@@ -126,9 +126,8 @@ export default function DataTable({
     return data.filter((item: Company) =>
       Object.entries(filter).every(([key, value]) => {
         if (searchTerm.length > 0) {
-          return item["name"].includes(searchTerm);
-        }
-        if (value !== null) {
+          // return item["name"].includes(searchTerm);
+        } else if (value !== null) {
           const compareDataResult = compareData(
             item[key],
             value,
@@ -141,13 +140,28 @@ export default function DataTable({
         return true;
       }),
     );
-  }, [filter]);
+  }, [searchTerm, filter]);
+
+  const dataFromSearch = useMemo(() => {
+    return filteredData.filter((item: Company) => {
+      return item['name'].includes(searchTerm);
+    })
+  }, [searchTerm]);
 
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
-    const inputData = hasFilters()
-      ? structuredClone(filteredData)
-      : structuredClone(data);
+    let inputData;
+
+    if(hasFilters()){
+      inputData = structuredClone(filteredData)
+    } else {
+      inputData = structuredClone(data)
+    }
+
+    if(searchTerm.length > 0){
+      inputData = inputData.filter((item: Company) => item['name'].includes(searchTerm));
+    }
+
     return inputData.sort((a: Company, b: Company) => {
       try {
         let first = a[sortDescriptor.column as string];
@@ -274,12 +288,12 @@ export default function DataTable({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    const debounce = setTimeout(() => {
-      handleFilterChange("search", searchTerm);
-    }, 500);
-    return () => clearTimeout(debounce);
-  }, [searchTerm]);
+  // useEffect(() => {
+  //   const debounce = setTimeout(() => {
+  //     handleFilterChange("search", searchTerm);
+  //   }, 500);
+  //   return () => clearTimeout(debounce);
+  // }, [searchTerm]);
 
   return (
     <>
