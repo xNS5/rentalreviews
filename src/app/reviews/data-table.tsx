@@ -233,14 +233,12 @@ export default function DataTable({
       const currQuery = new URLSearchParams(searchParams.toString());
 
       // Temporarily pausing work on adding search to the url params
-      if (key !== "search") {
-        if (prev[key] === value) {
-          currQuery.delete(key);
-        } else {
-          currQuery.set(key, `${value}`);
-        }
-        router.replace(`?${currQuery.toString()}`);
+      if (prev[key] === value) {
+        currQuery.delete(key);
+      } else {
+        currQuery.set(key, `${value}`);
       }
+      router.replace(`?${currQuery.toString()}`);
 
       return {
         ...prev,
