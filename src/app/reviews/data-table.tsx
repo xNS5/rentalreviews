@@ -20,7 +20,7 @@ import Link from "next/link";
 import { Select } from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
-import { Filter, FilterProps } from "@/components/filter/filter";
+import { Filter } from "@/components/filter/filter";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const DEFAULT_PAGINATION_VALUE = 10;
@@ -32,7 +32,7 @@ function getIsMobileWidth() {
   return false;
 }
 
-function isNumeric(val: any){
+function isNumeric(val: any) {
   return !isNaN(val) && !isNaN(parseFloat(val));
 }
 
@@ -72,9 +72,11 @@ export default function DataTable({
 }>) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { reviews, alt }: Config = useContext(ConfigContext);
+  const { filter_props } = reviews;
+  const altObj = alt["reviews"];
 
   const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
@@ -88,37 +90,44 @@ export default function DataTable({
     { key: "descending", title: "Descending" },
   ];
 
-  const { reviews, alt }: Config = useContext(ConfigContext);
-  const { filter_props } = reviews;
-  const altObj = alt["reviews"];
-
-  const urlQueryProps = useMemo(() => columns.reduce(
-      (acc, curr) => ({
-        ...acc,
-        ...(searchParams.has(curr.key)
-            ? { [curr.key]: (isNumeric(searchParams.get(curr.key)) ? parseFloat(`${searchParams.get(curr.key)}`) : searchParams.get(curr.key))}
+  const urlQueryProps: { [key: string]: any } = useMemo(
+    () =>
+      columns.reduce(
+        (acc, curr) => ({
+          ...acc,
+          ...(searchParams.has(curr.key)
+            ? {
+                [curr.key]: isNumeric(searchParams.get(curr.key))
+                  ? parseFloat(`${searchParams.get(curr.key)}`)
+                  : searchParams.get(curr.key),
+              }
             : undefined),
-      }),
-      {},
-  ), [searchParams]);
+        }),
+        {},
+      ),
+    [searchParams],
+  );
 
   const [filter, setFilter] = useState<{
     [key: string]: string | number | null;
-  }>(Object.keys(urlQueryProps).length > 0 ? urlQueryProps : {} );
+  }>(Object.keys(urlQueryProps).length > 0 ? urlQueryProps : {});
+  const [searchTerm, setSearchTerm] = useState("");
 
   const hasFilters = () => Object.values(filter).some((f) => f);
 
   // Filters data based on filter component properties
   const filteredData = useMemo(() => {
-    if (!hasFilters()) return data;
-
     const filterComparisonObj = filter_props.reduce(
       (acc: any, curr: any) => ({ ...acc, [curr.key]: curr.comparison }),
       {},
     );
 
+    // Filter based on filter state
     return data.filter((item: Company) =>
       Object.entries(filter).every(([key, value]) => {
+        if (searchTerm.length > 0) {
+          return item["name"].includes(searchTerm);
+        }
         if (value !== null) {
           const compareDataResult = compareData(
             item[key],
@@ -126,7 +135,7 @@ export default function DataTable({
             filterComparisonObj[key],
           );
           if (!compareDataResult) {
-            return false
+            return false;
           }
         }
         return true;
@@ -134,17 +143,11 @@ export default function DataTable({
     );
   }, [filter]);
 
-  // Filters data based on searchTerm
-  const dataFromSearch = useMemo(() => {
-    return filteredData.filter((item: Company) =>
-      item["name"].includes(searchTerm),
-    );
-  }, [searchTerm]);
-
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
-    let inputData = searchTerm.length > 0 ? dataFromSearch : filteredData;
-
+    const inputData = hasFilters()
+      ? structuredClone(filteredData)
+      : structuredClone(data);
     return inputData.sort((a: Company, b: Company) => {
       try {
         let first = a[sortDescriptor.column as string];
@@ -166,7 +169,7 @@ export default function DataTable({
   // Memoizes page count. Might not need to.
   const pageCount = useMemo(() => {
     return Math.ceil(sortedData.length / paginationValue);
-  }, [sortedData, paginationValue]);
+  }, [sortedData, searchTerm, paginationValue]);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -177,7 +180,14 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [currentPageNumber, sortDescriptor, pageCount, paginationValue, filter]);
+  }, [
+    currentPageNumber,
+    sortDescriptor,
+    pageCount,
+    searchTerm,
+    paginationValue,
+    filter,
+  ]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
@@ -208,12 +218,15 @@ export default function DataTable({
     setFilter((prev) => {
       const currQuery = new URLSearchParams(searchParams.toString());
 
-      if (prev[key] === value) {
-        currQuery.delete(key);
-      } else {
-        currQuery.set(key, `${value}`);
+      // Temporarily pausing work on adding search to the url params
+      if (key !== "search") {
+        if (prev[key] === value) {
+          currQuery.delete(key);
+        } else {
+          currQuery.set(key, `${value}`);
+        }
+        router.replace(`?${currQuery.toString()}`);
       }
-      router.replace(`?${currQuery.toString()}`);
 
       return {
         ...prev,
@@ -221,6 +234,16 @@ export default function DataTable({
       };
     });
   };
+
+  /*  const handleSearchUrl = (search: string) => {
+    const currQuery = new URLSearchParams(searchParams.toString());
+    if (currQuery.has("search")) {
+      currQuery.delete("search");
+    } else {
+      currQuery.set("search", `${search}`);
+    }
+    router.replace(`?${currQuery.toString()}`);
+  };*/
 
   useEffect(() => {
     function announceHandler() {
@@ -250,6 +273,13 @@ export default function DataTable({
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      handleFilterChange("search", searchTerm);
+    }, 500);
+    return () => clearTimeout(debounce);
+  }, [searchTerm]);
 
   return (
     <>
@@ -300,9 +330,11 @@ export default function DataTable({
             <label htmlFor="searchBox">Search</label>{" "}
             <Input
               id={"searchBox"}
-              value={searchTerm}
+              value={structuredClone(searchTerm)}
               placeholder="Company Name"
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+              }}
             />
             {/* Filter Component */}
             <Filter
