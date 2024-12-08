@@ -6,6 +6,7 @@ import { Select } from "@/components/select/select";
 export type FilterProps = {
   title: string;
   key: string | number | null;
+  shouldRender: boolean,
   compare: string;
   type: string;
   value: any;
@@ -43,7 +44,7 @@ export function Filter(props: any) {
       }}
       toggle={<Icon className={"h-5 w-5"} type={"fas-filter"} />}
     >
-      {filterProps?.map((prop: FilterProps, i: number) =>
+      {filterProps?.filter((prop: FilterProps) => prop.shouldRender).map((prop: FilterProps, i: number) =>
         getFilterComp(prop.type, i + 1, {
           label: prop.title,
           value: filter[prop.key ?? ""],
