@@ -21,19 +21,19 @@ import {Select} from "@/components/select/select";
 import {announce} from "@react-aria/live-announcer";
 import {Config, ConfigContext, getAltString} from "@/lib/configProvider";
 import {Filter, FilterProps} from "@/components/filter/filter";
-import {useRouter, useSearchParams} from "next/navigation";
+
+import {useFilters} from "@/app/reviews/useFilters";
+import {useDebounce} from "@/lib/useDebounce";
 
 const DEFAULT_PAGINATION_VALUE = 10;
+
+const inputTestRegex = new RegExp('[^a-zA-Z0-9+]');
 
 function getIsMobileWidth() {
     if (typeof window !== "undefined") {
         return window.innerWidth <= 940;
     }
     return false;
-}
-
-function isNumeric(val: any) {
-    return !isNaN(val) && !isNaN(parseFloat(val));
 }
 
 function compareData(a: any, b: any, type: string) {
@@ -62,22 +62,23 @@ function compareData(a: any, b: any, type: string) {
 }
 
 export default function DataTable({
-  columns,
-  data,
-  paginationValue = DEFAULT_PAGINATION_VALUE,
-  className,
-}: Readonly<{
-  columns: ColumnType[];
-  data: Company;
-  className?: string;
-  paginationValue?: number;
+                                      columns,
+                                      data,
+                                      paginationValue = DEFAULT_PAGINATION_VALUE,
+                                      className,
+                                  }: Readonly<{
+    columns: ColumnType[];
+    data: Company;
+    className?: string;
+    paginationValue?: number;
 }>) {
-    const router = useRouter();
-    const searchParams = useSearchParams();
     const {reviews, alt}: Config = useContext(ConfigContext);
     const {filter_props} = reviews;
     const altObj = alt["reviews"];
 
+    const {filter, setFilters} = useFilters();
+
+    const [searchTerm, setSearchTerm] = useState(filter.name);
     const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
     const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
         {},
@@ -87,38 +88,13 @@ export default function DataTable({
         direction: "ascending",
     });
     const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
+
     const sortOptions = [
         {key: "ascending", title: "Ascending"},
         {key: "descending", title: "Descending"},
     ];
 
-  const urlQueryProps: { [key: string]: any } = useMemo(
-    () =>
-      columns.reduce(
-        (acc, curr) => ({
-          ...acc,
-          ...(searchParams.has(curr.key)
-            ? {
-                [curr.key]: isNumeric(searchParams.get(curr.key))
-                  ? parseFloat(`${searchParams.get(curr.key)}`)
-                  : searchParams.get(curr.key),
-              }
-            : undefined),
-        }),
-        {},
-      ),
-    [searchParams],
-  );
-
-
-    const [filter, setFilter] = useState<{
-        [key: string]: string | number | null;
-    }>(searchParams.size > 0 ? urlQueryProps : {});
-    const [searchTerm, setSearchTerm] = useState(searchParams.has("search") ? searchParams.get('search')?.replaceAll('\++', '\s') : "");
-
     const hasFilters = () => Object.values(filter).some((f) => f);
-
-    const searchProp = useMemo(() => filter_props.find((prop: FilterProps) => prop.title === 'search'), [])
 
     // Filters data based on filter component properties
     const filteredData = useMemo(() => {
@@ -131,9 +107,8 @@ export default function DataTable({
         return data.filter((item: Company) =>
             Object.entries(filter).every(([key, value]) => {
                 if (value !== null) {
-                    const itemKey = key === 'search' ? searchProp['searchKey'] : key;
                     const compareDataResult = compareData(
-                        item[itemKey],
+                        item[key],
                         value,
                         filterComparisonObj[key],
                     );
@@ -144,7 +119,7 @@ export default function DataTable({
                 return true;
             }),
         );
-    }, [filter]);
+    }, [filter, searchTerm]);
 
     // Sorts filteredData if searchTerm is > 0, else uses data
     const sortedData = useMemo(() => {
@@ -172,12 +147,12 @@ export default function DataTable({
                 console.error("Error sorting column: ", e);
             }
         });
-    }, [sortDescriptor, searchTerm, filter, data]);
+    }, [sortDescriptor, searchTerm, filter]);
 
     // Memoizes page count. Might not need to.
     const pageCount = useMemo(() => {
         return Math.ceil(sortedData.length / paginationValue);
-    }, [sortedData, searchTerm, paginationValue]);
+    }, [filter]);
 
     // Paginates page data based on currPageNumber
     const paginatedPageData = useMemo(() => {
@@ -189,12 +164,7 @@ export default function DataTable({
             currentPageNumber * paginationValue,
         );
     }, [
-        currentPageNumber,
-        sortDescriptor,
-        pageCount,
-        searchTerm,
-        paginationValue,
-        filter,
+        filter
     ]);
 
     // Handles mouse enter link
@@ -221,25 +191,10 @@ export default function DataTable({
         }));
     };
 
-    // Callback that sets URL query params before executing the state changes
-    const handleFilterChange = (key: string, value: string | number | null) => {
-        setFilter((prev) => {
-            const currQuery = new URLSearchParams(searchParams.toString());
-
-            // Temporarily pausing work on adding search to the url params
-            if (prev[key] === value || `${value}`.length === 0) {
-                currQuery.delete(key);
-            } else {
-                currQuery.set(key, `${value}`);
-            }
-            router.replace(`?${currQuery.toString()}`);
-
-            return {
-                ...prev,
-                [key]: prev[key] === value ? null : value,
-            };
-        });
-    };
+    const handleSearchChange = (e: string) => {
+        setSearchTerm(e)
+        useDebounce(setFilters({"name": searchTerm}, [setFilters, searchTerm], 500);
+    }
 
     useEffect(() => {
         function announceHandler() {
@@ -271,14 +226,6 @@ export default function DataTable({
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
-    // debounces searching
-    useEffect(() => {
-        const debounce = setTimeout(() => {
-            handleFilterChange("search", searchTerm ?? "");
-        }, 500);
-        return () => clearTimeout(debounce);
-    }, [searchTerm]);
 
     return (
         <>
@@ -329,10 +276,10 @@ export default function DataTable({
                         <label htmlFor="searchBox">Search</label>{" "}
                         <Input
                             id={"searchBox"}
-                            value={structuredClone(searchTerm)}
+                            value={searchTerm}
                             placeholder="Company Name"
                             onChange={(e) => {
-                                setSearchTerm(e.target.value)
+                                handleSearchChange(e.target.value);
                             }}
                         />
                         {/* Filter Component */}
@@ -342,7 +289,7 @@ export default function DataTable({
                             onSelectCallbackFn={(
                                 key: string,
                                 value: string | number | null,
-                            ) => handleFilterChange(key, value)}
+                            ) => setFilters({[key]: value})}
                         />
                     </div>
                 </div>
