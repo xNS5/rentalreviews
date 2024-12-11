@@ -23,39 +23,17 @@ import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 import { Filter } from "@/components/filter/filter";
 
 import { useFilters } from "@/components/filter/useFilters";
+import Accordion from "@/components/accordion/accordion"
+import { compareData } from "@/app/reviews/tableUtils";
+import Loading from "@/app/loading";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
-function getIsMobileWidth() {
+export function getIsMobileWidth() {
   if (typeof window !== "undefined") {
     return window.innerWidth <= 940;
   }
   return false;
-}
-
-function compareData(a: any, b: any, type: string) {
-  switch (type) {
-    case ">":
-      return parseFloat(a) > parseFloat(b);
-    case ">=":
-      return parseFloat(a) >= parseFloat(b);
-    case "<":
-      return parseFloat(a) < parseFloat(b);
-    case "<=":
-      return parseFloat(a) <= parseFloat(b);
-    case "==":
-      return a == b;
-    case "===":
-      return a === b;
-    case "!=":
-      return a != b;
-    case "!==":
-      return a !== b;
-    case "includes":
-      return a.includes(b);
-    default:
-      return false;
-  }
 }
 
 export default function DataTable({
@@ -76,12 +54,12 @@ export default function DataTable({
   const { filter, setFilters } = useFilters();
 
   const [tableFilters, setTableFilters] = useState(filter);
-
   const [searchTerm, setSearchTerm] = useState(filter.name ?? "");
   const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
@@ -154,7 +132,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [filter]);
+  }, [pageCount, sortedData, currentPageNumber]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
@@ -180,15 +158,15 @@ export default function DataTable({
     }));
   };
 
-  const handleSearchChange = (e: string) => {
-    setSearchTerm(e);
-  };
-
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev) => ({
       ...prev,
-      [key]: prev[key] === value ? null : value,
+      [key]: prev[key] === value && key !== "name" ? null : value,
     }));
+  };
+
+  const loadingHandler = (state: boolean) => {
+    setIsLoading(state);
   };
 
   useEffect(() => {
@@ -222,15 +200,21 @@ export default function DataTable({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // useEffect(() => {
-  //     if(filter.hasOwnProperty('name')){
-  //         setSearchTerm(filter.name);
-  //     }
-  //     setTableFilters(filter);
-  // }, [filter]);
+  // Announces when page is loading data and when the loading has finished
+  useEffect(() => {
+    if (isLoading) {
+      announce("Loading data", "assertive", 500);
+    } else {
+      announce("Finished loading data", "assertive", 500);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setFilters(tableFilters), 500);
+    loadingHandler(true);
+    const timeout = setTimeout(() => {
+      setFilters(tableFilters);
+      loadingHandler(false);
+    }, 500);
     return () => clearTimeout(timeout);
   }, [tableFilters]);
 
@@ -278,20 +262,25 @@ export default function DataTable({
           </div>
           <div
             className={`flex flex-row space-x-2 justify-center items-center`}
-            tabIndex={-1}
           >
             <label htmlFor="searchBox">Search</label>{" "}
             <Input
               id={"searchBox"}
               value={searchTerm}
               placeholder="Company Name"
-              onChange={(e) =>  {
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleFilterChange("name", searchTerm);
+                }
+              }}
+              onChange={(e) => {
                 setSearchTerm(e.target.value);
                 handleFilterChange("name", e.target.value);
               }}
             />
             {/* Filter Component */}
             <Filter
+              heading={"Data Table Filters"}
               filter={structuredClone(filter)}
               filterProps={structuredClone(filter_props)}
               onSelectCallbackFn={(
@@ -299,9 +288,12 @@ export default function DataTable({
                 value: string | number | null,
               ) => handleFilterChange(key, value)}
             />
+            <Loading
+              className={`${isLoading ? "visible" : "invisible"} min-h-1`}
+            />
           </div>
         </div>
-        <div className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">
+        <div className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
           {/* Full-screen data view */}
           <Table
             aria-label={reviews.description}
@@ -418,7 +410,7 @@ export default function DataTable({
               </li>
             ))}
           </ol>
-          <span className="py-2 flex flex-col justify-center text-center">
+          <span className="py-2 flex flex-col justify-center text-center items-center">
             <span className="flex flex-row justify-center text-center space-x-1">
               <Button
                 variant={"ghost"}
@@ -460,9 +452,6 @@ export default function DataTable({
             <div aria-live="polite" aria-atomic="true">
               <p id="page-announcement">
                 Page {currentPageNumber} of {pageCount}
-              </p>
-              <p id={"result-count"}>
-
               </p>
             </div>
           </span>
