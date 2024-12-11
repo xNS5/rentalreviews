@@ -20,14 +20,11 @@ import Link from "next/link";
 import { Select } from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
-import { Filter, FilterProps } from "@/components/filter/filter";
+import { Filter } from "@/components/filter/filter";
 
-import { useFilters } from "@/app/reviews/useFilters";
-import { useDebounce } from "@/lib/useDebounce";
+import { useFilters } from "@/components/filter/useFilters";
 
 const DEFAULT_PAGINATION_VALUE = 10;
-
-const inputTestRegex = new RegExp("[^a-zA-Z0-9+]");
 
 function getIsMobileWidth() {
   if (typeof window !== "undefined") {
@@ -463,6 +460,9 @@ export default function DataTable({
             <div aria-live="polite" aria-atomic="true">
               <p id="page-announcement">
                 Page {currentPageNumber} of {pageCount}
+              </p>
+              <p id={"result-count"}>
+
               </p>
             </div>
           </span>

@@ -2,9 +2,9 @@
 
 import React, { useMemo, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { getColumnKeys } from "./columns";
+import { getColumnKeys } from "@/app/reviews/columns";
 
-const inputTestRegex = new RegExp("[^a-zA-Z0-9\+]");
+const inputTestRegex = new RegExp("[()[\\]{};.=<>:+\\-*\\/%]");
 
 function isNumeric(val: any) {
   return !isNaN(val) && !isNaN(parseFloat(val));
@@ -19,8 +19,8 @@ export function useFilters() {
       getColumnKeys().reduce(
         (acc, curr) => ({
           ...acc,
-          ...(searchParams.has(curr.key) /*&&
-          !inputTestRegex.test(searchParams.get(curr.key) as string)*/
+          ...(searchParams.has(curr.key) &&
+          !inputTestRegex.test(searchParams.get(curr.key) as string)
             ? {
                 [curr.key]: isNumeric(searchParams.get(curr.key))
                   ? parseFloat(`${searchParams.get(curr.key)}`)
