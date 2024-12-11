@@ -3,8 +3,8 @@
 import React, { useContext, useState } from "react";
 import { Config, ConfigContext } from "@/lib/configProvider";
 import Popover from "@/components/popover/popover";
-import { Icon } from "@/components/icon/icon";
-import { Select } from "@/components/select/select";
+import Icon from "@/components/icon/icon";
+import Select from "@/components/select/select";
 
 
 type FilterProps = {

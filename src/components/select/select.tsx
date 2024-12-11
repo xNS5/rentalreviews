@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import {
   Button,
   Key,
@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "react-aria-components";
 
-export const Select = ({
+export default function Select({
   label,
   labelProps = {},
   data,
@@ -25,7 +25,7 @@ export const Select = ({
   data: any,
   selectedKey: number | string | undefined,
   [key: string]: any
-}>) => {
+}>) {
   const [isSelectExpanded, setIsSelectExpanded] = useState(false);
 
   return (

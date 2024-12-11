@@ -1,7 +1,7 @@
 import React from "react";
 import Popover from "@/components/popover/popover";
-import { Icon } from "@/components/icon/icon";
-import { Select } from "@/components/select/select";
+import Icon  from "@/components/icon/icon";
+import Select from "@/components/select/select";
 
 export type FilterProps = {
   title: string;

@@ -10,20 +10,19 @@ import {
 } from "@/components/aria-table/aria-table";
 
 import React, { useEffect, useMemo, useState, useContext } from "react";
-import { Icon } from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { SortDescriptor } from "react-stately";
-import { Button } from "@/components/button/button";
+import Button from "@/components/button/button";
 import Link from "next/link";
-import { Select } from "@/components/select/select";
+import  Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 import { Filter } from "@/components/filter/filter";
 
 import { useFilters } from "@/components/filter/useFilters";
-import Accordion from "@/components/accordion/accordion"
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 

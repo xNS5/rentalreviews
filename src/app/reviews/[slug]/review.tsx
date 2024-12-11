@@ -3,7 +3,7 @@
 import React, { useContext, useMemo } from "react";
 import Link from "next/link";
 import Text from "@/components/text/text";
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import { Company } from "../columns";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 

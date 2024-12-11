@@ -9,7 +9,7 @@ import {
   TableHeader as TableHeaderComp,
   Group as GroupComp,
 } from "react-aria-components";
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import { Button } from "../ui/button";
 import {SortDescriptor} from "react-stately";
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Dropdown as DropdownComp, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { Button } from "../ui/button";
 import type { Link as LinkType } from "@/lib/linktype";
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import Link from "next/link";
 
 export default function NavigationMenu({

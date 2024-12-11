@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import Accordion from "../accordion/accordion";
 import Logo from "../logo/logo";
 import Link from "next/link";

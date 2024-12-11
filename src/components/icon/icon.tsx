@@ -29,7 +29,7 @@ const getIcon = (type: string, delimiter: string) => {
   });
 };
 
-export const Icon = ({
+export default function Icon ({
   type,
   className,
   ...rest
@@ -37,7 +37,7 @@ export const Icon = ({
   type: string;
   className?: string;
   [key: string]: any;
-}>) => {
+}>) {
   const DynamicIcon = getIcon(type, "-");
 
   if (DynamicIcon == null) {
