@@ -38,7 +38,7 @@ export const Select = ({
     >
       {label && <Label {...labelProps}>{label}</Label>}
       <Button className={"flex flex-row justify-center border border-black rounded p-1 m-1 shadow"}>
-        <SelectValue className={`px-1`} />
+        <SelectValue className={`p-2`} />
         <Icon
           type={"fas-caret-down"}
           className={`h-3 w-3 transition-transform ${isSelectExpanded ? "rotate-180 transform" : ""}`}
@@ -53,7 +53,7 @@ export const Select = ({
             <ListBoxItem
               id={elem.key}
               key={i}
-              className={({ isSelected }) => `text-black text-center my-1 p-2 ${isSelected ? 'bg-blue-500 text-white border border-black' : 'hover:!bg-blue-500 hover:text-white'} rounded`}
+              className={({ isSelected }) => `text-black text-center my-1 p-4 ${isSelected ? 'bg-blue-500 text-white border border-black' : 'hover:!bg-blue-500 hover:text-white'} rounded`}
               textValue={elem.title}
             >
               {({isSelected}) => (

@@ -34,18 +34,19 @@ export function useFilters() {
   );
 
   const setFilters = useCallback(
-    (newFilters: { [key: string]: any }) => {
+    (newFilters: { [key: string]: any }, callbackFn?: () => any) => {
       const currSearchParams = new URLSearchParams(searchParams.toString());
       Object.entries(newFilters).forEach(([key, value]) => {
         if (value === null || `${value}`.trim().length === 0) {
           currSearchParams.delete(key);
         } else {
-            console.log(key, value);
           currSearchParams.set(key, value);
         }
       });
-
       router.replace(`?${currSearchParams.toString()}`, { scroll: false });
+      if(callbackFn){
+          callbackFn();
+      }
     },
     [searchParams],
   );

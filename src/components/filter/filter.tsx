@@ -6,7 +6,7 @@ import { Select } from "@/components/select/select";
 export type FilterProps = {
   title: string;
   key: string | number | null;
-  shouldRender: boolean,
+  shouldRender: boolean;
   compare: string;
   type: string;
   value: any;
@@ -34,27 +34,35 @@ const getFilterComp = (type: string, key: any, props: any) => {
 };
 
 export function Filter(props: any) {
-  const { filter, onSelectCallbackFn, filterProps, callbackFn } = props;
+  const { heading, filter, onSelectCallbackFn, filterProps, callbackFn } =
+    props;
 
   return (
     <Popover
       className={{
         popover:
-          "transform -translate-x-[89%] sm:-translate-x-full mt-7 !z-[100000]",
+          "transform -translate-x-[85%] sm:-translate-x-full m-4 border border-slate-400 rounded shadow-lg z-10",
       }}
       toggle={<Icon className={"h-5 w-5"} type={"fas-filter"} />}
     >
-      {filterProps?.filter((prop: FilterProps) => prop.shouldRender).map((prop: FilterProps, i: number) =>
-        getFilterComp(prop.type, i + 1, {
-          label: prop.title,
-          value: filter[prop.key ?? ""],
-          data: prop.value,
-          selectedKey: filter[prop.key ?? ""],
-          onSelectCallbackFn: onSelectCallbackFn,
-          callbackFn: callbackFn,
-          callbackKey: prop.key,
-        })
+      {heading && (
+        <h2>
+          <b>{heading}</b>
+        </h2>
       )}
+      {filterProps
+        ?.filter((prop: FilterProps) => prop.shouldRender)
+        .map((prop: FilterProps, i: number) =>
+          getFilterComp(prop.type, i + 1, {
+            label: prop.title,
+            value: filter[prop.key ?? ""],
+            data: prop.value,
+            selectedKey: filter[prop.key ?? ""],
+            onSelectCallbackFn: onSelectCallbackFn,
+            callbackFn: callbackFn,
+            callbackKey: prop.key,
+          }),
+        )}
     </Popover>
   );
 }

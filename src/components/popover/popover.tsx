@@ -21,10 +21,6 @@ export default function Popover({
   const popoverRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const popoverVisibilityHandler = () => {
-    setIsVisible((prev) => !prev);
-  };
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -34,12 +30,12 @@ export default function Popover({
         !popoverRef.current.contains(event.target as Node) &&
         !triggerRef.current.contains(event.target as Node)
       ) {
-        popoverVisibilityHandler();
+        setIsVisible((prev) => !prev);
       }
     };
 
     const escHandler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && popoverRef.current !== null) {
         setIsVisible((prev) => !prev);
       }
     };
@@ -54,14 +50,15 @@ export default function Popover({
 
   return (
     <div className={`w-10 h-10`}>
-      <div className={`flex flex-row justify-center`} {...props}>
+      <div className={`flex flex-row justify-center items-center`} {...props}>
         <button
           ref={triggerRef}
-          onClick={popoverVisibilityHandler}
+          onClick={() =>  setIsVisible((prev) => !prev)}
           className={`flex flex-row cursor-pointer rounded pt-2 ${className?.toggle ?? ""}`}
           aria-haspopup="true"
           aria-expanded={isVisible}
           aria-controls="popover-content"
+          aria-label={`${isVisible ? "close" : "open"} data table filter menu`}
         >
           {toggle}
         </button>
@@ -75,8 +72,8 @@ export default function Popover({
             <div
               id="popover-content"
               ref={popoverRef}
-              className={`flex flex-col bg-white border border-black absolute animate ease-in-out bg-white border border-gray-300 shadow-md rounded-md p-4 z-50 whitespace-nowrap ${className?.popover ?? ""}`}
-              role="dialog"
+              className={`flex flex-col bg-white border border-black absolute animate ease-in-out bg-white border border-gray-300 shadow-md rounded-md p-2 whitespace-nowrap ${className?.popover ?? ""}`}
+              role="region"
               aria-modal="true"
             >
               {children}
