@@ -7,16 +7,10 @@ import Logo from "../logo/logo";
 import Link from "next/link";
 import { usePathname as getPathname } from "next/navigation";
 import NavigationMenu from "../navigation-menu/navigation-menu";
+import {getIsMobileWidth} from "@/lib/utils";
 import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/configProvider";
-
-function IsMobileWidth(): boolean {
-  if (typeof window !== "undefined") {
-    return window.innerWidth < 750;
-  }
-  return false;
-}
 
 function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
@@ -62,7 +56,7 @@ export default function Navbar({
   description: string;
 }>) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const [isMobileWidth, setIsMobileWidth] = useState(IsMobileWidth());
+  const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
   const MobileNavbarRef = useRef(null);
 
   /* handles the following scenarios:

@@ -25,15 +25,9 @@ import { Filter } from "@/components/filter/filter";
 import { useFilters } from "@/components/filter/useFilters";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
+import {getIsMobileWidth} from "@/lib/utils";
 
 const DEFAULT_PAGINATION_VALUE = 10;
-
-export function getIsMobileWidth() {
-  if (typeof window !== "undefined") {
-    return window.innerWidth <= 940;
-  }
-  return false;
-}
 
 export default function DataTable({
   columns,
