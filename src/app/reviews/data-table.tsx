@@ -25,7 +25,7 @@ import { Filter } from "@/components/filter/filter";
 import { useFilters } from "@/components/filter/useFilters";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
-import {getIsMobileWidth} from "@/lib/utils";
+import {getIsMobileWidth} from "@/lib/clientUtils";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -63,8 +63,6 @@ export default function DataTable({
     { key: "ascending", title: "Ascending" },
     { key: "descending", title: "Descending" },
   ];
-
-  const hasFilters = () => Object.values(filter).some((f) => f);
 
   // Filters data based on filter component properties
   const filteredData = useMemo(() => {
@@ -125,7 +123,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [pageCount, sortedData, currentPageNumber]);
+  }, [pageCount, sortedData, sortDescriptor, currentPageNumber]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
@@ -154,7 +152,7 @@ export default function DataTable({
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev) => ({
       ...prev,
-      [key]: prev[key] === value && key !== "name" ? null : value,
+      [key]: prev[key] === value ? null : value,
     }));
   };
 
@@ -274,7 +272,7 @@ export default function DataTable({
             {/* Filter Component */}
             <Filter
               heading={"Data Table Filters"}
-              filter={structuredClone(filter)}
+              filter={structuredClone(tableFilters)}
               filterProps={structuredClone(filter_props)}
               onSelectCallbackFn={(
                 key: string,
@@ -282,7 +280,7 @@ export default function DataTable({
               ) => handleFilterChange(key, value)}
             />
             <Loading
-              className={`${isLoading ? "visible" : "invisible"} min-h-1`}
+              className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
             />
           </div>
         </div>

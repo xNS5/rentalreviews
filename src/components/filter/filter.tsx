@@ -1,6 +1,6 @@
 import React from "react";
 import Popover from "@/components/popover/popover";
-import Icon  from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import Select from "@/components/select/select";
 
 export type FilterProps = {
@@ -9,13 +9,23 @@ export type FilterProps = {
   shouldRender: boolean;
   compare: string;
   type: string;
+  style: {
+    prefix: string;
+    postfix: string;
+  };
   value: any;
 };
 
 const getFilterComp = (type: string, key: any, props: any) => {
   if (type.toLowerCase() === "select") {
-    const { data, selectedKey, onSelectCallbackFn, callbackFn, callbackKey } =
-      props;
+    const {
+      data,
+      selectedKey,
+      onSelectCallbackFn,
+      callbackFn,
+      callbackKey,
+      selectedKeyStyle,
+    } = props;
     return (
       <Select
         key={key}
@@ -27,6 +37,7 @@ const getFilterComp = (type: string, key: any, props: any) => {
             callbackFn(callbackKey, value);
           }
         }}
+        selectedKeyStyle={selectedKeyStyle}
         {...props}
       />
     );
@@ -55,10 +66,11 @@ export function Filter(props: any) {
         .map((prop: FilterProps, i: number) =>
           getFilterComp(prop.type, i + 1, {
             label: prop.title,
-            value: filter[prop.key ?? ""],
+            value: prop.key ? filter[prop.key] : undefined,
             data: prop.value,
-            selectedKey: filter[prop.key ?? ""],
+            selectedKey: prop.key ? filter[prop.key] : undefined,
             onSelectCallbackFn: onSelectCallbackFn,
+            selectedKeyStyle: prop.style ?? undefined,
             callbackFn: callbackFn,
             callbackKey: prop.key,
           }),

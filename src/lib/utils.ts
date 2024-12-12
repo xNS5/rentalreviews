@@ -1,5 +1,3 @@
-"use client"
-
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -15,9 +13,3 @@ export function isValidSlug(slug: string): boolean{
   return !slug_regex_test.test(slug);
 }
 
-export function getIsMobileWidth(): boolean {
-  if (typeof window !== "undefined") {
-    return window.innerWidth < 750;
-  }
-  return false;
-}

@@ -7,7 +7,7 @@ import Logo from "../logo/logo";
 import Link from "next/link";
 import { usePathname as getPathname } from "next/navigation";
 import NavigationMenu from "../navigation-menu/navigation-menu";
-import {getIsMobileWidth} from "@/lib/utils";
+import {getIsMobileWidth} from "@/lib/clientUtils";
 import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/configProvider";
