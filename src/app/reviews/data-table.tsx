@@ -215,7 +215,7 @@ export default function DataTable({
       <h2 className={"md:text-lg text-base my-2"}>{reviews.disclaimer}</h2>
       <div
         className={cn(
-          "relative overflow-auto border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
+          "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
           className,
         )}
       >
