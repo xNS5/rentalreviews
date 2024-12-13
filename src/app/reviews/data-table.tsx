@@ -211,23 +211,24 @@ export default function DataTable({
 
   return (
     <>
-      <h1 className={"md:text-4xl my-4"}>{reviews.description}</h1>
-      <h2 className={"md:text-lg my-2"}>{reviews.disclaimer}</h2>
+      <h1 className={"md:text-4xl text-xl my-4"}>{reviews.description}</h1>
+      <h2 className={"md:text-lg text-base my-2"}>{reviews.disclaimer}</h2>
       <div
         className={cn(
-          "relative overflow-auto border-2 border-solid border-slate-500 rounded-lg",
+          "relative overflow-auto border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
           className,
         )}
       >
-        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
+        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-1">
           <div
             className={
-              "visible md:hidden flex flex-col items-start sm:flex-row justify-center sm:items-center text-center"
+              "visible md:hidden flex flex-row items-start sm:flex-row justify-center sm:items-center text-center"
             }
           >
             <Select
               label={"Sort Column"}
               data={columns}
+              className={`text-base md:text-xl`}
               onSelectionChange={(val: string) =>
                 setSortDescriptor(
                   (prev) => ({ ...prev, column: val }) as SortDescriptor,
@@ -240,6 +241,7 @@ export default function DataTable({
             <Select
               label={"Sort Direction"}
               data={sortOptions}
+              className={`text-base md:text-xl`}
               onSelectionChange={(val: string) =>
                 setSortDescriptor(
                   (prev: SortDescriptor) =>
@@ -252,36 +254,39 @@ export default function DataTable({
             />
           </div>
           <div
-            className={`flex flex-row space-x-2 justify-center items-center`}
+            className={`flex flex-col sm:flex-row space-x-2 justify-center items-center`}
           >
-            <label htmlFor="searchBox">Search</label>{" "}
-            <Input
-              id={"searchBox"}
-              value={searchTerm}
-              placeholder="Company Name"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleFilterChange("name", searchTerm);
-                }
-              }}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                handleFilterChange("name", e.target.value);
-              }}
-            />
-            {/* Filter Component */}
-            <Filter
-              heading={"Data Table Filters"}
-              filter={structuredClone(tableFilters)}
-              filterProps={structuredClone(filter_props)}
-              onSelectCallbackFn={(
-                key: string,
-                value: string | number | null,
-              ) => handleFilterChange(key, value)}
-            />
-            <Loading
-              className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
-            />
+            <label htmlFor="searchBox" className={`hidden sm:visible`}>Search</label>{" "}
+           <div className={`flex flex-row`}>
+             <Input
+                 id={"searchBox"}
+                 value={searchTerm}
+                 placeholder="Company Name"
+                 onKeyDown={(e) => {
+                   if (e.key === "Enter") {
+                     handleFilterChange("name", searchTerm);
+                   }
+                 }}
+                 onChange={(e) => {
+                   setSearchTerm(e.target.value);
+                   handleFilterChange("name", e.target.value);
+                 }}
+             />
+             {/* Filter Component */}
+             <Filter
+                 heading={"Filter By"}
+                 filter={structuredClone(tableFilters)}
+                 filterProps={structuredClone(filter_props)}
+                 className={`hidden md:visible`}
+                 onSelectCallbackFn={(
+                     key: string,
+                     value: string | number | null,
+                 ) => handleFilterChange(key, value)}
+             />
+             <Loading
+                 className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
+             />
+           </div>
           </div>
         </div>
         <div className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
@@ -401,7 +406,8 @@ export default function DataTable({
               </li>
             ))}
           </ol>
-          <span className="py-2 flex flex-col justify-center text-center items-center">
+        </div>
+          <span className="flex flex-col justify-center text-center items-center py-2">
             <span className="flex flex-row justify-center text-center space-x-1">
               <Button
                 variant={"ghost"}
@@ -446,7 +452,6 @@ export default function DataTable({
               </p>
             </div>
           </span>
-        </div>
       </div>
     </>
   );

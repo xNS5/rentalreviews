@@ -12,6 +12,7 @@ import {
   Select as SelectComp,
   SelectValue,
 } from "react-aria-components";
+import {getIsMobileWidth} from "@/lib/clientUtils";
 
 export default function Select({
   label,
@@ -31,11 +32,10 @@ export default function Select({
 
   return (
     <SelectComp
-      className={`flex flex-row m-2 justify-center items-center `}
+      className={`flex flex-col sm:flex-row m-2 justify-between items-center ${props.className ?? ""}`}
       isOpen={isSelectExpanded}
       onOpenChange={setIsSelectExpanded}
       selectedKey={selectedKey}
-      {...props}
     >
       {label && <Label {...labelProps}>{label}</Label>}
       <Button
