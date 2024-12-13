@@ -123,7 +123,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [pageCount, sortedData, sortDescriptor, currentPageNumber]);
+  }, [pageCount, sortedData, sortDescriptor, tableFilters, currentPageNumber]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
@@ -256,7 +256,7 @@ export default function DataTable({
           <div
             className={`flex flex-col sm:flex-row space-x-2 justify-center items-center`}
           >
-            <label htmlFor="searchBox" className={`hidden sm:visible`}>Search</label>{" "}
+            <label htmlFor="searchBox" className={`invisible md:hidden`}>Search</label>{" "}
            <div className={`flex flex-row`}>
              <Input
                  id={"searchBox"}
@@ -269,7 +269,6 @@ export default function DataTable({
                  }}
                  onChange={(e) => {
                    setSearchTerm(e.target.value);
-                   handleFilterChange("name", e.target.value);
                  }}
              />
              {/* Filter Component */}
@@ -282,6 +281,7 @@ export default function DataTable({
                      key: string,
                      value: string | number | null,
                  ) => handleFilterChange(key, value)}
+
              />
              <Loading
                  className={`${isLoading ? "visible" : "invisible"} !min-h-1`}

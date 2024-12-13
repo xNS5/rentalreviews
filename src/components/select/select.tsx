@@ -32,7 +32,8 @@ export default function Select({
 
   return (
     <SelectComp
-      className={`flex flex-col sm:flex-row m-2 justify-between items-center ${props.className ?? ""}`}
+      {...props}
+      className={`flex flex-col md:flex-row m-2 justify-between items-center ${props.className ?? ""}`}
       isOpen={isSelectExpanded}
       onOpenChange={setIsSelectExpanded}
       selectedKey={selectedKey}

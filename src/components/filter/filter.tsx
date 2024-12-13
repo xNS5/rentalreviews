@@ -22,7 +22,6 @@ const getFilterComp = (type: string, key: any, props: any) => {
       data,
       selectedKey,
       onSelectCallbackFn,
-      callbackFn,
       callbackKey,
       selectedKeyStyle,
     } = props;
@@ -33,9 +32,6 @@ const getFilterComp = (type: string, key: any, props: any) => {
         selectedKey={selectedKey}
         onSelectionChange={(value: string) => {
           onSelectCallbackFn(callbackKey, value);
-          if (callbackFn !== undefined) {
-            callbackFn(callbackKey, value);
-          }
         }}
         selectedKeyStyle={selectedKeyStyle}
         {...props}
@@ -61,8 +57,7 @@ export function Filter(props: any) {
           <b>{heading}</b>
         </h2>
       )}
-      {filterProps
-        ?.filter((prop: FilterProps) => prop.shouldRender)
+      {filterProps?.filter((prop: FilterProps) => prop.shouldRender)
         .map((prop: FilterProps, i: number) =>
           getFilterComp(prop.type, i + 1, {
             label: prop.title,
