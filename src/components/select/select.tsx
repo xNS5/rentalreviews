@@ -32,11 +32,11 @@ export default function Select({
 
   return (
     <SelectComp
-      {...props}
-      className={`flex flex-col md:flex-row m-2 justify-between items-center ${props.className ?? ""}`}
       isOpen={isSelectExpanded}
       onOpenChange={setIsSelectExpanded}
       selectedKey={selectedKey}
+      {...props}
+      className={`flex flex-col md:flex-row m-2 justify-between items-center ${props.className ?? ""}`}
     >
       {label && <Label {...labelProps}>{label}</Label>}
       <Button
