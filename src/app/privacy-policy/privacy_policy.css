@@ -9,7 +9,7 @@ h1 {
     text-align: center;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 750px) {
     h1 {
       font-size: 2.25rem; /* This is 4xl in Tailwind (36px) */
     }

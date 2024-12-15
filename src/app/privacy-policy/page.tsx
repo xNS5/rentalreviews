@@ -8,7 +8,7 @@ import {notFound} from "next/navigation";
 
 import "./privacy_policy.css";
 
-export default function PrivacyPolicy() {
+export default function Page() {
   const { privacy_policy }: Config = useContext(ConfigContext);
 
   if(privacy_policy === undefined){
