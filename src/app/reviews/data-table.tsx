@@ -9,26 +9,26 @@ import {
   Column,
 } from "@/components/aria-table/aria-table";
 
-import { Icon } from "@/components/icon/icon";
+import React, { useEffect, useMemo, useState, useContext } from "react";
+import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Company, ColumnType } from "@/app/reviews/columns";
-import { useEffect, useMemo, useState, useContext } from "react";
 import { SortDescriptor } from "react-stately";
-import { Button } from "@/components/button/button";
+import Button from "@/components/button/button";
 import Link from "next/link";
-import { Select } from "@/components/select/select";
-import {announce} from "@react-aria/live-announcer";
-import {Config, ConfigContext, getAltString} from "@/lib/configProvider";
+import  Select from "@/components/select/select";
+import { announce } from "@react-aria/live-announcer";
+import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
+import { Filter } from "@/components/filter/filter";
+
+import { useFilters } from "@/components/filter/useFilters";
+import { compareData } from "@/app/reviews/tableUtils";
+import Loading from "@/app/loading";
+import {getIsMobileWidth} from "@/lib/clientUtils";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
-function getIsMobileWidth() {
-  if (typeof window !== "undefined") {
-    return window.innerWidth <= 940;
-  }
-  return false;
-}
 export default function DataTable({
   columns,
   data,
@@ -40,33 +40,58 @@ export default function DataTable({
   className?: string;
   paginationValue?: number;
 }>) {
+  const { reviews, alt }: Config = useContext(ConfigContext);
+  const { filter_props } = reviews;
+  const altObj = alt["reviews"];
+
+  const { filter, setFilters } = useFilters();
+
+  const [tableFilters, setTableFilters] = useState(filter);
+  const [searchTerm, setSearchTerm] = useState(filter.name ?? "");
   const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
   });
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
+
   const sortOptions = [
     { key: "ascending", title: "Ascending" },
     { key: "descending", title: "Descending" },
   ];
 
-  const { reviews, alt }: Config = useContext(ConfigContext);
-  const altObj = alt['reviews'];
-
-  // Filters data based on searchTerm
+  // Filters data based on filter component properties
   const filteredData = useMemo(() => {
-    return data.filter((item: Company) => item["name"].includes(searchTerm));
-  }, [searchTerm, data]);
+    const filterComparisonObj = filter_props.reduce(
+      (acc: any, curr: any) => ({ ...acc, [curr.key]: curr.comparison }),
+      {},
+    );
+
+    // Filter based on filter state
+    return data.filter((item: Company) =>
+      Object.entries(filter).every(([key, value]) => {
+        if (value !== null) {
+          const compareDataResult = compareData(
+            item[key],
+            value,
+            filterComparisonObj[key],
+          );
+          if (!compareDataResult) {
+            return false;
+          }
+        }
+        return true;
+      }),
+    );
+  }, [filter, searchTerm]);
 
   // Sorts filteredData if searchTerm is > 0, else uses data
   const sortedData = useMemo(() => {
-    let inputData = searchTerm.length > 0 ? filteredData : data;
-    return inputData.sort((a: Company, b: Company) => {
+    return filteredData.sort((a: Company, b: Company) => {
       try {
         let first = a[sortDescriptor.column as string];
         let second = b[sortDescriptor.column as string];
@@ -82,12 +107,12 @@ export default function DataTable({
         console.error("Error sorting column: ", e);
       }
     });
-  }, [sortDescriptor, searchTerm, filteredData, data]);
+  }, [sortDescriptor, searchTerm, filter]);
 
   // Memoizes page count. Might not need to.
   const pageCount = useMemo(() => {
     return Math.ceil(sortedData.length / paginationValue);
-  }, [sortedData, paginationValue]);
+  }, [filter]);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -98,13 +123,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [
-    currentPageNumber,
-    sortDescriptor,
-    sortedData,
-    pageCount,
-    paginationValue,
-  ]);
+  }, [pageCount, sortedData, sortDescriptor, tableFilters, currentPageNumber]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) => {
@@ -130,239 +149,310 @@ export default function DataTable({
     }));
   };
 
+  const handleFilterChange = (key: string, value: any) => {
+    setTableFilters((prev) => ({
+      ...prev,
+      [key]: prev[key] === value ? null : value,
+    }));
+  };
+
+  const loadingHandler = (state: boolean) => {
+    setIsLoading(state);
+  };
 
   useEffect(() => {
-    function announceHandler(){
-      if(isMobileWidth){
-        announce("Main content contains a heading and a list of links", "assertive", 500);
+    function announceHandler() {
+      if (isMobileWidth) {
+        announce(
+          "Main content contains a heading and a list of links",
+          "assertive",
+          500,
+        );
       } else {
-        announce("Main content contains a heading and a data table", "assertive", 500);
+        announce(
+          "Main content contains a heading and a data table",
+          "assertive",
+          500,
+        );
       }
     }
+
     function handleResize() {
       const isWindowMobileWidth = getIsMobileWidth();
-      if(isWindowMobileWidth != isMobileWidth){
+      if (isWindowMobileWidth != isMobileWidth) {
         setIsMobileWidth(isWindowMobileWidth);
         announceHandler();
       }
     }
+
     // To make the layout announcement on first load
     announceHandler();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Announces when page is loading data and when the loading has finished
+  useEffect(() => {
+    if (isLoading) {
+      announce("Loading data", "assertive", 500);
+    } else {
+      announce("Finished loading data", "assertive", 500);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    loadingHandler(true);
+    const timeout = setTimeout(() => {
+      setFilters(tableFilters);
+      loadingHandler(false);
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [tableFilters]);
 
   return (
-      <>
-        <h1 className=" md:text-4xl my-4">{reviews.description}</h1>
-        <h2 className={"md:text-lg my-2"}>{reviews.disclaimer}</h2>
-        <div
-            className={cn(
-                "relative overflow-auto border-2 border-solid border-slate-500 rounded-lg",
-                className,
-            )}
-        >
-          <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-2">
-            <div
-                className={
-                  "visible md:hidden flex flex-col items-start sm:flex-row justify-center sm:items-center text-center"
-                }
-            >
-              <Select
-                  label={"Sort Column"}
-                  data={columns}
-                  onSelectionChange={(val: string) =>
-                      setSortDescriptor(
-                          (prev) => ({...prev, column: val}) as SortDescriptor,
-                      )
-                  }
-                  selectedKey={sortDescriptor.column}
-                  defaultSelectedKey={sortDescriptor.column}
-                  arialabel={"column name dropdown"}
-              />
-              <Select
-                  label={"Sort Direction"}
-                  data={sortOptions}
-                  onSelectionChange={(val: string) =>
-                      setSortDescriptor(
-                          (prev: SortDescriptor) =>
-                              ({...prev, direction: val}) as SortDescriptor,
-                      )
-                  }
-                  selectedKey={sortDescriptor.direction}
-                  defaultSelectedKey={sortDescriptor.direction}
-                  arialabel={"sort direction dropdown"}
-              />
-            </div>
-            <div
-                className={`flex flex-row space-x-2 justify-center items-center`}
-                tabIndex={-1}
-            >
-              <label htmlFor="searchBox">Search</label>{" "}
-              <Input
-                  id={"searchBox"}
-                  value={searchTerm}
-
-                  placeholder="Company Name"
-                  onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+    <>
+      <h1 className={"md:text-4xl text-xl my-4"}>{reviews.description}</h1>
+      <h2 className={"md:text-lg text-base my-2"}>{reviews.disclaimer}</h2>
+      <div
+        className={cn(
+          "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
+          className,
+        )}
+      >
+        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-1">
+          <div
+            className={
+              "visible md:hidden flex flex-row items-start sm:flex-row justify-center sm:items-center text-center"
+            }
+          >
+            <Select
+              label={"Sort Column"}
+              data={columns}
+              className={`text-base md:text-xl`}
+              onSelectionChange={(val: string) =>
+                setSortDescriptor(
+                  (prev) => ({ ...prev, column: val }) as SortDescriptor,
+                )
+              }
+              selectedKey={sortDescriptor.column}
+              defaultSelectedKey={sortDescriptor.column}
+              arialabel={"column name dropdown"}
+            />
+            <Select
+              label={"Sort Direction"}
+              data={sortOptions}
+              className={`text-base md:text-xl`}
+              onSelectionChange={(val: string) =>
+                setSortDescriptor(
+                  (prev: SortDescriptor) =>
+                    ({ ...prev, direction: val }) as SortDescriptor,
+                )
+              }
+              selectedKey={sortDescriptor.direction}
+              defaultSelectedKey={sortDescriptor.direction}
+              arialabel={"sort direction dropdown"}
+            />
           </div>
           <div
-              className="flex flex-col relative overflow-auto border-y-1 border-x-0.5 border-solid border-slate-500 rounded">
-            {/* Full-screen data view */}
-            <Table
-                aria-label={reviews.description}
-                sortDescriptor={sortDescriptor}
-                onSortChange={handleSortChange}
-                className="hidden md:table w-full"
-            >
-              <TableHeader>
-                {columns.map((column, i: number) => (
-                    <Column
-                        id={column.key}
-                        textValue={column.title}
-                        key={i}
-                        isRowHeader={i === 0}
-                        sortDescriptor={sortDescriptor}
-                        className={`border-black ${i < columns.length - 1 ? "border-r-1" : ""}`}
-                        allowsSorting
-                    >
-                      <p>{column.title}</p>
-                    </Column>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {paginatedPageData.map((item: Company, i: number) => (
-                    <Row key={i}>
-                      {columns.map((column:{key: string, title: string}, j: number) => (
-                          <Cell
-                              key={j}
-                              className={`${j < columns.length - 1 ? "border-black border-r-1" : ""}`}
-                          >
-                            {j == 0 ? (
-                                <Link
-                                    id={`${item.slug}`}
-                                    href={`/reviews/${item.slug}`}
-                                    aria-label={`Link to ${item[column.key]}`}
-                                    className={`flex mx-3 font-medium items-center justify-center`}
-                                    onMouseEnter={() => handleMouseEnter(item.slug)}
-                                    onMouseLeave={() => handleMouseLeave(item.slug)}
-                                >
-                                  <p className="px-2">{`${item[column.key]}`}</p>
-                                  <Icon
-                                      type="fas-link"
-                                      className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
-                                  />
-                                </Link>
-                            ) : (
-                                <>
-                                  {altObj[column.key] !== undefined && <label className={"sr-only"}>
-                                    {getAltString(altObj, column.key, item[column.key])}
-                                  </label>}
-                                  <p aria-hidden={altObj[column.key] !== undefined}>{`${item[column.key]}${column.key.includes("rating") ? "/5" : ""}`}</p>
-                                </>
-                            )}
-                          </Cell>
-                      ))}
-                    </Row>
-                ))}
-              </TableBody>
-            </Table>
+            className={`flex flex-col sm:flex-row space-x-2 justify-center items-center`}
+          >
+            <label htmlFor="searchBox" className={`invisible md:hidden`}>Search</label>{" "}
+           <div className={`flex flex-row`}>
+             <Input
+                 id={"searchBox"}
+                 value={searchTerm}
+                 placeholder="Company Name"
+                 onKeyDown={(e) => {
+                   if (e.key === "Enter") {
+                     handleFilterChange("name", searchTerm);
+                   }
+                 }}
+                 onChange={(e) => {
+                   setSearchTerm(e.target.value);
+                 }}
+             />
+             {/* Filter Component */}
+             <Filter
+                 heading={"Filter By"}
+                 filter={structuredClone(tableFilters)}
+                 filterProps={structuredClone(filter_props)}
+                 className={`hidden md:visible`}
+                 onSelectCallbackFn={(
+                     key: string,
+                     value: string | number | null,
+                 ) => handleFilterChange(key, value)}
 
-            {/* Mobile/Compact data view */}
-            <ol
-                className={
-                  "visible md:hidden justify-center items-center px-10 space-y-2 py-5 bg-slate-200 border border-slate-500 rounded"
-                }
-            >
-              {paginatedPageData.map((item: Company, i: number) => (
-                  <li
-                      key={i}
-                      className={`flex flex-col text-start flex-1 bg-white border border-slate-500 rounded-lg p-5 my-1 shadow hover:shadow-xl hover:border-black`}
-                      onMouseEnter={() => handleMouseEnter(item.slug)}
-                      onMouseLeave={() => handleMouseLeave(item.slug)}
-                  >
-                    <Link
-                        id={`${item.slug}`}
-                        href={`/reviews/${item.slug}`}
-                        aria-label={`Link to ${item.name} review page. Company Type ${item.company_type}. Average Rating ${item.average_rating} out of 5. Adjusted average rating ${item.adjusted_average_rating} out of 5. Review Count ${item.review_count}.`}
-                        className={`text-start font-medium items-center justify-center hover:!no-underline`}
-                    >
-                      <h2 className={"text-2xl underline"}>
-                        <b>{item.name}</b>
-                        <Icon
-                            type="fas-link"
-                            className={`${hoverStates[item.slug] ? "visible" : "invisible"} m-1 h-5 w-5`}
-                        />
-                      </h2>
-
-                      <p>
-                        <b>Company Type</b>: {item.company_type}
-                      </p>
-                      <p>
-                        <b>Average Rating</b>: {item.average_rating}/5
-                      </p>
-                      <p>
-                        <b>Adjusted Average Rating</b>: {item.adjusted_average_rating}
-                        /5
-                      </p>
-                      <p>
-                        <b>Review Count</b>: {item.review_count}
-                      </p>
-                    </Link>
-                  </li>
+             />
+             <Loading
+                 className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
+             />
+           </div>
+          </div>
+        </div>
+        <div className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
+          {/* Full-screen data view */}
+          <Table
+            aria-label={reviews.description}
+            sortDescriptor={sortDescriptor}
+            onSortChange={handleSortChange}
+            className="hidden md:table w-full"
+          >
+            <TableHeader>
+              {columns.map((column, i: number) => (
+                <Column
+                  id={column.key}
+                  textValue={column.title}
+                  key={i}
+                  isRowHeader={i === 0}
+                  sortDescriptor={sortDescriptor}
+                  className={`border-black ${i < columns.length - 1 ? "border-r-1" : ""}`}
+                  allowsSorting
+                >
+                  <p>{column.title}</p>
+                </Column>
               ))}
-            </ol>
-            <span className="py-2 flex flex-col justify-center text-center">
-          <span className="flex flex-row justify-center text-center space-x-1">
-            <Button
+            </TableHeader>
+            <TableBody>
+              {paginatedPageData.map((item: Company, i: number) => (
+                <Row key={i}>
+                  {columns.map(
+                    (column: { key: string; title: string }, j: number) => (
+                      <Cell
+                        key={j}
+                        className={`${j < columns.length - 1 ? "border-black border-r-1" : ""}`}
+                        value={item[column.key]}
+                      >
+                        {j == 0 ? (
+                          <Link
+                            id={`${item.slug}`}
+                            href={`/reviews/${item.slug}`}
+                            aria-label={`Link to ${item[column.key]}`}
+                            className={`flex mx-3 font-medium items-center justify-center`}
+                            onMouseEnter={() => handleMouseEnter(item.slug)}
+                            onMouseLeave={() => handleMouseLeave(item.slug)}
+                          >
+                            <p className="px-2">{`${item[column.key]}`}</p>
+                            <Icon
+                              type="fas-link"
+                              className={`${hoverStates[item.slug] ? "visible" : "invisible"} mx-1 h-4 w-4`}
+                            />
+                          </Link>
+                        ) : (
+                          <>
+                            {altObj[column.key] !== undefined && (
+                              <label className={"sr-only"}>
+                                {getAltString(
+                                  altObj,
+                                  column.key,
+                                  item[column.key],
+                                )}
+                              </label>
+                            )}
+                            <p
+                              aria-hidden={altObj[column.key] !== undefined}
+                            >{`${item[column.key]}${column.key.includes("rating") ? "/5" : ""}`}</p>
+                          </>
+                        )}
+                      </Cell>
+                    ),
+                  )}
+                </Row>
+              ))}
+            </TableBody>
+          </Table>
+
+          {/* Mobile/Compact data view */}
+          <ol
+            className={
+              "visible md:hidden justify-center items-center px-10 space-y-2 py-5 bg-slate-200 border border-slate-500 rounded"
+            }
+          >
+            {paginatedPageData.map((item: Company, i: number) => (
+              <li
+                key={i}
+                className={`flex flex-col text-start flex-1 bg-white border border-slate-500 rounded-lg p-5 my-1 shadow hover:shadow-xl hover:border-black`}
+                onMouseEnter={() => handleMouseEnter(item.slug)}
+                onMouseLeave={() => handleMouseLeave(item.slug)}
+              >
+                <Link
+                  id={`${item.slug}`}
+                  href={`/reviews/${item.slug}`}
+                  aria-label={`Link to ${item.name} review page. Company Type ${item.company_type}. Average Rating ${item.average_rating} out of 5. Adjusted average rating ${item.adjusted_average_rating} out of 5. Review Count ${item.review_count}.`}
+                  className={`text-start font-medium items-center justify-center hover:!no-underline`}
+                >
+                  <h2 className={"text-2xl underline"}>
+                    <b>{item.name}</b>
+                    <Icon
+                      type="fas-link"
+                      className={`${hoverStates[item.slug] ? "visible" : "invisible"} m-1 h-5 w-5`}
+                    />
+                  </h2>
+
+                  <p>
+                    <b>Company Type</b>: {item.company_type}
+                  </p>
+                  <p>
+                    <b>Average Rating</b>: {item.average_rating}/5
+                  </p>
+                  <p>
+                    <b>Adjusted Average Rating</b>:{" "}
+                    {item.adjusted_average_rating}
+                    /5
+                  </p>
+                  <p>
+                    <b>Review Count</b>: {item.review_count}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </div>
+          <span className="flex flex-col justify-center text-center items-center py-2">
+            <span className="flex flex-row justify-center text-center space-x-1">
+              <Button
                 variant={"ghost"}
                 aria-label="last page"
                 disabled={currentPageNumber === 1}
                 aria-disabled={currentPageNumber === 1}
                 onClick={() => handlePageChange(1)}
-            >
-              {"<<"}
-            </Button>
-            <Button
+              >
+                {"<<"}
+              </Button>
+              <Button
                 variant={"ghost"}
                 aria-label="previous page"
                 disabled={currentPageNumber === 1}
                 aria-disabled={currentPageNumber === 1}
                 onClick={() => handlePageChange(currentPageNumber - 1)}
-            >
-              {"<"}
-            </Button>
-            <Button
+              >
+                {"<"}
+              </Button>
+              <Button
                 variant={"ghost"}
                 aria-label="next page"
                 disabled={currentPageNumber === pageCount}
                 aria-disabled={currentPageNumber === pageCount}
                 onClick={() => handlePageChange(currentPageNumber + 1)}
-            >
-              {">"}
-            </Button>
-            <Button
+              >
+                {">"}
+              </Button>
+              <Button
                 variant={"ghost"}
                 aria-label="last page"
                 disabled={currentPageNumber === pageCount}
                 aria-disabled={currentPageNumber === pageCount}
                 onClick={() => handlePageChange(pageCount)}
-            >
-              {">>"}
-            </Button>
+              >
+                {">>"}
+              </Button>
+            </span>
+            <div aria-live="polite" aria-atomic="true">
+              <p id="page-announcement">
+                Page {currentPageNumber} of {pageCount}
+              </p>
+            </div>
           </span>
-          <div aria-live="polite" aria-atomic="true">
-            <p id="page-announcement">
-              Page {currentPageNumber} of {pageCount}
-            </p>
-          </div>
-        </span>
-          </div>
-        </div>
-      </>
-
+      </div>
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import { Inter as FontSans } from "next/font/google";
-import { Suspense } from "react";
-import { getDocument } from "../db/db";
-import { Config } from "../lib/configProvider";
+import React, { Suspense } from "react";
+import { getDocument } from "@/db/db";
+import { Config } from "@/lib/configProvider";
 import { cn } from "@/lib/utils";
 import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";
@@ -58,7 +58,7 @@ export default async function RootLayout({
         <Config data={config}>
           <Suspense key={Math.random()} fallback={<Loading />}>
             <main id="main-content" role="main" className={`${inter.variable}`} tabIndex={-1}>
-              <Providers>{children}</Providers>
+              {children}
             </main>
           </Suspense>
           <Footer data={footer} />

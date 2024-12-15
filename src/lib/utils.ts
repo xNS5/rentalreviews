@@ -12,3 +12,4 @@ export function isValidSlug(slug: string): boolean{
   const slug_regex_test = new RegExp('[^a-z0-9-]');
   return !slug_regex_test.test(slug);
 }
+
