@@ -3,7 +3,6 @@ import React, { Suspense } from "react";
 import { getDocument } from "@/db/db";
 import { Config } from "@/lib/configProvider";
 import { cn } from "@/lib/utils";
-import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import "./globals.css";
@@ -21,22 +20,8 @@ export async function generateMetadata() {
   const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
   return {
     title: config?.metadata.title,
-    description: config?.metadata.description,
-    icons: [
-      {
-        rel: "icon",
-        type: "image/png",
-        url: "/images/building-icon-light.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        rel: "icon",
-        type: "image/png",
-        url: "/images/building-icon-dark.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-    ],
-  };
+    description: config?.metadata.description
+  }
 }
 
 export default async function RootLayout({
