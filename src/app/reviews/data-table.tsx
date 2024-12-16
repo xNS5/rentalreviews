@@ -64,16 +64,15 @@ export default function DataTable({
     { key: "descending", title: "Descending" },
   ];
 
-  // Filters data based on filter component properties
-  const filteredData = useMemo(() => {
-    const filterComparisonObj = filter_props.reduce(
+  // Maps name to comparison string (e.g. ">", ">=", "==", etc.)
+  const filterComparisonObj = useMemo(() => filter_props.reduce(
       (acc: any, curr: any) => ({ ...acc, [curr.key]: curr.comparison }),
       {},
-    );
+  ), []);
 
-    // Filter based on filter state
-    return data.filter((item: Company) =>
-      Object.entries(filter).every(([key, value]) => {
+  // Filters data based on filter component properties
+  const filteredData = useMemo(() => data.filter((item: Company) =>
+      Object.entries(tableFilters).every(([key, value]) => {
         if (value !== null) {
           const compareDataResult = compareData(
             item[key],
@@ -86,12 +85,9 @@ export default function DataTable({
         }
         return true;
       }),
-    );
-  }, [filter, searchTerm]);
+    ), [filter, tableFilters]);
 
-  // Sorts filteredData if searchTerm is > 0, else uses data
-  const sortedData = useMemo(() => {
-    return filteredData.sort((a: Company, b: Company) => {
+  const sortedData = useMemo(() => filteredData.sort((a: Company, b: Company) => {
       try {
         let first = a[sortDescriptor.column as string];
         let second = b[sortDescriptor.column as string];
@@ -106,13 +102,10 @@ export default function DataTable({
       } catch (e) {
         console.error("Error sorting column: ", e);
       }
-    });
-  }, [sortDescriptor, searchTerm, filter]);
+    }), [sortDescriptor, searchTerm, filter]);
 
   // Memoizes page count. Might not need to.
-  const pageCount = useMemo(() => {
-    return Math.ceil(sortedData.length / paginationValue);
-  }, [filter]);
+  const pageCount = useMemo(() => Math.ceil(sortedData.length / paginationValue), [filter]);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -126,14 +119,10 @@ export default function DataTable({
   }, [pageCount, sortedData, sortDescriptor, tableFilters, currentPageNumber]);
 
   // Handles mouse enter link
-  const handleMouseEnter = (key: any) => {
-    setHoverStates((prev) => ({ ...prev, [key]: true }));
-  };
+  const handleMouseEnter = (key: any) =>  setHoverStates((prev) => ({ ...prev, [key]: true }));
 
   // Handles mouse leave link
-  const handleMouseLeave = (key: any) => {
-    setHoverStates((prev) => ({ ...prev, [key]: false }));
-  };
+  const handleMouseLeave = (key: any) =>  setHoverStates((prev) => ({ ...prev, [key]: false }));
 
   // Handles page change, sets current page number and resets the hover state object
   const handlePageChange = (page: number) => {
@@ -141,24 +130,18 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  const handleSortChange = (newSortObj: SortDescriptor) => {
-    setSortDescriptor((prevSortObj: SortDescriptor) => ({
-      column: newSortObj.column,
-      direction:
+  const handleSortChange = (newSortObj: SortDescriptor) => setSortDescriptor((prevSortObj: SortDescriptor) => ({
+    column: newSortObj.column,
+    direction:
         prevSortObj.direction === "ascending" ? "descending" : "ascending",
-    }));
-  };
+  }));
 
-  const handleFilterChange = (key: string, value: any) => {
-    setTableFilters((prev) => ({
-      ...prev,
-      [key]: prev[key] === value ? null : value,
-    }));
-  };
+  const handleFilterChange = (key: string, value: any) => setTableFilters((prev) => ({
+    ...prev,
+    [key]: prev[key] === value ? null : value,
+  }));
 
-  const loadingHandler = (state: boolean) => {
-    setIsLoading(state);
-  };
+  const loadingHandler = (state: boolean) => setIsLoading(state);
 
   useEffect(() => {
     function announceHandler() {
@@ -263,12 +246,13 @@ export default function DataTable({
                  value={searchTerm}
                  placeholder="Company Name"
                  onKeyDown={(e) => {
-                   if (e.key === "Enter") {
+                   if (e.key === "Enter" && tableFilters?.name.length > 0) {
                      handleFilterChange("name", searchTerm);
                    }
                  }}
                  onChange={(e) => {
                    setSearchTerm(e.target.value);
+                   handleFilterChange("name", e.target.value);
                  }}
              />
              {/* Filter Component */}
