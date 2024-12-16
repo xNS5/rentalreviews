@@ -20,22 +20,8 @@ export async function generateMetadata() {
   const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
   return {
     title: config?.metadata.title,
-    description: config?.metadata.description,
-    icons: [
-      {
-        rel: 'icon',
-        type: 'image/png',
-        media: '(prefers-color-scheme: dark)',
-        url: '/images/building_icon-light.png',
-      },
-      {
-        rel: 'icon',
-        type: 'image/png',
-        media: '(prefers-color-scheme: light)',
-        url: '/images/building-icon-dark.png',
-      },
-    ],
-  };
+    description: config?.metadata.description
+  }
 }
 
 export default async function RootLayout({
