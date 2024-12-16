@@ -73,7 +73,7 @@ export default function Popover({
               id="popover-content"
               ref={popoverRef}
               className={`flex flex-col bg-white border border-black absolute animate ease-in-out bg-white border border-gray-300 shadow-md rounded-md p-2 whitespace-nowrap ${className?.popover ?? ""}`}
-              role="region"
+              role="dialog"
               aria-modal="true"
             >
               {children}
