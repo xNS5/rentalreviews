@@ -3,7 +3,6 @@ import React, { Suspense } from "react";
 import { getDocument } from "@/db/db";
 import { Config } from "@/lib/configProvider";
 import { cn } from "@/lib/utils";
-import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import "./globals.css";
@@ -24,16 +23,16 @@ export async function generateMetadata() {
     description: config?.metadata.description,
     icons: [
       {
-        rel: "icon",
-        type: "image/png",
-        url: "/images/building-icon-light.png",
-        media: "(prefers-color-scheme: light)",
+        rel: 'icon',
+        type: 'image/png',
+        media: '(prefers-color-scheme: dark)',
+        url: '/images/building_icon-light.png',
       },
       {
-        rel: "icon",
-        type: "image/png",
-        url: "/images/building-icon-dark.png",
-        media: "(prefers-color-scheme: dark)",
+        rel: 'icon',
+        type: 'image/png',
+        media: '(prefers-color-scheme: light)',
+        url: '/images/building-icon-dark.png',
       },
     ],
   };
