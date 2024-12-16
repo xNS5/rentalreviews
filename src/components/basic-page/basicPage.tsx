@@ -18,10 +18,8 @@ export default function BasicPage({configName}: Readonly<{
         notFound();
     }
 
-
-
     return (
-        <Article className="container" announcement={config[configName].aria_announcement ?? undefined}>
+        <Article id={`basic-page-${configName}`} className="container" announcement={config[configName].aria_announcement ?? undefined}>
             <Text text={config[configName]?.text ?? ""} />
         </Article>
     );
