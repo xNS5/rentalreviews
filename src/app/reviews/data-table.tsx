@@ -66,7 +66,11 @@ export default function DataTable({
 
   // Maps name to comparison string (e.g. ">", ">=", "==", etc.)
   const filterComparisonObj = useMemo(() => filter_props.reduce(
-      (acc: any, curr: any) => ({ ...acc, [curr.key]: curr.comparison }),
+      (acc: any, curr: any) => ({ ...acc, [curr.key]: {
+        "comparison": curr.comparison,
+        "title": curr.title,
+          ...(curr.style ? {"alt": curr.style.alt }: undefined)
+        } }),
       {},
   ), []);
 
@@ -77,7 +81,7 @@ export default function DataTable({
           const compareDataResult = compareData(
             item[key],
             value,
-            filterComparisonObj[key],
+            filterComparisonObj[key].comparison,
           );
           if (!compareDataResult) {
             return false;
@@ -188,6 +192,31 @@ export default function DataTable({
     const timeout = setTimeout(() => {
       setFilters(tableFilters);
       loadingHandler(false);
+      // let hasActiveFilters = false;
+      //
+      // const validFilters = Object.fromEntries(
+      //     Object.entries(tableFilters).filter(([key, value]: [key: string, value: string | null]) => {
+      //       if(value){
+      //         hasActiveFilters = true;
+      //         return true;
+      //       }
+      //       return false;
+      //     })
+      // );
+      //
+      // if(hasActiveFilters){
+      //   let messageStringArr: string[] = []
+      //   Object.entries(validFilters).forEach(([key, value]: [key: string, value: string]) => {
+      //     if(filterComparisonObj.hasOwnProperty(key) && filterComparisonObj[key].hasOwnProperty("alt")){
+      //       const filterObj = filterComparisonObj[key];
+      //       const {title, alt} = filterObj;
+      //       messageStringArr.push(`${title} ${alt.prefix} ${value} ${alt.postfix}`.trim().replace(/\s{2,}/g,' '));
+      //     }
+      //   })
+      //   announce(`Filtering table records by ${messageStringArr.join(', ')}`, "assertive", 500);
+      // } else {
+      //   announce("No filters applied to table records", "assertive", 500);
+      // }
     }, 500);
     return () => clearTimeout(timeout);
   }, [tableFilters]);

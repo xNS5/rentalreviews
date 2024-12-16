@@ -53,7 +53,7 @@ export function Filter(props: any) {
       toggle={<Icon className={"h-5 w-5"} type={"fas-filter"} />}
     >
       {heading && (
-        <h2 id={"heading"}>
+        <h2>
           <b>{heading}</b>
         </h2>
       )}
@@ -68,7 +68,6 @@ export function Filter(props: any) {
             selectedKeyStyle: prop.style ?? undefined,
             callbackFn: callbackFn,
             callbackKey: prop.key,
-            "aria-labelledby": "heading"
           }),
         )}
     </Popover>
