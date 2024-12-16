@@ -47,11 +47,14 @@ export default function Select({
         <SelectValue className={`p-2`}>
           {({ defaultChildren, isPlaceholder }) => {
             return isPlaceholder ? (
-              <p>Filter by</p>
+                <>
+                  <label className={'sr-only'}>no value selected</label>
+                  <span aria-hidden={true}>Filter by</span>
+                </>
             ) : (
               <div>
                 <p>
-                  {selectedKeyStyle?.prefix ?? ""}
+                  {selectedKeyStyle?.prefix}{" "}
                   {defaultChildren}
                   {selectedKeyStyle?.postfix}
                 </p>
@@ -77,11 +80,12 @@ export default function Select({
                 `text-black text-center my-1 p-4 ${isSelected ? "bg-blue-500 text-white border border-black" : "hover:!bg-blue-500 hover:text-white"} rounded`
               }
               textValue={elem.title}
+              value={elem.value}
             >
               {({ isSelected }) => (
                 <>
                   {isSelected && (
-                    <Icon type={"fas-check"} className={`h-4 w-4 pr-1`} />
+                    <Icon type={"fas-check"} className={`h-4 w-4 pr-1`} aria-hidden={true}/>
                   )}
                   {elem.title}
                 </>

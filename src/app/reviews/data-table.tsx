@@ -17,7 +17,7 @@ import { Company, ColumnType } from "@/app/reviews/columns";
 import { SortDescriptor } from "react-stately";
 import Button from "@/components/button/button";
 import Link from "next/link";
-import  Select from "@/components/select/select";
+import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
 import { Filter } from "@/components/filter/filter";
@@ -25,7 +25,7 @@ import { Filter } from "@/components/filter/filter";
 import { useFilters } from "@/components/filter/useFilters";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
-import {getIsMobileWidth} from "@/lib/clientUtils";
+import { getIsMobileWidth } from "@/lib/clientUtils";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -64,55 +64,70 @@ export default function DataTable({
     { key: "descending", title: "Descending" },
   ];
 
+  // Maps name to comparison string (e.g. ">", ">=", "==", etc.)
+  const filterComparisonObj = useMemo(
+    () =>
+      filter_props.reduce(
+        (acc: any, curr: any) => ({
+          ...acc,
+          [curr.key]: {
+            comparison: curr.comparison,
+            title: curr.title,
+            ...(curr.style ? { alt: curr.style.alt } : undefined),
+          },
+        }),
+        {},
+      ),
+    [],
+  );
+
   // Filters data based on filter component properties
-  const filteredData = useMemo(() => {
-    const filterComparisonObj = filter_props.reduce(
-      (acc: any, curr: any) => ({ ...acc, [curr.key]: curr.comparison }),
-      {},
-    );
-
-    // Filter based on filter state
-    return data.filter((item: Company) =>
-      Object.entries(filter).every(([key, value]) => {
-        if (value !== null) {
-          const compareDataResult = compareData(
-            item[key],
-            value,
-            filterComparisonObj[key],
-          );
-          if (!compareDataResult) {
-            return false;
+  const filteredData = useMemo(
+    () =>
+      data.filter((item: Company) =>
+        Object.entries(tableFilters).every(([key, value]) => {
+          if (value !== null) {
+            const compareDataResult = compareData(
+              item[key],
+              value,
+              filterComparisonObj[key].comparison,
+            );
+            if (!compareDataResult) {
+              return false;
+            }
           }
+          return true;
+        }),
+      ),
+    [filter, tableFilters],
+  );
+
+  const sortedData = useMemo(
+    () =>
+      filteredData.sort((a: Company, b: Company) => {
+        try {
+          let first = a[sortDescriptor.column as string];
+          let second = b[sortDescriptor.column as string];
+
+          if (typeof first === "number" && typeof second === "number") {
+            return sortDescriptor.direction === "descending"
+              ? second - first
+              : first - second;
+          }
+          let cmp = first.localeCompare(second);
+          return sortDescriptor.direction === "descending" ? cmp * -1 : cmp;
+        } catch (e) {
+          console.error("Error sorting column: ", e);
         }
-        return true;
       }),
-    );
-  }, [filter, searchTerm]);
-
-  // Sorts filteredData if searchTerm is > 0, else uses data
-  const sortedData = useMemo(() => {
-    return filteredData.sort((a: Company, b: Company) => {
-      try {
-        let first = a[sortDescriptor.column as string];
-        let second = b[sortDescriptor.column as string];
-
-        if (typeof first === "number" && typeof second === "number") {
-          return sortDescriptor.direction === "descending"
-            ? second - first
-            : first - second;
-        }
-        let cmp = first.localeCompare(second);
-        return sortDescriptor.direction === "descending" ? cmp * -1 : cmp;
-      } catch (e) {
-        console.error("Error sorting column: ", e);
-      }
-    });
-  }, [sortDescriptor, searchTerm, filter]);
+    [sortDescriptor, searchTerm, filter],
+  );
 
   // Memoizes page count. Might not need to.
-  const pageCount = useMemo(() => {
-    return Math.ceil(sortedData.length / paginationValue);
-  }, [filter]);
+  const pageCount = useMemo(
+    () => Math.ceil(sortedData.length / paginationValue),
+    [filter],
+  );
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -126,14 +141,12 @@ export default function DataTable({
   }, [pageCount, sortedData, sortDescriptor, tableFilters, currentPageNumber]);
 
   // Handles mouse enter link
-  const handleMouseEnter = (key: any) => {
+  const handleMouseEnter = (key: any) =>
     setHoverStates((prev) => ({ ...prev, [key]: true }));
-  };
 
   // Handles mouse leave link
-  const handleMouseLeave = (key: any) => {
+  const handleMouseLeave = (key: any) =>
     setHoverStates((prev) => ({ ...prev, [key]: false }));
-  };
 
   // Handles page change, sets current page number and resets the hover state object
   const handlePageChange = (page: number) => {
@@ -141,24 +154,46 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  const handleSortChange = (newSortObj: SortDescriptor) => {
+  const handleSortChange = (newSortObj: SortDescriptor) =>
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
       column: newSortObj.column,
       direction:
         prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
-  };
 
   const handleFilterChange = (key: string, value: any) => {
-    setTableFilters((prev) => ({
-      ...prev,
-      [key]: prev[key] === value ? null : value,
-    }));
+    setTableFilters((prev) => {
+      const newFilters = { ...prev, [key]: prev[key] === value ? null : value };
+      let hasActiveFilters = false;
+
+      const validFilters = Object.fromEntries(
+          Object.entries(newFilters).filter(([key, value]: [key: string, value: string | null]) => {
+            if(value){
+              hasActiveFilters = true;
+              return true;
+            }
+            return false;
+          })
+      );
+
+      if(hasActiveFilters){
+        let messageStringArr: string[] = []
+        Object.entries(validFilters).forEach(([key, value]: [key: string, value: string]) => {
+          if(filterComparisonObj.hasOwnProperty(key) && filterComparisonObj[key].hasOwnProperty("alt")){
+            const filterObj = filterComparisonObj[key];
+            const {title, alt} = filterObj;
+            messageStringArr.push(`${title} ${alt.prefix} ${value} ${alt.postfix}`.trim().replace(/\s{2,}/g,' '));
+          }
+        })
+        announce(`Filtering table records by ${messageStringArr.join(', ')}`, "assertive", 500);
+      } else {
+        announce("No filters applied to table records", "assertive", 500);
+      }
+      return newFilters;
+    });
   };
 
-  const loadingHandler = (state: boolean) => {
-    setIsLoading(state);
-  };
+  const loadingHandler = (state: boolean) => setIsLoading(state);
 
   useEffect(() => {
     function announceHandler() {
@@ -256,37 +291,39 @@ export default function DataTable({
           <div
             className={`flex flex-col sm:flex-row space-x-2 justify-center items-center`}
           >
-            <label htmlFor="searchBox" className={`invisible md:hidden`}>Search</label>{" "}
-           <div className={`flex flex-row`}>
-             <Input
-                 id={"searchBox"}
-                 value={searchTerm}
-                 placeholder="Company Name"
-                 onKeyDown={(e) => {
-                   if (e.key === "Enter") {
-                     handleFilterChange("name", searchTerm);
-                   }
-                 }}
-                 onChange={(e) => {
-                   setSearchTerm(e.target.value);
-                 }}
-             />
-             {/* Filter Component */}
-             <Filter
-                 heading={"Filter By"}
-                 filter={structuredClone(tableFilters)}
-                 filterProps={structuredClone(filter_props)}
-                 className={`hidden md:visible`}
-                 onSelectCallbackFn={(
-                     key: string,
-                     value: string | number | null,
-                 ) => handleFilterChange(key, value)}
-
-             />
-             <Loading
-                 className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
-             />
-           </div>
+            <label htmlFor="searchBox" className={`invisible md:hidden`}>
+              Search
+            </label>{" "}
+            <div className={`flex flex-row`}>
+              <Input
+                id={"searchBox"}
+                value={searchTerm}
+                placeholder="Company Name"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && tableFilters?.name.length > 0) {
+                    handleFilterChange("name", searchTerm);
+                  }
+                }}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  handleFilterChange("name", e.target.value);
+                }}
+              />
+              {/* Filter Component */}
+              <Filter
+                heading={"Filter By"}
+                filter={structuredClone(tableFilters)}
+                filterProps={structuredClone(filter_props)}
+                className={`hidden md:visible`}
+                onSelectCallbackFn={(
+                  key: string,
+                  value: string | number | null,
+                ) => handleFilterChange(key, value)}
+              />
+              <Loading
+                className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
@@ -407,51 +444,51 @@ export default function DataTable({
             ))}
           </ol>
         </div>
-          <span className="flex flex-col justify-center text-center items-center py-2">
-            <span className="flex flex-row justify-center text-center space-x-1">
-              <Button
-                variant={"ghost"}
-                aria-label="last page"
-                disabled={currentPageNumber === 1}
-                aria-disabled={currentPageNumber === 1}
-                onClick={() => handlePageChange(1)}
-              >
-                {"<<"}
-              </Button>
-              <Button
-                variant={"ghost"}
-                aria-label="previous page"
-                disabled={currentPageNumber === 1}
-                aria-disabled={currentPageNumber === 1}
-                onClick={() => handlePageChange(currentPageNumber - 1)}
-              >
-                {"<"}
-              </Button>
-              <Button
-                variant={"ghost"}
-                aria-label="next page"
-                disabled={currentPageNumber === pageCount}
-                aria-disabled={currentPageNumber === pageCount}
-                onClick={() => handlePageChange(currentPageNumber + 1)}
-              >
-                {">"}
-              </Button>
-              <Button
-                variant={"ghost"}
-                aria-label="last page"
-                disabled={currentPageNumber === pageCount}
-                aria-disabled={currentPageNumber === pageCount}
-                onClick={() => handlePageChange(pageCount)}
-              >
-                {">>"}
-              </Button>
-            </span>
-            <div aria-live="polite" aria-atomic="true">
-              <p id="page-announcement">
-                Page {currentPageNumber} of {pageCount}
-              </p>
-            </div>
+        <span className="flex flex-col justify-center text-center items-center py-2">
+          <span className="flex flex-row justify-center text-center space-x-1">
+            <Button
+              variant={"ghost"}
+              aria-label="last page"
+              disabled={currentPageNumber === 1}
+              aria-disabled={currentPageNumber === 1}
+              onClick={() => handlePageChange(1)}
+            >
+              {"<<"}
+            </Button>
+            <Button
+              variant={"ghost"}
+              aria-label="previous page"
+              disabled={currentPageNumber === 1}
+              aria-disabled={currentPageNumber === 1}
+              onClick={() => handlePageChange(currentPageNumber - 1)}
+            >
+              {"<"}
+            </Button>
+            <Button
+              variant={"ghost"}
+              aria-label="next page"
+              disabled={currentPageNumber === pageCount}
+              aria-disabled={currentPageNumber === pageCount}
+              onClick={() => handlePageChange(currentPageNumber + 1)}
+            >
+              {">"}
+            </Button>
+            <Button
+              variant={"ghost"}
+              aria-label="last page"
+              disabled={currentPageNumber === pageCount}
+              aria-disabled={currentPageNumber === pageCount}
+              onClick={() => handlePageChange(pageCount)}
+            >
+              {">>"}
+            </Button>
           </span>
+          <div aria-live="polite" aria-atomic="true">
+            <p id="page-announcement">
+              Page {currentPageNumber} of {pageCount}
+            </p>
+          </div>
+        </span>
       </div>
     </>
   );

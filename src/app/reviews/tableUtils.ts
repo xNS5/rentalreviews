@@ -17,7 +17,7 @@ export function compareData(a: any, b: any, type: string) {
         case "!==":
             return a !== b;
         case "includes":
-            return a.includes(b);
+            return a.toLowerCase().includes(b.toLowerCase());
         default:
             return false;
     }

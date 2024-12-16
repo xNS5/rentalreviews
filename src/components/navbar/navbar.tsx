@@ -123,7 +123,7 @@ export default function Navbar({
           </button>
           {/* Wanted to keep this inside the same div as the logo */}
           {!isMobileNavOpen && (
-            <ol className="hidden md:flex flex-row justify-center items-center">
+            <ol className="hidden md:flex flex-row justify-center items-center" >
               {data?.map((link: LinkType, i: number) => (
                 <li key={i} className="text-xl mx-2">
                   {link.type == "link" ? (

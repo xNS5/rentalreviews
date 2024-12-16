@@ -1,0 +1,33 @@
+article[id^="basic-page-"]{
+    section {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        ol {
+            padding-left: 5em;
+            list-style-type: circle;
+            ol {
+                margin-top: 0;
+                padding-left: 2.5em;
+            }
+        }
+    }
+
+    h1 {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    @media (min-width: 750px) {
+        h1 {
+            font-size: 2.25rem; /* This is 4xl in Tailwind (36px) */
+        }
+    }
+
+    h2 {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+}
