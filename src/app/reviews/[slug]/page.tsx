@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import getCompanyData from "@/lib/getCompanyData";
+import { getCompanyData, getCompanyMetadata } from "@/lib/getCompanyData";
 import { isValidSlug } from "@/lib/utils";
 import Article from "@/components/article/article";
 import { Config, getAltString } from "@/lib/configProvider";
@@ -10,8 +10,27 @@ import Text from "@/components/text/text";
 import type { Company } from "../columns";
 
 import "./review.css";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: any) {
+  if (params !== undefined) {
+    const { slug } = params;
+    let pageName = "";
+    const { metadata }: Config | undefined = await getDocument<Config>(
+      "config",
+      "config",
+      604800000,
+    );
+    const companyMetadata = await getCompanyMetadata(slug);
+    return {
+      title: `${metadata.title} | ${companyMetadata.name}`,
+      description: metadata.description,
+    };
+  }
+  return {} as Metadata;
+}
 
 export default async function Page({
   params,
@@ -24,12 +43,14 @@ export default async function Page({
   if (slug == undefined || !isValidSlug(slug) || company === undefined) {
     notFound();
   }
+  await generateMetadata(company);
 
   const { alt, disclaimer, review }: Config = await getDocument<Config>(
     "config",
     "config",
   );
-  let altObj: { [key: string]: any } = global.altCache?.get(`review/${slug}/altObj`) ?? undefined;
+  let altObj: { [key: string]: any } =
+    global.altCache?.get(`review/${slug}/altObj`) ?? undefined;
 
   if (altObj === undefined) {
     altObj = review.displayed_column_ratings.reduce(
@@ -43,12 +64,13 @@ export default async function Page({
   }
 
   const date = new Date(company.created_timestamp * 1000);
-  const hasAdjustedReviewValue: boolean = company.review_count != company.adjusted_review_count;
+  const hasAdjustedReviewValue: boolean =
+    company.review_count != company.adjusted_review_count;
 
   return (
     <Article
       className="container mx-auto py-10 review-summary"
-      announcement={""}
+      announcement={review.aria_announcement}
     >
       <>
         {date && (

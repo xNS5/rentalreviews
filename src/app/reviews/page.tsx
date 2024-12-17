@@ -7,6 +7,14 @@ import { Config } from "@/lib/configProvider";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata() {
+    const {metadata, reviews}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+    return {
+        title: `${metadata.title} | ${reviews.title}`,
+        description: metadata.description
+    }
+}
+
 export default async function Page() {
   const reviewData: Company | undefined = await getDocument<Company>("index", "properties_and_companies_index");
   const {reviews, alt, disclaimer} = await getDocument<Config>("config", "config");

@@ -4,9 +4,16 @@ import { notFound } from "next/navigation";
 import {Config} from "@/lib/configProvider";
 import Loading from "./loading";
 import Article from "@/components/article/article";
-import type { Text as TextType } from "@/lib/configProvider";
 import {getDocument} from "@/db/db";
+import type { Text as TextType } from "@/lib/configProvider";
 
+export async function generateMetadata() {
+  const {metadata, home}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+  return {
+    title: `${metadata.title} | ${home.title}`,
+    description: metadata.description
+  }
+}
 
 export default async function Home() {
   const { home }: Config = await getDocument<Config>("config", "config");

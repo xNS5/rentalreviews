@@ -7,6 +7,14 @@ import { getDocument } from "@/db/db";
 import type { FaqQuestion } from "./faq-type";
 import type { Link as LinkType } from "@/lib/linktype";
 
+export async function generateMetadata() {
+  const {metadata, faq}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+  return {
+    title: `${metadata.title} | ${faq.title}`,
+    description: metadata.description
+  }
+}
+
 export default async function Page() {
   const { faq } = await getDocument<Config>("config", "config", 604800000);
   return (
