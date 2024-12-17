@@ -161,34 +161,38 @@ export default function DataTable({
         prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
 
+  const validateActiveFilters = (filters: any) => {
+    let hasActiveFilters = false;
+
+    const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]: [key: any, value: any]) => {
+          if(value){
+            hasActiveFilters = true;
+            return true;
+          }
+          return false;
+        })
+    );
+
+    if(hasActiveFilters){
+      let messageStringArr: string[] = []
+      Object.entries(validFilters).forEach(([key, value]: [key: any, value: any]) => {
+        if(filterComparisonObj.hasOwnProperty(key) && filterComparisonObj[key].hasOwnProperty("alt")){
+          const filterObj = filterComparisonObj[key];
+          const {title, alt} = filterObj;
+          messageStringArr.push(`${title} ${alt.prefix} ${value} ${alt.postfix}`.trim().replace(/\s{2,}/g,' '));
+        }
+      })
+      announce(`Filtering table records by ${messageStringArr.join(', ')}`, "assertive", 500);
+    } else {
+      announce("No filters applied to table records", "assertive", 500);
+    }
+  }
+
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev) => {
-      const newFilters = { ...prev, [key]: prev[key] === value ? null : value };
-      let hasActiveFilters = false;
-
-      const validFilters = Object.fromEntries(
-          Object.entries(newFilters).filter(([key, value]: [key: string, value: string | null]) => {
-            if(value){
-              hasActiveFilters = true;
-              return true;
-            }
-            return false;
-          })
-      );
-
-      if(hasActiveFilters){
-        let messageStringArr: string[] = []
-        Object.entries(validFilters).forEach(([key, value]: [key: string, value: string]) => {
-          if(filterComparisonObj.hasOwnProperty(key) && filterComparisonObj[key].hasOwnProperty("alt")){
-            const filterObj = filterComparisonObj[key];
-            const {title, alt} = filterObj;
-            messageStringArr.push(`${title} ${alt.prefix} ${value} ${alt.postfix}`.trim().replace(/\s{2,}/g,' '));
-          }
-        })
-        announce(`Filtering table records by ${messageStringArr.join(', ')}`, "assertive", 500);
-      } else {
-        announce("No filters applied to table records", "assertive", 500);
-      }
+      const newFilters: {[key: string]: any} = { ...prev, [key]: prev[key] === value ? null : value };
+      validateActiveFilters(newFilters);
       return newFilters;
     });
   };
@@ -238,6 +242,7 @@ export default function DataTable({
   useEffect(() => {
     loadingHandler(true);
     const timeout = setTimeout(() => {
+      validateActiveFilters(tableFilters);
       setFilters(tableFilters);
       loadingHandler(false);
     }, 500);
