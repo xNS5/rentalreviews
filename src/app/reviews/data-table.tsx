@@ -9,7 +9,7 @@ import {
   Column,
 } from "@/components/aria-table/aria-table";
 
-import React, { useEffect, useMemo, useState, useContext } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -19,7 +19,7 @@ import Button from "@/components/button/button";
 import Link from "next/link";
 import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
-import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
+import { getAltString } from "@/lib/configProvider";
 import { Filter } from "@/components/filter/filter";
 
 import { useFilters } from "@/components/filter/useFilters";
@@ -268,10 +268,10 @@ export default function DataTable({
   return (
     <>
       <h1 className={"md:text-4xl text-xl my-4"}>{title}</h1>
-      <h2 className={"md:text-lg text-base my-2"}>{disclaimer}</h2>
+      {props.disclaimer && <h2 className={"md:text-lg text-base my-2"}>{props.disclaimer}</h2>}
       <div
-        className={cn(
-          "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
+          className={cn(
+              "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
           className,
         )}
       >
