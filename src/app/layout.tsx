@@ -17,7 +17,7 @@ const inter = FontSans({
 
 
 export async function generateMetadata() {
-  const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
+  const config: Config | undefined = await getDocument<Config>("config", "config", 604800000);
   return {
     title: config?.metadata.title,
     description: config?.metadata.description
@@ -30,7 +30,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   metadata: any;
 }>) {
-  const config = await getDocument<Config>("config", "config", 2592000);
+  const config = await getDocument<Config>("config", "config", 604800000);
   const { navbar, footer, metadata } = config;
 
   return (
@@ -40,14 +40,12 @@ export default async function RootLayout({
         <header>
           <Navbar data={navbar} title={metadata.title as string} description={metadata.description as string} />
         </header>
-        <Config data={config}>
           <Suspense key={Math.random()} fallback={<Loading />}>
             <main id="main-content" role="main" className={`${inter.variable}`} tabIndex={-1}>
               {children}
             </main>
           </Suspense>
           <Footer data={footer} />
-        </Config>
       </body>
     </html>
   );

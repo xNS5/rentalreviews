@@ -2,8 +2,8 @@ import { getDocument, getCollection} from "@/db/db";
 import { Company } from "@/app/reviews/columns";
 
 export default async function getCompanyData(slug: string): Promise<Company> {
-  const companyPromise: Promise<Company> = getDocument<Company>("properties_and_companies", slug);
-  const reviewPromise: Promise<Company> = getDocument<Company>("reviews", slug);
+  const companyPromise: Promise<Company> = getDocument<Company>("properties_and_companies", slug, 604800000);
+  const reviewPromise: Promise<Company> = getDocument<Company>("reviews", slug, 604800000);
   
   const [company, review] = await Promise.all([companyPromise, reviewPromise]);
 

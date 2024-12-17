@@ -15,7 +15,7 @@ type SitemapType = {
 }
 
 export default async function sitemap(){
-    const {sitemap} = await getDocument<SitemapType>("sitemap", "sitemap", 2592000);
+    const {sitemap} = await getDocument<SitemapType>("sitemap", "sitemap", 604800000);
     if(!sitemap){
         console.error("Sitemap.xml data not found, check DB connection");
         return [];

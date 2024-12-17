@@ -1,8 +1,11 @@
+import {getDocument} from "@/db/db"
 import BasicPage from "@/components/basic-page/basicPage";
+import { Config } from "@/lib/configProvider";
 
-export default function Page() {
+export default async function Page() {
+    const { privacy_policy } = await getDocument<Config>("config", "config", 604800000);
     return (
-        <BasicPage configName={"privacy_policy"}/>
+        <BasicPage data={privacy_policy}/>
     );
 }
 

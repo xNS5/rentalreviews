@@ -34,15 +34,15 @@ export default function DataTable({
   data,
   paginationValue = DEFAULT_PAGINATION_VALUE,
   className,
+  ...props
 }: Readonly<{
   columns: ColumnType[];
   data: Company;
   className?: string;
   paginationValue?: number;
-}>) {
-  const { reviews, alt }: Config = useContext(ConfigContext);
-  const { filter_props } = reviews;
-  const altObj = alt["reviews"];
+  [key: string]: any;
+}>) {const { filter_props, title, disclaimer } = props.reviews;
+  const altObj = props.alt["reviews"];
 
   const { filter, setFilters } = useFilters();
 
@@ -165,33 +165,49 @@ export default function DataTable({
     let hasActiveFilters = false;
 
     const validFilters = Object.fromEntries(
-        Object.entries(filters).filter(([key, value]: [key: any, value: any]) => {
-          if(value){
-            hasActiveFilters = true;
-            return true;
-          }
-          return false;
-        })
+      Object.entries(filters).filter(([key, value]: [key: any, value: any]) => {
+        if (value) {
+          hasActiveFilters = true;
+          return true;
+        }
+        return false;
+      }),
     );
 
-    if(hasActiveFilters){
-      let messageStringArr: string[] = []
-      Object.entries(validFilters).forEach(([key, value]: [key: any, value: any]) => {
-        if(filterComparisonObj.hasOwnProperty(key) && filterComparisonObj[key].hasOwnProperty("alt")){
-          const filterObj = filterComparisonObj[key];
-          const {title, alt} = filterObj;
-          messageStringArr.push(`${title} ${alt.prefix} ${value} ${alt.postfix}`.trim().replace(/\s{2,}/g,' '));
-        }
-      })
-      announce(`Filtering table records by ${messageStringArr.join(', ')}`, "assertive", 500);
+    if (hasActiveFilters) {
+      let messageStringArr: string[] = [];
+      Object.entries(validFilters).forEach(
+        ([key, value]: [key: any, value: any]) => {
+          if (
+            filterComparisonObj.hasOwnProperty(key) &&
+            filterComparisonObj[key].hasOwnProperty("alt")
+          ) {
+            const filterObj = filterComparisonObj[key];
+            const { title, alt } = filterObj;
+            messageStringArr.push(
+              `${title} ${alt.prefix} ${value} ${alt.postfix}`
+                .trim()
+                .replace(/\s{2,}/g, " "),
+            );
+          }
+        },
+      );
+      announce(
+        `Filtering table records by ${messageStringArr.join(", ")}`,
+        "assertive",
+        500,
+      );
     } else {
       announce("No filters applied to table records", "assertive", 500);
     }
-  }
+  };
 
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev) => {
-      const newFilters: {[key: string]: any} = { ...prev, [key]: prev[key] === value ? null : value };
+      const newFilters: { [key: string]: any } = {
+        ...prev,
+        [key]: prev[key] === value ? null : value,
+      };
       validateActiveFilters(newFilters);
       return newFilters;
     });
@@ -251,8 +267,8 @@ export default function DataTable({
 
   return (
     <>
-      <h1 className={"md:text-4xl text-xl my-4"}>{reviews.description}</h1>
-      <h2 className={"md:text-lg text-base my-2"}>{reviews.disclaimer}</h2>
+      <h1 className={"md:text-4xl text-xl my-4"}>{title}</h1>
+      <h2 className={"md:text-lg text-base my-2"}>{disclaimer}</h2>
       <div
         className={cn(
           "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
@@ -334,7 +350,7 @@ export default function DataTable({
         <div className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
           {/* Full-screen data view */}
           <Table
-            aria-label={reviews.description}
+            aria-label={title}
             sortDescriptor={sortDescriptor}
             onSortChange={handleSortChange}
             className="hidden md:table w-full"

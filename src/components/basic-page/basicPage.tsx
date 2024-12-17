@@ -1,26 +1,15 @@
-"use client"
-
-import React, {useContext} from "react";
 import Text from "@/components/text/text";
 import Article from "@/components/article/article";
-import {Config, ConfigContext} from "@/lib/configProvider";
-import {notFound} from "next/navigation";
+import {Config} from "@/lib/configProvider";
 
 import "./basicPage.css";
 
-export default function BasicPage({configName}: Readonly<{
-    configName: string
+export default function BasicPage({data}: Readonly<{
+    data: Config
 }>) {
-    const config: Config = useContext(ConfigContext);
-
-    if(config === undefined || !config.hasOwnProperty(configName)){
-        console.error("Data is undefined. Check DB connection.");
-        notFound();
-    }
-
     return (
-        <Article id={`basic-page-${configName}`} className="container" announcement={config[configName].aria_announcement ?? undefined}>
-            <Text text={config[configName]?.text ?? ""} />
+        <Article id={`basic-page-${data.name}`} className="container" announcement={data.aria_announcement ?? undefined}>
+            <Text text={data?.text ?? ""} />
         </Article>
     );
 }
