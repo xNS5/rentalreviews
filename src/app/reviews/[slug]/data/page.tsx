@@ -6,7 +6,7 @@ import Article from "@/components/article/article";
 
 export const dynamic = "force-dynamic";
 
-export default async function Data({params}: Readonly<{
+export default async function Page({params}: Readonly<{
     params: { [key: string]: string }
 }>) {
   const { slug } = params;

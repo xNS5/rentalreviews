@@ -7,7 +7,7 @@ import { Config } from "@/lib/configProvider";
 
 export const dynamic = "force-dynamic";
 
-export default async function Reviews() {
+export default async function Page() {
   const reviewData: Company | undefined = await getDocument<Company>("index", "properties_and_companies_index");
   const {reviews, alt, disclaimer} = await getDocument<Config>("config", "config");
   const ColumnKeys = getColumnKeys();

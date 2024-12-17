@@ -7,7 +7,7 @@ import { getDocument } from "@/db/db";
 import type { FaqQuestion } from "./faq-type";
 import type { Link as LinkType } from "@/lib/linktype";
 
-export default async function FAQ() {
+export default async function Page() {
   const { faq } = await getDocument<Config>("config", "config", 604800000);
   return (
     <Article
