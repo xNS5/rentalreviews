@@ -9,6 +9,9 @@ export type Config = {
     title?: string;
     description?: string;
     text?: Text[];
+    robots?: {
+      [key: string]: any
+    }
   } | any
 };
 
