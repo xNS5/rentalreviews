@@ -48,7 +48,6 @@ export default function DataTable({
 
   const [tableFilters, setTableFilters] = useState(filter);
   const [searchTerm, setSearchTerm] = useState(filter.name ?? "");
-  const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
@@ -123,11 +122,24 @@ export default function DataTable({
     [sortDescriptor, searchTerm, filter],
   );
 
-  // Memoizes page count. Might not need to.
+  // Memoizes page count
   const pageCount = useMemo(
     () => Math.ceil(sortedData.length / paginationValue),
     [filter],
   );
+
+  const [currentPageNumber, setCurrentPageNumberNumber] = useState(() => {
+    if(filter.page_number){
+      if(filter.page_number < 1){
+        return 1;
+      }
+      if(filter.page_number > pageCount){
+        return pageCount
+      }
+      return filter.page_number;
+    }
+    return 1
+  });
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -148,12 +160,6 @@ export default function DataTable({
   const handleMouseLeave = (key: any) =>
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
-  // Handles page change, sets current page number and resets the hover state object
-  const handlePageChange = (page: number) => {
-    setCurrentPageNumberNumber(page);
-    setHoverStates({});
-  };
-
   const handleSortChange = (newSortObj: SortDescriptor) =>
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
       column: newSortObj.column,
@@ -161,56 +167,61 @@ export default function DataTable({
         prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
 
-  const validateActiveFilters = (filters: any) => {
-    let hasActiveFilters = false;
-
-    const validFilters = Object.fromEntries(
-      Object.entries(filters).filter(([key, value]: [key: any, value: any]) => {
-        if (value) {
-          hasActiveFilters = true;
-          return true;
-        }
-        return false;
-      }),
-    );
-
-    if (hasActiveFilters) {
-      let messageStringArr: string[] = [];
-      Object.entries(validFilters).forEach(
-        ([key, value]: [key: any, value: any]) => {
-          if (
-            filterComparisonObj.hasOwnProperty(key) &&
-            filterComparisonObj[key].hasOwnProperty("alt")
-          ) {
-            const filterObj = filterComparisonObj[key];
-            const { title, alt } = filterObj;
-            messageStringArr.push(
-              `${title} ${alt.prefix} ${value} ${alt.postfix}`
-                .trim()
-                .replace(/\s{2,}/g, " "),
-            );
-          }
-        },
-      );
-      announce(
-        `Filtering table records by ${messageStringArr.join(", ")}`,
-        "assertive",
-        500,
-      );
-    } else {
-      announce("No filters applied to table records", "assertive", 500);
-    }
-  };
-
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev) => {
       const newFilters: { [key: string]: any } = {
         ...prev,
         [key]: prev[key] === value ? null : value,
       };
-      validateActiveFilters(newFilters);
       return newFilters;
     });
+  };
+
+  // Handles page change, sets current page number and resets the hover state object
+  const handlePageChange = (page: number) => {
+    setCurrentPageNumberNumber(page);
+    setHoverStates({});
+  };
+
+  const validateActiveFilters = (filters: any) => {
+    let hasActiveFilters = false;
+
+    const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([key, value]: [key: any, value: any]) => {
+          if (value) {
+            hasActiveFilters = true;
+            return true;
+          }
+          return false;
+        }),
+    );
+
+    if (hasActiveFilters) {
+      let messageStringArr: string[] = [];
+      Object.entries(validFilters).forEach(
+          ([key, value]: [key: any, value: any]) => {
+            if (
+                filterComparisonObj.hasOwnProperty(key) &&
+                filterComparisonObj[key].hasOwnProperty("alt")
+            ) {
+              const filterObj = filterComparisonObj[key];
+              const { title, alt } = filterObj;
+              messageStringArr.push(
+                  `${title} ${alt.prefix} ${value} ${alt.postfix}`
+                      .trim()
+                      .replace(/\s{2,}/g, " "),
+              );
+            }
+          },
+      );
+      announce(
+          `Filtering table records by ${messageStringArr.join(", ")}`,
+          "assertive",
+          500,
+      );
+    } else {
+      announce("No filters applied to table records", "assertive", 500);
+    }
   };
 
   const loadingHandler = (state: boolean) => setIsLoading(state);
@@ -259,11 +270,10 @@ export default function DataTable({
     loadingHandler(true);
     const timeout = setTimeout(() => {
       validateActiveFilters(tableFilters);
-      setFilters(tableFilters);
-      loadingHandler(false);
+      setFilters({...tableFilters, page_number: currentPageNumber}, () => loadingHandler(false));
     }, 500);
     return () => clearTimeout(timeout);
-  }, [tableFilters]);
+  }, [tableFilters, currentPageNumber]);
 
   return (
     <>
@@ -474,7 +484,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === 1}
               onClick={() => handlePageChange(1)}
             >
-              {"<<"}
+              <Icon type={"fas-angles-left"} className={`h-4 w-4`}/>
             </Button>
             <Button
               variant={"ghost"}
@@ -483,7 +493,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === 1}
               onClick={() => handlePageChange(currentPageNumber - 1)}
             >
-              {"<"}
+               <Icon type={"fas-angle-left"} className={`h-2 w-2`}/>
             </Button>
             <Button
               variant={"ghost"}
@@ -492,7 +502,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === pageCount}
               onClick={() => handlePageChange(currentPageNumber + 1)}
             >
-              {">"}
+               <Icon type={"fas-angle-right"} className={`h-2 w-2`}/>
             </Button>
             <Button
               variant={"ghost"}
@@ -501,7 +511,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === pageCount}
               onClick={() => handlePageChange(pageCount)}
             >
-              {">>"}
+               <Icon type={"fas-angles-right"} className={`h-4 w-4`}/>
             </Button>
           </span>
           <div aria-live="polite" aria-atomic="true">
