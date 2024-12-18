@@ -35,7 +35,7 @@ jobs:
           --auth ${{ secrets.NETLIFY_DEPLOY_KEY }} \
           --message "${{ github.event.pull_request.title }}"
 
-      - name: Deploy to Netlify Preview
+      - name: Deploy to Netlify Production
         if: ${{ success() && github.ref_name == 'main' }}
         run: |
           netlify deploy --build \
