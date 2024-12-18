@@ -8,7 +8,7 @@ export default function Logo({ children, className, ...rest}: Readonly<{
 }>){
   return( <div className="inline-flex">
     <Image
-      src={"/images/apartment.png"}
+    src={"/images/apartment.png"}
       alt="Apartment logo"
       width={60}
       height={60}

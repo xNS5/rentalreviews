@@ -1,16 +1,22 @@
-"use client"
-
-import React, { Suspense, useContext } from "react";
+import React, { Suspense } from "react";
 import Text from "@/components/text/text";
 import { notFound } from "next/navigation";
-import {Config, ConfigContext} from "@/lib/configProvider";
+import {Config} from "@/lib/configProvider";
 import Loading from "./loading";
 import Article from "@/components/article/article";
+import {getDocument} from "@/db/db";
 import type { Text as TextType } from "@/lib/configProvider";
 
+export async function generateMetadata() {
+  const {metadata, home}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+  return {
+    title: `${metadata.title} | ${home.title}`,
+    description: metadata.description
+  }
+}
 
-export default function Home() {
-  const { home }: Config = useContext(ConfigContext);
+export default async function Home() {
+  const { home }: Config = await getDocument<Config>("config", "config");
 
   if (home == undefined) {
     console.error("Data is undefined. Check DB connection.");
