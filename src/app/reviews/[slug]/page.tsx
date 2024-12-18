@@ -17,7 +17,6 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: any) {
   if (params !== undefined) {
     const { slug } = params;
-    let pageName = "";
     const { metadata }: Config | undefined = await getDocument<Config>(
       "config",
       "config",
@@ -43,25 +42,18 @@ export default async function Page({
   if (slug == undefined || !isValidSlug(slug) || company === undefined) {
     notFound();
   }
-  await generateMetadata(company);
 
   const { alt, disclaimer, review }: Config = await getDocument<Config>(
     "config",
     "config",
   );
-  let altObj: { [key: string]: any } =
-    global.altCache?.get(`review/${slug}/altObj`) ?? undefined;
-
-  if (altObj === undefined) {
-    altObj = review.displayed_column_ratings.reduce(
+  let altObj: { [key: string]: any } = review.displayed_column_ratings.reduce(
       (acc: any, curr: string) => ({
         ...acc,
         [curr]: getAltString(alt["review"], curr, company[curr]),
       }),
       {},
-    );
-    global.altCache?.set(`review/${slug}/altObj`, altObj, 86400000);
-  }
+  );
 
   const date = new Date(company.created_timestamp * 1000);
   const hasAdjustedReviewValue: boolean =

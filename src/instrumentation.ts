@@ -10,6 +10,5 @@ export async function register() {
 
     global.collectionCache = new NodeCache(config);
     global.documentCache= new NodeCache(config);
-    global.altCache = new NodeCache(config);
   }
 }
