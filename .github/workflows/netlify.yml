@@ -10,7 +10,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: rentalreviews
     steps:
       - name: Checkout
         uses: actions/checkout@v4
