@@ -21,6 +21,7 @@ export async function generateMetadata() {
   return {
     title: config?.metadata.title,
     description: config?.metadata.description
+
   }
 }
 
