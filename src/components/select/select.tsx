@@ -34,17 +34,17 @@ export default function Select({
     <SelectComp
       isOpen={isSelectExpanded}
       onOpenChange={setIsSelectExpanded}
-      selectedKey={selectedKey}
+      selectedKey={selectedKey || -1}
       {...props}
       className={`flex flex-col md:flex-row m-2 justify-between items-center ${props.className ?? ""}`}
     >
-      {label && <Label {...labelProps}>{label}</Label>}
+      {label && <Label id={"label"}{...labelProps}>{label}</Label>}
       <Button
         className={
           "flex flex-row justify-center border border-black rounded p-1 m-1 shadow"
         }
       >
-        <SelectValue className={`p-2`}>
+        <SelectValue className={`p-2`} aria-labelledby={"label"}>
           {({ defaultChildren, isPlaceholder }) => {
             return isPlaceholder ? (
                 <>

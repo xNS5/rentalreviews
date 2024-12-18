@@ -9,7 +9,7 @@ import {
   Column,
 } from "@/components/aria-table/aria-table";
 
-import React, { useEffect, useMemo, useState, useContext } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Icon from "@/components/icon/icon";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -19,7 +19,7 @@ import Button from "@/components/button/button";
 import Link from "next/link";
 import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
-import { Config, ConfigContext, getAltString } from "@/lib/configProvider";
+import { getAltString } from "@/lib/configProvider";
 import { Filter } from "@/components/filter/filter";
 
 import { useFilters } from "@/components/filter/useFilters";
@@ -34,24 +34,24 @@ export default function DataTable({
   data,
   paginationValue = DEFAULT_PAGINATION_VALUE,
   className,
+  ...props
 }: Readonly<{
   columns: ColumnType[];
   data: Company;
   className?: string;
   paginationValue?: number;
-}>) {
-  const { reviews, alt }: Config = useContext(ConfigContext);
-  const { filter_props } = reviews;
-  const altObj = alt["reviews"];
+  [key: string]: any;
+}>) {const { filter_props, title } = props.reviews;
+  const altObj = props.alt["reviews"];
 
   const { filter, setFilters } = useFilters();
 
   const [tableFilters, setTableFilters] = useState(filter);
   const [searchTerm, setSearchTerm] = useState(filter.name ?? "");
-  const [currentPageNumber, setCurrentPageNumberNumber] = useState(1);
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [currentPageNumber, setCurrentPageNumberNumber] = useState(1)
   const [isLoading, setIsLoading] = useState(false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
@@ -123,11 +123,13 @@ export default function DataTable({
     [sortDescriptor, searchTerm, filter],
   );
 
-  // Memoizes page count. Might not need to.
+  // Memoizes page count
   const pageCount = useMemo(
     () => Math.ceil(sortedData.length / paginationValue),
     [filter],
   );
+
+
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -148,12 +150,6 @@ export default function DataTable({
   const handleMouseLeave = (key: any) =>
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
-  // Handles page change, sets current page number and resets the hover state object
-  const handlePageChange = (page: number) => {
-    setCurrentPageNumberNumber(page);
-    setHoverStates({});
-  };
-
   const handleSortChange = (newSortObj: SortDescriptor) =>
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
       column: newSortObj.column,
@@ -161,43 +157,72 @@ export default function DataTable({
         prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
 
-  const validateActiveFilters = (filters: any) => {
-    let hasActiveFilters = false;
-
-    const validFilters = Object.fromEntries(
-        Object.entries(filters).filter(([key, value]: [key: any, value: any]) => {
-          if(value){
-            hasActiveFilters = true;
-            return true;
-          }
-          return false;
-        })
-    );
-
-    if(hasActiveFilters){
-      let messageStringArr: string[] = []
-      Object.entries(validFilters).forEach(([key, value]: [key: any, value: any]) => {
-        if(filterComparisonObj.hasOwnProperty(key) && filterComparisonObj[key].hasOwnProperty("alt")){
-          const filterObj = filterComparisonObj[key];
-          const {title, alt} = filterObj;
-          messageStringArr.push(`${title} ${alt.prefix} ${value} ${alt.postfix}`.trim().replace(/\s{2,}/g,' '));
-        }
-      })
-      announce(`Filtering table records by ${messageStringArr.join(', ')}`, "assertive", 500);
-    } else {
-      announce("No filters applied to table records", "assertive", 500);
-    }
-  }
-
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev) => {
-      const newFilters: {[key: string]: any} = { ...prev, [key]: prev[key] === value ? null : value };
-      validateActiveFilters(newFilters);
+      const newFilters: { [key: string]: any } = {
+        ...prev,
+        [key]: prev[key] === value ? null : value,
+      };
       return newFilters;
     });
   };
 
-  const loadingHandler = (state: boolean) => setIsLoading(state);
+  // Handles page change, sets current page number and resets the hover state object
+  const handlePageChange = (page: number) => {
+    setCurrentPageNumberNumber(page);
+    setHoverStates({});
+  };
+
+  const validateActiveFilters = (filters: any) => {
+    let hasActiveFilters = false;
+
+    const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([_, value]: [_: any, value: any]) => {
+          if (value) {
+            hasActiveFilters = true;
+            return true;
+          }
+          return false;
+        }),
+    );
+
+    if (hasActiveFilters) {
+      let messageStringArr: string[] = [];
+      Object.entries(validFilters).forEach(
+          ([key, value]: [key: any, value: any]) => {
+            if (
+                filterComparisonObj.hasOwnProperty(key) &&
+                filterComparisonObj[key].hasOwnProperty("alt")
+            ) {
+              const filterObj = filterComparisonObj[key];
+              const { title, alt } = filterObj;
+              messageStringArr.push(
+                  `${title} ${alt.prefix} ${value} ${alt.postfix}`
+                      .trim()
+                      .replace(/\s{2,}/g, " "),
+              );
+            }
+          },
+      );
+      announce(
+          `Filtering table records by ${messageStringArr.join(", ")}`,
+          "assertive",
+          500,
+      );
+    } else {
+      announce("No filters applied to table records", "assertive", 500);
+    }
+  };
+
+  // Announces when page is loading data and when the loading has finished
+  const loadingHandler = (state: boolean) => {
+    if(state){
+      announce("Loading data", "assertive", 500);
+    } else {
+      announce("Finished loading data", "assertive", 500);
+    }
+    setIsLoading(state);
+  };
 
   useEffect(() => {
     function announceHandler() {
@@ -230,32 +255,24 @@ export default function DataTable({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Announces when page is loading data and when the loading has finished
-  useEffect(() => {
-    if (isLoading) {
-      announce("Loading data", "assertive", 500);
-    } else {
-      announce("Finished loading data", "assertive", 500);
-    }
-  }, [isLoading]);
-
   useEffect(() => {
     loadingHandler(true);
     const timeout = setTimeout(() => {
-      validateActiveFilters(tableFilters);
-      setFilters(tableFilters);
-      loadingHandler(false);
+      setFilters(tableFilters, () => {
+        validateActiveFilters(tableFilters);
+        loadingHandler(false);
+      });
     }, 500);
     return () => clearTimeout(timeout);
   }, [tableFilters]);
 
   return (
     <>
-      <h1 className={"md:text-4xl text-xl my-4"}>{reviews.description}</h1>
-      <h2 className={"md:text-lg text-base my-2"}>{reviews.disclaimer}</h2>
+      <h1 className={"md:text-4xl text-xl my-4"}>{title}</h1>
+      {props.disclaimer && <h2 className={"md:text-lg text-base my-2"}>{props.disclaimer}</h2>}
       <div
-        className={cn(
-          "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
+          className={cn(
+              "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
           className,
         )}
       >
@@ -334,7 +351,7 @@ export default function DataTable({
         <div className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
           {/* Full-screen data view */}
           <Table
-            aria-label={reviews.description}
+            aria-label={title}
             sortDescriptor={sortDescriptor}
             onSortChange={handleSortChange}
             className="hidden md:table w-full"
@@ -458,7 +475,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === 1}
               onClick={() => handlePageChange(1)}
             >
-              {"<<"}
+              <Icon type={"fas-angles-left"} className={`h-4 w-4`}/>
             </Button>
             <Button
               variant={"ghost"}
@@ -467,7 +484,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === 1}
               onClick={() => handlePageChange(currentPageNumber - 1)}
             >
-              {"<"}
+               <Icon type={"fas-angle-left"} className={`h-2 w-2`}/>
             </Button>
             <Button
               variant={"ghost"}
@@ -476,7 +493,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === pageCount}
               onClick={() => handlePageChange(currentPageNumber + 1)}
             >
-              {">"}
+               <Icon type={"fas-angle-right"} className={`h-2 w-2`}/>
             </Button>
             <Button
               variant={"ghost"}
@@ -485,7 +502,7 @@ export default function DataTable({
               aria-disabled={currentPageNumber === pageCount}
               onClick={() => handlePageChange(pageCount)}
             >
-              {">>"}
+               <Icon type={"fas-angles-right"} className={`h-4 w-4`}/>
             </Button>
           </span>
           <div aria-live="polite" aria-atomic="true">
