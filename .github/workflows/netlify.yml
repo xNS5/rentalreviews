@@ -10,6 +10,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: rentalreivews
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,7 +39,7 @@ jobs:
             NEXT_PUBLIC_FIREBASE_STAGING_MESSAGING_SENDER_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_MESSAGING_SENDER_ID }}
             NEXT_PUBLIC_FIREBASE_STAGING_APP_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_APP_ID }}
 
-      - name: Create Env File
+      - name: Create Production Env File
         uses: tmshkr/handle-env@v1.2
         if: ${{ github.ref_name == 'main' }}
         with:
