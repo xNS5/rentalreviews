@@ -165,6 +165,7 @@ export default function DataTable({
       };
       return newFilters;
     });
+    handlePageChange(1);
   };
 
   // Handles page change, sets current page number and resets the hover state object
