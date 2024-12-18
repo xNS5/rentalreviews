@@ -41,7 +41,7 @@ export default function DataTable({
   className?: string;
   paginationValue?: number;
   [key: string]: any;
-}>) {const { filter_props, title, disclaimer } = props.reviews;
+}>) {const { filter_props, title } = props.reviews;
   const altObj = props.alt["reviews"];
 
   const { filter, setFilters } = useFilters();
@@ -51,6 +51,7 @@ export default function DataTable({
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [currentPageNumber, setCurrentPageNumberNumber] = useState(1)
   const [isLoading, setIsLoading] = useState(false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
@@ -128,18 +129,7 @@ export default function DataTable({
     [filter],
   );
 
-  const [currentPageNumber, setCurrentPageNumberNumber] = useState(() => {
-    if(filter.page_number){
-      if(filter.page_number < 1){
-        return 1;
-      }
-      if(filter.page_number > pageCount){
-        return pageCount
-      }
-      return filter.page_number;
-    }
-    return 1
-  });
+
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -187,7 +177,7 @@ export default function DataTable({
     let hasActiveFilters = false;
 
     const validFilters = Object.fromEntries(
-        Object.entries(filters).filter(([key, value]: [key: any, value: any]) => {
+        Object.entries(filters).filter(([_, value]: [_: any, value: any]) => {
           if (value) {
             hasActiveFilters = true;
             return true;
@@ -224,7 +214,15 @@ export default function DataTable({
     }
   };
 
-  const loadingHandler = (state: boolean) => setIsLoading(state);
+  // Announces when page is loading data and when the loading has finished
+  const loadingHandler = (state: boolean) => {
+    if(state){
+      announce("Loading data", "assertive", 500);
+    } else {
+      announce("Finished loading data", "assertive", 500);
+    }
+    setIsLoading(state);
+  };
 
   useEffect(() => {
     function announceHandler() {
@@ -257,23 +255,16 @@ export default function DataTable({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Announces when page is loading data and when the loading has finished
-  useEffect(() => {
-    if (isLoading) {
-      announce("Loading data", "assertive", 500);
-    } else {
-      announce("Finished loading data", "assertive", 500);
-    }
-  }, [isLoading]);
-
   useEffect(() => {
     loadingHandler(true);
     const timeout = setTimeout(() => {
-      validateActiveFilters(tableFilters);
-      setFilters({...tableFilters, page_number: currentPageNumber}, () => loadingHandler(false));
+      setFilters(tableFilters, () => {
+        validateActiveFilters(tableFilters);
+        loadingHandler(false);
+      });
     }, 500);
     return () => clearTimeout(timeout);
-  }, [tableFilters, currentPageNumber]);
+  }, [tableFilters]);
 
   return (
     <>
