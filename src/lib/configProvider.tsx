@@ -1,7 +1,3 @@
-"use client"
-
-import React, { createContext } from "react";
-
 export type Config = {
   [key: string]: {
     name: string;
@@ -9,6 +5,9 @@ export type Config = {
     title?: string;
     description?: string;
     text?: Text[];
+    robots?: {
+      [key: string]: any
+    }
   } | any
 };
 
@@ -31,22 +30,10 @@ export type PrefixPostfix = {
 };
 
 export function getAltString(altObj: AltRecord, key: string, value: any) {
+  // console.log(altObj, altObj[key]);
   if (altObj[key]) {
     const { prefix, postfix } = altObj[key];
     return `${prefix} ${value} ${postfix}`.trim();
   }
-  return "undefined";
-}
-
-export const ConfigContext = createContext({});
-
-export function Config({ data, children }: Readonly<{
-  data: Config;
-  children: React.ReactNode;
-}>) {
-  return (
-    <ConfigContext.Provider value={data}>
-      {children}
-    </ConfigContext.Provider>
-  )
+  return undefined;
 }

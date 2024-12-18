@@ -1,4 +1,4 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/6c71a4d8-be3c-4e14-83a8-297f3ad68cb5/deploy-status)](https://app.netlify.com/sites/sunny-medovik-46ba23/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6c71a4d8-be3c-4e14-83a8-297f3ad68cb5/deploy-status?branch=main)](https://app.netlify.com/sites/sunny-medovik-46ba23/deploys)
 
 # Bellingham Rental Reviews
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Dropdown as DropdownComp, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { Button } from "../ui/button";
 import type { Link as LinkType } from "@/lib/linktype";
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import Link from "next/link";
 
 export default function NavigationMenu({
@@ -44,7 +44,7 @@ export default function NavigationMenu({
       </DropdownTrigger>
       <DropdownMenu variant="flat" className={`${className?.menu ?? ""} bg-white border border-slate-200 shadow rounded p-2`} items={data.children} {...(props?.menu && props.menu)}>
         {(child: LinkType) => (
-          <DropdownItem key={`${child.name}`} value={child.name} variant="flat" className={`${className?.item ?? ""}`}>
+          <DropdownItem key={`${child.name}`} textValue={child.name} variant="flat" className={`${className?.item ?? ""}`}>
             <Link href={child.url} onClick={() => setIsNavOpen(!isNavOpen)} target={child.target}>
               <p>{child.name}</p>
             </Link>

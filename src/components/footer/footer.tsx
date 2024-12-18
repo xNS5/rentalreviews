@@ -1,4 +1,4 @@
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import Link from "next/link";
 import type { FooterItem } from "./footertypes";
 import type { Config } from "@/lib/configProvider";

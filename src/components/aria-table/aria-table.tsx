@@ -9,7 +9,7 @@ import {
   TableHeader as TableHeaderComp,
   Group as GroupComp,
 } from "react-aria-components";
-import {Icon} from "@/components/icon/icon";
+import Icon from "@/components/icon/icon";
 import { Button } from "../ui/button";
 import {SortDescriptor} from "react-stately";
 
@@ -135,7 +135,7 @@ const Cell = ({
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-//   [key: string]: any;
+  [key: string]: any;
 }>) => (
   <CellComp className={cn("p-4 align-middle text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-slate-600 focus-visible:-outline-offset-4 group-selected:focus-visible:outline-white", className)} {...props}>
     {children}

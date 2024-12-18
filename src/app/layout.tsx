@@ -1,9 +1,8 @@
 import { Inter as FontSans } from "next/font/google";
-import { Suspense } from "react";
-import { getDocument } from "../db/db";
-import { Config } from "../lib/configProvider";
+import React, { Suspense } from "react";
+import { getDocument } from "@/db/db";
+import { Config } from "@/lib/configProvider";
 import { cn } from "@/lib/utils";
-import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import "./globals.css";
@@ -18,25 +17,12 @@ const inter = FontSans({
 
 
 export async function generateMetadata() {
-  const config: Config | undefined = await getDocument<Config>("config", "config", 2592000);
+  const config: Config | undefined = await getDocument<Config>("config", "config", 604800000);
   return {
     title: config?.metadata.title,
-    description: config?.metadata.description,
-    icons: [
-      {
-        rel: "icon",
-        type: "image/png",
-        url: "/images/building-icon-light.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        rel: "icon",
-        type: "image/png",
-        url: "/images/building-icon-dark.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-    ],
-  };
+    description: config?.metadata.description
+
+  }
 }
 
 export default async function RootLayout({
@@ -45,7 +31,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   metadata: any;
 }>) {
-  const config = await getDocument<Config>("config", "config", 2592000);
+  const config = await getDocument<Config>("config", "config", 604800000);
   const { navbar, footer, metadata } = config;
 
   return (
@@ -55,14 +41,12 @@ export default async function RootLayout({
         <header>
           <Navbar data={navbar} title={metadata.title as string} description={metadata.description as string} />
         </header>
-        <Config data={config}>
           <Suspense key={Math.random()} fallback={<Loading />}>
             <main id="main-content" role="main" className={`${inter.variable}`} tabIndex={-1}>
-              <Providers>{children}</Providers>
+              {children}
             </main>
           </Suspense>
           <Footer data={footer} />
-        </Config>
       </body>
     </html>
   );
