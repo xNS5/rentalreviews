@@ -1,5 +1,5 @@
 import { isValidSlug } from "@/lib/utils";
-import getCompanyData from "@/lib/getCompanyData";
+import {getCompanyData} from "@/lib/getCompanyData";
 import { notFound } from "next/navigation";
 import { JsonWrapper } from "./json-wrapper";
 import Article from "@/components/article/article";
