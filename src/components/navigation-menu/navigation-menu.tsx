@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Dropdown as DropdownComp, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
-import { Button } from "../ui/button";
+import Button from "@/components/button/button";
 import type { Link as LinkType } from "@/lib/linktype";
 import Icon from "@/components/icon/icon";
 import Link from "next/link";
@@ -34,7 +34,11 @@ export default function NavigationMenu({
   return (
     <DropdownComp onOpenChange={() => setIsNavOpen(!isNavOpen)} className={`${className?.comp ?? ""}`} {...(props?.comp && props.comp)}>
       <DropdownTrigger>
-        <Button id={props?.trigger?.id} variant={"ghost"} className={` p-0 ${className?.trigger ?? ""} font-normal`} {...(props?.trigger && props.trigger)}>
+        <Button
+            id={props?.trigger?.id}
+            variant={"ghost"}
+            className={` p-0 ${className?.trigger ?? ""} font-normal`}
+            {...(props?.trigger && props.trigger)}>
           {data.name}
           <Icon
             type="fas-chevron-down"
