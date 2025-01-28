@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from "react";
 import Icon from "@/components/icon/icon";
-import Accordion from "../accordion/accordion";
+import {NewAccordion} from "../accordion/newaccordion";
 import Logo from "../logo/logo";
 import Link from "next/link";
 import { usePathname as getPathname } from "next/navigation";
@@ -96,11 +96,11 @@ export default function Navbar({
 
   return (
     <nav
-        className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-1 px-5"}
+        className={"w-full bg-white flex flex-col flex-wrap shadow-lg px-5"}
     >
       {/* Features: conditionally enables/disables the focus trap based on isMobileNavOpen state */}
       <FocusTrap
-       disabled={isMobileNavOpen}
+       disabled={false}
       >
         <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
           <Link href="/" className="self-start flex flex-col rounded px-2 py-4" role="link">
@@ -141,20 +141,21 @@ export default function Navbar({
         </div>
         {isMobileNavOpen && (
             <div id={'mobile-navbar'} ref={MobileNavbarRef}>
-              <ol className="flex flex-col relative justify-start items-center w-full h-screen">
+              <ol className="flex flex-col justify-start items-center w-full h-screen">
                 {data?.map((link: LinkType, i: number) => (
-                    <li key={i} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
+                    <li key={i} tabIndex={-1} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
                       {link.type === "link" ? (
-                          <NavItem id={`nav-link-${i}`} href={link.url} name={link.name}
-                                   onClick={() => setIsMobileNavOpen((prev) => !prev)}/>
+                          <NavItem
+                              id={`nav-link-${i}`}
+                              href={link.url}
+                              name={link.name}
+                              onClick={() => setIsMobileNavOpen((prev) => !prev)}
+                              className={`rounded-xl`}
+                          />
                       ) : (
-                          <Accordion
+                          <NewAccordion
                               id={`nav-accordion-${i}`}
                               triggerText={link.name}
-                              className={{
-                                trigger: "rounded justify-center text-2xl px-2",
-                                content: "rounded border border-slate-400 shadow-lg",
-                              }}
                           >
                             <ol className="text-center">
                               {link.children?.map((child: LinkType, j: number) => (
@@ -169,7 +170,7 @@ export default function Navbar({
                                   </li>
                               ))}
                             </ol>
-                          </Accordion>
+                          </NewAccordion>
                       )}
                     </li>
                 ))}

@@ -21,10 +21,7 @@ export default function NavigationMenu({
         item?: string;
     };
     props?: {
-        comp?: {[key: string]: any};
-        menu?: {[key: string]: any};
-        trigger?: {[key: string]: any};
-        item?: {[key: string]: any};
+        trigger: {[key: string]: any};
     }
 }>){
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -78,6 +75,7 @@ export default function NavigationMenu({
                     // aria-controls={`${accordionId}`}
                     aria-expanded={isNavOpen}
                     onClick={() => setIsNavOpen((prev) => !prev)}
+                    className={`flex flex-row justify-center items-center ${className?.trigger ?? ''}`}
                     {...(props?.trigger && props.trigger)}
                 >
                     {data.name}
