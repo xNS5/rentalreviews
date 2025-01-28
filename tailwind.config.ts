@@ -1,10 +1,9 @@
-import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss"
 import {fontFamily} from "tailwindcss/defaultTheme";
 
 const config = {
   darkMode: ["class"],
-  plugins: [nextui(), require('tailwindcss-react-aria-components')],
+  plugins: [require('tailwindcss-react-aria-components')],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
