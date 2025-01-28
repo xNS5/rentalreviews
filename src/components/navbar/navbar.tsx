@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from "react";
 import Icon from "@/components/icon/icon";
-import {NewAccordion} from "../accordion/newaccordion";
+import Accordion from "../accordion/accordion";
 import Logo from "../logo/logo";
 import Link from "next/link";
 import { usePathname as getPathname } from "next/navigation";
@@ -153,7 +153,7 @@ export default function Navbar({
                               className={`rounded-xl`}
                           />
                       ) : (
-                          <NewAccordion
+                          <Accordion
                               id={`nav-accordion-${i}`}
                               triggerText={link.name}
                           >
@@ -170,7 +170,7 @@ export default function Navbar({
                                   </li>
                               ))}
                             </ol>
-                          </NewAccordion>
+                          </Accordion>
                       )}
                     </li>
                 ))}
