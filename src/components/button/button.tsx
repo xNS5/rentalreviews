@@ -7,14 +7,14 @@ export default function Button({
   children,
   ...props
 }: Readonly<{
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
   children: React.ReactNode;
   [key: string]: any;
 }>) {
   const isDisabled = props.disabled
   return (
-    <AriaButton onPress={() => onClick()} className={`rounded-lg p-3 transition-colors ease-in-out duration-400 hover:bg-slate-500 hover:text-white disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed ${className}`} isDisabled={isDisabled} {...props}>
+    <AriaButton onPress={() => onClick ? onClick() : undefined} className={`rounded-lg p-3 transition-colors ease-in-out duration-400 hover:bg-slate-500 hover:text-white disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed ${className}`} isDisabled={isDisabled} {...props}>
       {children}
     </AriaButton>
   );

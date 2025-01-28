@@ -10,7 +10,7 @@ import {
   Group as GroupComp,
 } from "react-aria-components";
 import Icon from "@/components/icon/icon";
-import { Button } from "../ui/button";
+import Button from "@/components/button/button";
 import {SortDescriptor} from "react-stately";
 
 
@@ -74,13 +74,13 @@ const Column = ({
             <GroupComp
               role="presentation"
               tabIndex={-1}
-              className="flex flex-1 justify-center text-center overflow-hidden outline-none focus-visible:ring-2 ring-slate-600"
+              className="flex flex-1 justify-center text-center overflow-hidden outline-none focus-visible:ring-2 ring-slate-600 text-black"
             >
-              <Button variant={"ghost"} className="flex flex-1 flex-row bg-slate-200 hover:text-white hover:bg-slate-500 basis-full text-black">
+              <button className="flex flex-row justify-center items-center bg-slate-200 hover:text-white hover:bg-slate-500 basis-full text-black p-3 rounded-xl max-w-[300px] min-w-[139px]">
                 {allowsSorting ? (
-                  <span className="flex" aria-label={`${props.textValue} column sorted ${sortDirection}`}>
+                  <span className={`flex items-center justify-center`} aria-label={`${props.textValue} column sorted ${sortDirection}`}>
                     {children}
-                    <span className={`mt-0.5 w-4 h-4 flex items-center justify-center transition`} aria-hidden={true}>
+                    <span className={`mt-0.5 w-4 h-4`} aria-hidden={true}>
                       {sortDirection !== "disabled" ? (
                         <Icon type={`${direction === "ascending" ? "fas-arrow-up-short-wide" : "fas-arrow-down-wide-short"}`} className="ml-2 h-4 w-4" />
                       ) : (
@@ -91,7 +91,7 @@ const Column = ({
                 ) : (
                   <span>{children}</span>
                 )}
-              </Button>
+              </button>
             </GroupComp>
           </div>
         );

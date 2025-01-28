@@ -95,10 +95,11 @@ export default function Navbar({
   }, [isMobileNavOpen, isMobileWidth]);
 
   return (
-    <nav>
+    <nav
+        className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-1 px-5"}
+    >
       {/* Features: conditionally enables/disables the focus trap based on isMobileNavOpen state */}
       <FocusTrap
-        className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-1 px-5"}
        disabled={isMobileNavOpen}
       >
         <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
