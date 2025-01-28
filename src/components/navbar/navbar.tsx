@@ -6,9 +6,9 @@ import Accordion from "../accordion/accordion";
 import Logo from "../logo/logo";
 import Link from "next/link";
 import { usePathname as getPathname } from "next/navigation";
-import NavigationMenu from "../navigation-menu/navigation-menu";
 import {getIsMobileWidth} from "@/lib/clientUtils";
-import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
+import FocusTrap from "@/components/focus-trap/focustrap"
+import NavigationMenu from "@/components/navigation-menu/navigation-menu";
 import type { Link as LinkType } from "@/lib/linktype";
 import type { Config } from "@/lib/configProvider";
 
@@ -95,13 +95,11 @@ export default function Navbar({
   }, [isMobileNavOpen, isMobileWidth]);
 
   return (
-    <>
+    <nav>
       {/* Features: conditionally enables/disables the focus trap based on isMobileNavOpen state */}
       <FocusTrap
-        id="navbar-menu"
-        as="nav"
         className={"w-full bg-white flex flex-col flex-wrap shadow-lg py-1 px-5"}
-        features={isMobileNavOpen ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None}
+       disabled={isMobileNavOpen}
       >
         <div className="flex flex-row flex-wrap space-between justify-between align-center content-center w-full m-auto">
           <Link href="/" className="self-start flex flex-col rounded px-2 py-4" role="link">
@@ -152,7 +150,6 @@ export default function Navbar({
                           <Accordion
                               id={`nav-accordion-${i}`}
                               triggerText={link.name}
-                              as="button"
                               className={{
                                 trigger: "rounded justify-center text-2xl px-2",
                                 content: "rounded border border-slate-400 shadow-lg",
@@ -179,7 +176,7 @@ export default function Navbar({
             </div>
         )}
       </FocusTrap>
-    </>
+    </nav>
   );
 }
 
