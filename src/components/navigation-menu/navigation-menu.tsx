@@ -68,6 +68,8 @@ export default function NavigationMenu({
     }, [isNavOpen]);
 
     return (
+    <FocusTrap
+        disabled={isNavOpen}>
         <div id={"dropdown-menu"} className={`${className?.comp ?? ''}`}>
             <h3>
                 <Button
@@ -86,7 +88,6 @@ export default function NavigationMenu({
                 </Button>
             </h3>
             {isNavOpen && (
-                <FocusTrap>
                     <div ref={navMenuRef} className={`relative text-left ${className?.menu ?? ""}`}>
                         <ol id={accordionId}
                             className={`flex flex-col rounded-xl absolute bg-neutral-100 shadow-lg p-5 my-2 text-nowrap right-0 border-2 border-neutral-300`}>
@@ -108,8 +109,8 @@ export default function NavigationMenu({
                             }
                         </ol>
                     </div>
-                </FocusTrap>
             )}
         </div>
+    </FocusTrap>
     )
 }
