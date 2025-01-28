@@ -1,22 +1,59 @@
-import {
-    Accordion as AccordionComp,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
+"use client";
 
-export default function Accordion(props: Readonly<{
-    [key: string]: any
-  }>){
-    const {triggerText, children, className, defaultValue} = props; 
-    return (
-        <AccordionComp id="accordion-comp" type="single" defaultValue={defaultValue} collapsible className={`w-full ${className?.comp ?? ""}`}>
-            <AccordionItem id="accordion-item" value={triggerText} className={`w-full ${className?.item ?? ""}`}>
-                <AccordionTrigger id="accordion-trigger" className={`w-full ${className?.trigger ?? ""}`}>{triggerText}</AccordionTrigger>
-                <AccordionContent id="accordion-content" className={`${className?.content ?? ""}`}>
-                    {children}
-                </AccordionContent>
-            </AccordionItem>
-        </AccordionComp>
-    )
+import Icon from "@/components/icon/icon";
+import React, { useState } from "react";
+import Button from "@/components/button/button";
+import FocusTrap from "@/components/focus-trap/focustrap";
+import { Disclosure, DisclosurePanel, Heading } from "react-aria-components";
+
+interface ClassName {
+  comp?: string;
+  item?: string;
+  children?: string;
+  content?: string;
+  trigger?: string;
+}
+
+export default function Accordion({
+  triggerText,
+  children,
+  className,
+  ...rest
+}: Readonly<{
+  triggerText: string;
+  children: React.ReactNode;
+  className?: ClassName;
+  [key: string]: any;
+}>) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <Disclosure
+      isExpanded={isExpanded}
+      className={`${className?.comp ?? ""}`}
+      {...(rest ? { ...rest } : undefined)}
+      data-accordion="collapse"
+    >
+      <FocusTrap disabled={isExpanded}>
+        <Heading className={`flex flex-col justify-center items-center`}>
+          <Button
+            onClick={() => setIsExpanded((prev) => !prev)}
+            slot="trigger"
+            className={`flex flex-row justify-center items-center rounded-xl text-2xl hover:underline ${className?.trigger ?? ""}`}
+          >
+            {triggerText}
+            <Icon
+              type="fas-chevron-down"
+              className={`h-4 w-4 ml-1 text-inherit transition-transform ${isExpanded ? "rotate-180 transform" : ""}`}
+            />
+          </Button>
+        </Heading>
+        <DisclosurePanel
+          className={`border-2 rounded-xl my-2 shadow-lg ${className?.content ?? ""}`}
+        >
+          {children}
+        </DisclosurePanel>
+      </FocusTrap>
+    </Disclosure>
+  );
 }

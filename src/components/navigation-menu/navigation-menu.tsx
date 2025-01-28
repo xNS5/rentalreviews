@@ -1,56 +1,114 @@
 "use client"
 
-import { useState } from "react";
-import { Dropdown as DropdownComp, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
-import { Button } from "../ui/button";
-import type { Link as LinkType } from "@/lib/linktype";
-import Icon from "@/components/icon/icon";
 import Link from "next/link";
+import {useState, useEffect, useRef} from "react";
+import Icon from "@/components/icon/icon";
+import Button from "@/components/button/button";
+import type {Link as LinkType} from "@/lib/linktype";
+import FocusTrap from "@/components/focus-trap/focustrap";
+import {getIsMobileWidth} from "@/lib/clientUtils";
 
 export default function NavigationMenu({
-  data,
-  className,
-  props
-}: Readonly<{
-  data: LinkType;
-  className?: {
-    comp?: string;
-    menu?: string;
-    trigger?: string;
-    item?: string;
-  };
-  props?: {
-    comp?: {[key: string]: any};
-    menu?: {[key: string]: any};
-    trigger?: {[key: string]: any};
-    item?: {[key: string]: any};
-  }
-}>) {
+      data,
+      className,
+      props
+  }: Readonly<{
+    data: LinkType;
+    className?: {
+        comp?: string;
+        menu?: string;
+        trigger?: string;
+        item?: string;
+    };
+    props?: {
+        trigger: {[key: string]: any};
+    }
+}>){
+    const [isNavOpen, setIsNavOpen] = useState(false);
+    const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
+    const accordionId = `accordion-group-${Math.floor(Math.random() * 100) + 1}`;
+    const navMenuRef = useRef<HTMLDivElement>(null);
 
-  const [isNavOpen, setIsNavOpen] = useState(false);
+    useEffect(() => {
+        const escHandler = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && navMenuRef.current !== null) {
+                setIsNavOpen((prev) => !prev);
+            }
+        };
 
-  if (data.children === undefined) return;
+        const resizeHandler = () => {
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile !== isMobileWidth) {
+                setIsMobileWidth(isMobile);
+                if (navMenuRef.current !== null) {
+                    setIsNavOpen((prev) => !prev);
+                }
+            }
+        };
 
-  return (
-    <DropdownComp onOpenChange={() => setIsNavOpen(!isNavOpen)} className={`${className?.comp ?? ""}`} {...(props?.comp && props.comp)}>
-      <DropdownTrigger>
-        <Button id={props?.trigger?.id} variant={"ghost"} className={` p-0 ${className?.trigger ?? ""} font-normal`} {...(props?.trigger && props.trigger)}>
-          {data.name}
-          <Icon
-            type="fas-chevron-down"
-            className={`h-4 w-4 ml-1 text-inherit transition-transform ${isNavOpen ? "rotate-180 transform" : ""}`}
-          />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu variant="flat" className={`${className?.menu ?? ""} bg-white border border-slate-200 shadow rounded p-2`} items={data.children} {...(props?.menu && props.menu)}>
-        {(child: LinkType) => (
-          <DropdownItem key={`${child.name}`} textValue={child.name} variant="flat" className={`${className?.item ?? ""}`}>
-            <Link href={child.url} onClick={() => setIsNavOpen(!isNavOpen)} target={child.target}>
-              <p>{child.name}</p>
-            </Link>
-          </DropdownItem>
-        )}
-      </DropdownMenu>
-    </DropdownComp>
-  );
+        const clickHandler = ({ target }: MouseEvent) => {
+          if (navMenuRef.current && !navMenuRef.current?.contains(target as Node)) {
+              setIsNavOpen((prev) => !prev);
+          }
+        };
+
+
+        window.addEventListener("resize", resizeHandler);
+        document.addEventListener("keydown", escHandler);
+        document.addEventListener("mousedown", clickHandler);
+
+        return () => {
+            window.removeEventListener("resize", resizeHandler);
+            document.removeEventListener("keydown", escHandler);
+            document.removeEventListener("mousedown", clickHandler);
+        };
+    }, [isNavOpen]);
+
+    return (
+    <FocusTrap
+        disabled={isNavOpen}>
+        <div id={"dropdown-menu"} className={`${className?.comp ?? ''}`}>
+            <h3>
+                <Button
+                    id={props?.trigger?.id}
+                    type={"button"}
+                    // aria-controls={`${accordionId}`}
+                    aria-expanded={isNavOpen}
+                    onClick={() => setIsNavOpen((prev) => !prev)}
+                    className={`flex flex-row justify-center items-center ${className?.trigger ?? ''}`}
+                    {...(props?.trigger && props.trigger)}
+                >
+                    {data.name}
+                    <Icon
+                        type="fas-chevron-down"
+                        className={`h-4 w-4 ml-1 text-inherit transition-transform ${isNavOpen ? "rotate-180 transform" : ""}`}
+                    />
+                </Button>
+            </h3>
+            {isNavOpen && (
+                    <div ref={navMenuRef} className={`relative text-left ${className?.menu ?? ""}`}>
+                        <ol id={accordionId}
+                            className={`flex flex-col rounded-xl absolute bg-neutral-100 shadow-lg p-5 my-2 text-nowrap right-0 border-2 border-neutral-300`}>
+                            {
+                                data.children?.map((child: LinkType, i: number) =>
+                                    <li
+                                        key={i}
+                                        className={`${className?.item ?? ""} my-2`}
+
+                                    >
+                                        <Link
+                                            className={`my-2`}
+                                            href={child.url}
+                                            onClick={() => setIsNavOpen((prev) => !prev)}
+                                        >
+                                            {child.name}
+                                        </Link>
+                                    </li>)
+                            }
+                        </ol>
+                    </div>
+            )}
+        </div>
+    </FocusTrap>
+    )
 }
