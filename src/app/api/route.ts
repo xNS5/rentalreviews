@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCompanyData } from "@/lib/getCompanyData";
-import { isValidSlug } from "@/lib/utils";
+import { isValidSlug } from "@/lib/serverUtils";
 
  enum STATUS {
   SUCCESS = 200,

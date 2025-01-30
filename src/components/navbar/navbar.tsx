@@ -9,8 +9,7 @@ import { usePathname as getPathname } from "next/navigation";
 import {getIsMobileWidth} from "@/lib/clientUtils";
 import FocusTrap from "@/components/focus-trap/focustrap"
 import NavigationMenu from "@/components/navigation-menu/navigation-menu";
-import type { Link as LinkType } from "@/lib/linktype";
-import type { Config } from "@/lib/configProvider";
+import type { Config, Link as LinkType } from "@/lib/types";
 
 function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");

@@ -1,6 +1,6 @@
 import {getDocument} from "@/db/db"
 import BasicPage from "@/components/basic-page/basicPage";
-import { Config } from "@/lib/configProvider";
+import { Config } from "@/lib/types";
 
 export async function generateMetadata() {
     const {metadata, privacy_policy}: Config | undefined = await getDocument<Config>("config", "config", 604800000);

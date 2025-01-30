@@ -1,9 +1,9 @@
 import BasicPage from "@/components/basic-page/basicPage";
 import { getDocument } from "@/db/db";
-import { Config } from "@/lib/configProvider";
+import type { Config } from "@/lib/types";
 
 export async function generateMetadata() {
-  const {metadata, accessibility}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+  const {metadata, accessibility} = await getDocument<Config>("config", "config", 604800000);
   return {
     title: `${metadata.title} | ${accessibility.title}`,
     description: metadata.description

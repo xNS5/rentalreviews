@@ -1,11 +1,8 @@
 import Link from "next/link";
 import Text from "@/components/text/text";
 import Article from "@/components/article/article";
-import { Config } from "@/lib/configProvider";
+import { Config, Link as LinkType } from "@/lib/types";
 import { getDocument } from "@/db/db";
-
-import type { FaqQuestion } from "./faq-type";
-import type { Link as LinkType } from "@/lib/linktype";
 
 export async function generateMetadata() {
   const {metadata, faq}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
@@ -16,11 +13,12 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-  const { faq } = await getDocument<Config>("config", "config", 604800000);
+  const { faq, metadata } = await getDocument<Config>("config", "config", 604800000);
+
   return (
     <Article
       className="container"
-      announcement={faq.aria_announcement ?? undefined}
+      announcement={metadata.aria_announcement?.faq ?? undefined}
     >
       <div className="flex flex-col text-center py-2">
         <h1 className="md:text-4xl">{faq.title}</h1>
@@ -29,7 +27,7 @@ export default async function Page() {
         </h2>
       </div>
       <ol>
-        {faq?.questions.map((questionObj: FaqQuestion, i: number) => (
+        {faq?.questions.map((questionObj, i: number) => (
           <section key={i}>
             <li key={i}>
               <section className="m-2 flex flex-col">

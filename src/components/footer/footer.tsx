@@ -1,25 +1,25 @@
 import Icon from "@/components/icon/icon";
 import Link from "next/link";
-import type { FooterItem } from "./footertypes";
-import type { Config } from "@/lib/configProvider";
+import type { FooterItem } from "@/lib/types";
 
-function getConfigEntries(obj: Config[]) {
+function getConfigEntries(obj: FooterItem[]) {
   return obj.reduce((acc, curr) => {
-    if(!acc[curr.row]){
-        acc[curr.row] = [];
+    const { row } = curr;
+    if(!acc[row]){
+        acc[row] = [];
     }
-    acc[curr.row].push(curr);
+    acc[row].push(curr);
     return acc;
-  }, []);
+  }, {} as Record<number, FooterItem[]>);
 }
 
-export default function Footer({ data }: Config) {
+export default function Footer({ data }: {data: FooterItem[]}) {
   const footerData = getConfigEntries(data);
 
   return (
     <footer className="grid auto-rows-max">
       {footerData &&
-        footerData.map((elem: any[], i: number) => (
+        Object.values(footerData).map((elem: any[], i: number) => (
           <div key={i} className="my-1 flex inline-flex items-center justify-center">
             {elem.map((item: FooterItem, j: number) => {
               if (item.type === "text") {

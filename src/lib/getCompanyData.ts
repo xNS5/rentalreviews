@@ -1,4 +1,4 @@
-import { getDocument, getCollection} from "@/db/db";
+import { getDocument } from "@/db/db";
 import { Company } from "@/app/reviews/columns";
 
 export async function getCompanyData(slug: string): Promise<Company> {
