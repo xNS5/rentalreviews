@@ -3,7 +3,6 @@ on:
   pull_request:
     branches:
       - main
-      - development
     types: [closed]
   workflow_dispatch:
 
@@ -25,19 +24,19 @@ jobs:
           npm install netlify-cli -g \
           npm install @netlify/plugin-nextjs -g
 
-      - name: Create Test Env File
-        uses: tmshkr/handle-env@v1.2
-        if: ${{ github.ref_name == 'development' }}
-        with:
-          env: |
-            NEXT_PUBLIC_DB_ENV='test'
-            NEXT_PUBLIC_CACHE_TTL=${{ vars.NEXT_PUBLIC_CACHE_TTL }}
-            NEXT_PUBLIC_FIREBASE_STAGING_STAGING_API_KEY=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_STAGING_API_KEY }}
-            NEXT_PUBLIC_FIREBASE_STAGING_AUTH_DOMAIN=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_AUTH_DOMAIN }}
-            NEXT_PUBLIC_FIREBASE_STAGING_PROJECT_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_PROJECT_ID }}
-            NEXT_PUBLIC_FIREBASE_STAGING_STORAGE_BUCKET=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_STORAGE_BUCKET }}
-            NEXT_PUBLIC_FIREBASE_STAGING_MESSAGING_SENDER_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_MESSAGING_SENDER_ID }}
-            NEXT_PUBLIC_FIREBASE_STAGING_APP_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_APP_ID }}
+#      - name: Create Test Env File
+#        uses: tmshkr/handle-env@v1.2
+#        if: ${{ github.ref_name == 'development' }}
+#        with:
+#          env: |
+#            NEXT_PUBLIC_DB_ENV='test'
+#            NEXT_PUBLIC_CACHE_TTL=${{ vars.NEXT_PUBLIC_CACHE_TTL }}
+#            NEXT_PUBLIC_FIREBASE_STAGING_STAGING_API_KEY=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_STAGING_API_KEY }}
+#            NEXT_PUBLIC_FIREBASE_STAGING_AUTH_DOMAIN=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_AUTH_DOMAIN }}
+#            NEXT_PUBLIC_FIREBASE_STAGING_PROJECT_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_PROJECT_ID }}
+#            NEXT_PUBLIC_FIREBASE_STAGING_STORAGE_BUCKET=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_STORAGE_BUCKET }}
+#            NEXT_PUBLIC_FIREBASE_STAGING_MESSAGING_SENDER_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_MESSAGING_SENDER_ID }}
+#            NEXT_PUBLIC_FIREBASE_STAGING_APP_ID=${{ vars.NEXT_PUBLIC_FIREBASE_STAGING_APP_ID }}
 
       - name: Create Production Env File
         uses: tmshkr/handle-env@v1.2
@@ -58,13 +57,13 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Deploy to Netlify Preview
-        if: ${{ success() && github.ref_name == 'development' }}
-        run: |
-          netlify deploy --build \
-          --site ${{ secrets.NETLIFY_SITE_ID }} \
-          --auth ${{ secrets.NETLIFY_DEPLOY_KEY }} \
-          --message "${{ github.event.pull_request.title }}"
+#      - name: Deploy to Netlify Preview
+#        if: ${{ success() && github.ref_name == 'development' }}
+#        run: |
+#          netlify deploy --build \
+#          --site ${{ secrets.NETLIFY_SITE_ID }} \
+#          --auth ${{ secrets.NETLIFY_DEPLOY_KEY }} \
+#          --message "${{ github.event.pull_request.title }}"
 
       - name: Deploy to Netlify Production
         if: ${{ success() && github.ref_name == 'main' }}
