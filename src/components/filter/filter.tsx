@@ -3,7 +3,7 @@ import Popover from "@/components/popover/popover";
 import Icon from "@/components/icon/icon";
 import Select from "@/components/select/select";
 
-export type FilterProps = {
+type FilterProps = {
   title: string;
   key: string | number | null;
   shouldRender: boolean;

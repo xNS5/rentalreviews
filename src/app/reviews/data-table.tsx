@@ -21,11 +21,10 @@ import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { getAltString } from "@/lib/serverUtils";
 import { Filter } from "@/components/filter/filter";
-
-import { useFilters } from "@/components/filter/useFilters";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
+import {useURLParams} from "@/lib/useURLParams";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -44,10 +43,10 @@ export default function DataTable({
 }>) {const { filter_props, title } = props.reviews;
   const altObj = props.alt["reviews"];
 
-  const { filter, setFilters } = useFilters();
+  const { params, setParams } = useURLParams();
 
-  const [tableFilters, setTableFilters] = useState(filter);
-  const [searchTerm, setSearchTerm] = useState(filter.name ?? "");
+  const [tableFilters, setTableFilters] = useState(params);
+  const [searchTerm, setSearchTerm] = useState(params.name ?? "");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
@@ -99,7 +98,7 @@ export default function DataTable({
           return true;
         }),
       ),
-    [filter, tableFilters],
+    [params, tableFilters],
   );
 
   const sortedData = useMemo(
@@ -120,13 +119,13 @@ export default function DataTable({
           console.error("Error sorting column: ", e);
         }
       }),
-    [sortDescriptor, searchTerm, filter],
+    [sortDescriptor, searchTerm, params],
   );
 
   // Memoizes page count
   const pageCount = useMemo(
     () => Math.ceil(sortedData.length / paginationValue),
-    [filter],
+    [params],
   );
 
 
@@ -259,7 +258,7 @@ export default function DataTable({
   useEffect(() => {
     loadingHandler(true);
     const timeout = setTimeout(() => {
-      setFilters(tableFilters, () => {
+      setParams(tableFilters, () => {
         validateActiveFilters(tableFilters);
         loadingHandler(false);
       });
