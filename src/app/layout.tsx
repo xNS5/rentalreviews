@@ -1,8 +1,8 @@
 import { Inter as FontSans } from "next/font/google";
 import React, { Suspense } from "react";
 import { getDocument } from "@/db/db";
-import { Config } from "@/lib/configProvider";
-import { cn } from "@/lib/utils";
+import { Config } from "@/lib/types";
+import { cn } from "@/lib/serverUtils";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import "./globals.css";
@@ -17,10 +17,10 @@ const inter = FontSans({
 
 
 export async function generateMetadata() {
-  const config: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+  const { metadata } = await getDocument<Config>("config", "config", 604800000);
   return {
-    title: config?.metadata.title,
-    description: config?.metadata.description
+    title: metadata.title,
+    description: metadata.description
 
   }
 }

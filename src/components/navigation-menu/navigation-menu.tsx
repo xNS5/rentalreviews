@@ -4,7 +4,7 @@ import Link from "next/link";
 import {useState, useEffect, useRef} from "react";
 import Icon from "@/components/icon/icon";
 import Button from "@/components/button/button";
-import type {Link as LinkType} from "@/lib/linktype";
+import type {Link as LinkType} from "@/lib/types";
 import FocusTrap from "@/components/focus-trap/focustrap";
 import {getIsMobileWidth} from "@/lib/clientUtils";
 

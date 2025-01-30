@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/serverUtils";
 import {
   Cell as CellComp,
   Column as ColumnComp,
@@ -10,7 +10,6 @@ import {
   Group as GroupComp,
 } from "react-aria-components";
 import Icon from "@/components/icon/icon";
-import Button from "@/components/button/button";
 import {SortDescriptor} from "react-stately";
 
 
@@ -137,7 +136,7 @@ const Cell = ({
   className?: string;
   [key: string]: any;
 }>) => (
-  <CellComp className={cn("p-4 align-middle text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-slate-600 focus-visible:-outline-offset-4 group-selected:focus-visible:outline-white", className)} {...props}>
+  <CellComp className={cn("p-4 align-middle text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-slate-600 focus-visible:-outline-offset-4 group-selected:focus-visible:outline-white [&:not(:last-child)]:border-r", className)} {...props}>
     {children}
   </CellComp>
 );

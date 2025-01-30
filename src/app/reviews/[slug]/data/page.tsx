@@ -1,4 +1,4 @@
-import { isValidSlug } from "@/lib/utils";
+import { isValidSlug } from "@/lib/serverUtils";
 import {getCompanyData} from "@/lib/getCompanyData";
 import { notFound } from "next/navigation";
 import { JsonWrapper } from "./json-wrapper";

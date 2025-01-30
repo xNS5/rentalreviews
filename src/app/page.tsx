@@ -1,14 +1,13 @@
 import React, { Suspense } from "react";
 import Text from "@/components/text/text";
 import { notFound } from "next/navigation";
-import {Config} from "@/lib/configProvider";
+import { Config, Text as TextType } from "@/lib/types";
 import Loading from "./loading";
 import Article from "@/components/article/article";
 import {getDocument} from "@/db/db";
-import type { Text as TextType } from "@/lib/configProvider";
 
 export async function generateMetadata() {
-  const {metadata, home}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+  const { metadata, home} = await getDocument<Config>("config", "config", 604800000);
   return {
     title: `${metadata.title} | ${home.title}`,
     description: metadata.description
@@ -16,7 +15,7 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const { home }: Config = await getDocument<Config>("config", "config");
+  const { home, metadata }: Config = await getDocument<Config>("config", "config");
 
   if (home == undefined) {
     console.error("Data is undefined. Check DB connection.");
@@ -26,7 +25,7 @@ export default async function Home() {
   return (
     <div className="container mx-auto px-4">
       <Suspense key={Math.random()} fallback={<Loading />}>
-        <Article announcement={home?.aria_announcement ?? undefined}>
+        <Article announcement={metadata.aria_announcement?.home ?? undefined}>
           <section className="my-20">
             {home?.content?.map((elem: TextType, i: number) => (
               <div key={i} role="article">

@@ -11,15 +11,15 @@ import {
 
 import React, { useEffect, useMemo, useState } from "react";
 import Icon from "@/components/icon/icon";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/input/input";
+import { cn } from "@/lib/serverUtils";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { SortDescriptor } from "react-stately";
 import Button from "@/components/button/button";
 import Link from "next/link";
 import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
-import { getAltString } from "@/lib/configProvider";
+import { getAltString } from "@/lib/serverUtils";
 import { Filter } from "@/components/filter/filter";
 
 import { useFilters } from "@/components/filter/useFilters";

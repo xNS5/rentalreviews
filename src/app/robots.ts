@@ -1,5 +1,5 @@
 import {getDocument} from "@/db/db"
-import { Config } from "@/lib/configProvider";
+import { Config } from "@/lib/types";
 import { headers } from 'next/headers';
 
 export default async function robots(){

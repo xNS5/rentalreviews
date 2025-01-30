@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { getCompanyData, getCompanyMetadata } from "@/lib/getCompanyData";
-import { isValidSlug } from "@/lib/utils";
+import { isValidSlug, getAltString} from "@/lib/serverUtils";
 import Article from "@/components/article/article";
-import { Config, getAltString } from "@/lib/configProvider";
+import { Config } from "@/lib/types";
 import { getDocument } from "@/db/db";
 import Link from "next/link";
 import Icon from "@/components/icon/icon";
