@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Text from "@/components/text/text";
 import Article from "@/components/article/article";
-import { Config, Faq, Link as LinkType } from "@/lib/types";
+import { Config, Link as LinkType } from "@/lib/types";
 import { getDocument } from "@/db/db";
 
 export async function generateMetadata() {
