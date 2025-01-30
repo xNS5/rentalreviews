@@ -75,7 +75,7 @@ const Column = ({
               tabIndex={-1}
               className="flex flex-1 justify-center text-center overflow-hidden outline-none focus-visible:ring-2 ring-slate-600 text-black"
             >
-              <button className="flex flex-row justify-center items-center bg-slate-200 hover:text-white hover:bg-slate-500 basis-full text-black p-3 rounded-xl max-w-[300px] min-w-[139px]">
+              <button className="flex flex-row justify-center items-center bg-slate-200 hover:text-white hover:bg-slate-500 basis-full text-black p-3 rounded-xl max-w-[300px] min-w-[139px] ">
                 {allowsSorting ? (
                   <span className={`flex items-center justify-center`} aria-label={`${props.textValue} column sorted ${sortDirection}`}>
                     {children}

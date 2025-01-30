@@ -357,7 +357,9 @@ export default function DataTable({
             onSortChange={handleSortChange}
             className="hidden md:table w-full"
           >
-            <TableHeader>
+            <TableHeader
+              className={`border-t`}
+            >
               {columns.map((column, i: number) => (
                 <Column
                   id={column.key}
@@ -365,7 +367,7 @@ export default function DataTable({
                   key={i}
                   isRowHeader={i === 0}
                   sortDescriptor={sortDescriptor}
-                  className={`border-black ${i < columns.length - 1 ? "border-r-1" : ""}`}
+                  className={`border-black [&:not(:last-child)]:border-r ${i < columns.length - 1 ? "border-r-1" : ""}`}
                   allowsSorting
                 >
                   <p>{column.title}</p>
@@ -479,7 +481,6 @@ export default function DataTable({
               <Icon type={"fas-angles-left"} className={`h-4 w-4`}/>
             </Button>
             <Button
-              variant={"ghost"}
               aria-label="previous page"
               disabled={currentPageNumber === 1}
               aria-disabled={currentPageNumber === 1}
@@ -488,7 +489,6 @@ export default function DataTable({
                <Icon type={"fas-angle-left"} className={`h-2 w-2`}/>
             </Button>
             <Button
-              variant={"ghost"}
               aria-label="next page"
               disabled={currentPageNumber === pageCount}
               aria-disabled={currentPageNumber === pageCount}
@@ -497,7 +497,6 @@ export default function DataTable({
                <Icon type={"fas-angle-right"} className={`h-2 w-2`}/>
             </Button>
             <Button
-              variant={"ghost"}
               aria-label="last page"
               disabled={currentPageNumber === pageCount}
               aria-disabled={currentPageNumber === pageCount}
