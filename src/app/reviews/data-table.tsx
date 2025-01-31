@@ -128,8 +128,6 @@ export default function DataTable({
     [params],
   );
 
-
-
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
     if (currentPageNumber === pageCount) {
@@ -265,6 +263,8 @@ export default function DataTable({
     }, 500);
     return () => clearTimeout(timeout);
   }, [tableFilters]);
+
+
 
   return (
     <>

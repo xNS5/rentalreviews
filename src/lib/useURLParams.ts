@@ -2,7 +2,6 @@
 
 import React, { useMemo, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { getColumnKeys } from "@/app/reviews/columns";
 
 const inputTestRegex = new RegExp("[()[\\]{};.=<>:+\\-*\\/%]");
 
@@ -14,17 +13,17 @@ export function useURLParams() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const  params: { [key: string]: any } = useMemo(
+
+    const params: { [key: string]: any } = useMemo(
         () =>
-            getColumnKeys().reduce(
-                (acc, curr) => ({
+            searchParams.entries().reduce(
+                (acc, [key, value]) => ({
                     ...acc,
-                    ...(searchParams.has(curr.key) &&
-                    !inputTestRegex.test(searchParams.get(curr.key) as string)
+                    ...(!inputTestRegex.test(value)
                         ? {
-                            [curr.key]: isNumeric(searchParams.get(curr.key))
-                                ? parseFloat(`${searchParams.get(curr.key)}`)
-                                : searchParams.get(curr.key)?.replaceAll('\++', '\s'),
+                            [key]: isNumeric(value)
+                                ? parseFloat(`${value}`)
+                                : value?.replaceAll('\++', '\s'),
                         }
                         : undefined),
                 }),
@@ -32,6 +31,8 @@ export function useURLParams() {
             ),
         [searchParams],
     );
+
+    console.log(params);
 
     const setParams = useCallback(
         (newFilters: { [key: string]: any }, callbackFn?: () => any) => {
