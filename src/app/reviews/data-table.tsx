@@ -20,7 +20,7 @@ import Link from "next/link";
 import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { getAltString } from "@/lib/serverUtils";
-import { Filter } from "@/components/filter/filter";
+import {Filter, FilterItem, FilterProps, processFilters} from "@/components/aria-table/filter";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
@@ -40,12 +40,15 @@ export default function DataTable({
   className?: string;
   paginationValue?: number;
   [key: string]: any;
-}>) {const { filter_props, title } = props.reviews;
+}>) {
+
+  const { filter_props, title } = props.reviews;
   const altObj = props.alt["reviews"];
 
   const { params, setParams } = useURLParams();
 
-  const [tableFilters, setTableFilters] = useState(params);
+  const [tableFilters, setTableFilters] = useState<FilterProps>(processFilters(filter_props, params));
+
   const [searchTerm, setSearchTerm] = useState(params.name ?? "");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
@@ -63,33 +66,16 @@ export default function DataTable({
     { key: "descending", title: "Descending" },
   ];
 
-  // Maps name to comparison string (e.g. ">", ">=", "==", etc.)
-  const filterComparisonObj = useMemo(
-    () =>
-      filter_props.reduce(
-        (acc: any, curr: any) => ({
-          ...acc,
-          [curr.key]: {
-            comparison: curr.comparison,
-            title: curr.title,
-            ...(curr.style ? { alt: curr.style.alt } : undefined),
-          },
-        }),
-        {},
-      ),
-    [],
-  );
-
   // Filters data based on filter component properties
   const filteredData = useMemo(
     () =>
       data.filter((item: Company) =>
-        Object.entries(tableFilters).every(([key, value]) => {
-          if (value !== null) {
+        Object.keys(tableFilters).every((key) => {
+          if (data !== null) {
             const compareDataResult = compareData(
               item[key],
-              value,
-              filterComparisonObj[key].comparison,
+              tableFilters[key].value,
+                tableFilters[key].comparison,
             );
             if (!compareDataResult) {
               return false;
@@ -155,13 +141,10 @@ export default function DataTable({
     }));
 
   const handleFilterChange = (key: string, value: any) => {
-    setTableFilters((prev) => {
-      const newFilters: { [key: string]: any } = {
-        ...prev,
-        [key]: prev[key] === value ? null : value,
-      };
-      return newFilters;
-    });
+    setTableFilters((prev: FilterProps) => ({
+      ...prev,
+      [key]: prev[key].value === value ? null : value,
+    }));
     handlePageChange(1);
   };
 
@@ -189,10 +172,10 @@ export default function DataTable({
       Object.entries(validFilters).forEach(
           ([key, value]: [key: any, value: any]) => {
             if (
-                filterComparisonObj.hasOwnProperty(key) &&
-                filterComparisonObj[key].hasOwnProperty("alt")
+                filter_props.hasOwnProperty(key) &&
+                filter_props[key].hasOwnProperty("alt")
             ) {
-              const filterObj = filterComparisonObj[key];
+              const filterObj = filter_props[key];
               const { title, alt } = filterObj;
               messageStringArr.push(
                   `${title} ${alt.prefix} ${value} ${alt.postfix}`
@@ -332,16 +315,16 @@ export default function DataTable({
                 }}
               />
               {/* Filter Component */}
-              <Filter
-                heading={"Filter By"}
-                filter={structuredClone(tableFilters)}
-                filterProps={structuredClone(filter_props)}
-                className={`hidden md:visible`}
-                onSelectCallbackFn={(
-                  key: string,
-                  value: string | number | null,
-                ) => handleFilterChange(key, value)}
-              />
+              {/*<Filter*/}
+              {/*  heading={"Filter By"}*/}
+              {/*  filterState={tableFilters}*/}
+              {/*  filterProps={structuredClone(filter_props)}*/}
+              {/*  className={`hidden md:visible`}*/}
+              {/*  onSelectCallbackFn={(*/}
+              {/*    key: string,*/}
+              {/*    value: string | number | null,*/}
+              {/*  ) => handleFilterChange(key, value)}*/}
+              {/*/>*/}
               <Loading
                 className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
               />

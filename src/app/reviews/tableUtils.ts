@@ -1,3 +1,5 @@
+import {FilterProps} from "@/components/aria-table/filter";
+
 export function compareData(a: any, b: any, type: string) {
     switch (type) {
         case ">":
@@ -22,3 +24,4 @@ export function compareData(a: any, b: any, type: string) {
             return false;
     }
 }
+

@@ -15,7 +15,6 @@ export function isValidSlug(slug: string): boolean{
 }
 
 
-
 export function getAltString(altObj: AltRecord, key: string, value: any) {
   // console.log(altObj, altObj[key]);
   if (altObj[key]) {
