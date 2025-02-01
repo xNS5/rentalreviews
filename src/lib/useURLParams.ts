@@ -13,26 +13,17 @@ export function useURLParams() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-
     const params: { [key: string]: any } = useMemo(
         () =>
-            searchParams.entries().reduce(
-                (acc, [key, value]) => ({
-                    ...acc,
-                    ...(!inputTestRegex.test(value)
-                        ? {
-                            [key]: isNumeric(value)
-                                ? parseFloat(`${value}`)
-                                : value?.replaceAll('\++', '\s'),
-                        }
-                        : undefined),
-                }),
-                {},
-            ),
+            [...searchParams.entries()].reduce((acc, [key, val]) =>
+                ({...acc,
+                ...(!inputTestRegex.test(val) && {
+                    [key]: val
+                    })
+                })
+                ,{}),
         [searchParams],
     );
-
-    console.log(params);
 
     const setParams = useCallback(
         (newFilters: { [key: string]: any }, callbackFn?: () => any) => {
