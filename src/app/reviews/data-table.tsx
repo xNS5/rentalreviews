@@ -438,32 +438,32 @@ export default function DataTable({
             <Button
               variant={"ghost"}
               aria-label="last page"
-              disabled={currentPageNumber === 1}
-              aria-disabled={currentPageNumber === 1}
+              disabled={currentPageNumber === 1 || pageCount === 0}
+              aria-disabled={currentPageNumber === 1 || pageCount === 0}
               onClick={() => handlePageChange(1)}
             >
               <Icon type={"fas-angles-left"} className={`h-4 w-4`}/>
             </Button>
             <Button
               aria-label="previous page"
-              disabled={currentPageNumber === 1}
-              aria-disabled={currentPageNumber === 1}
+              disabled={currentPageNumber === 1 || pageCount === 0}
+              aria-disabled={currentPageNumber === 1 || pageCount === 0}
               onClick={() => handlePageChange(currentPageNumber - 1)}
             >
                <Icon type={"fas-angle-left"} className={`h-2 w-2`}/>
             </Button>
             <Button
               aria-label="next page"
-              disabled={currentPageNumber === pageCount}
-              aria-disabled={currentPageNumber === pageCount}
+              disabled={currentPageNumber === pageCount || pageCount === 0}
+              aria-disabled={currentPageNumber === pageCount || pageCount === 0}
               onClick={() => handlePageChange(currentPageNumber + 1)}
             >
                <Icon type={"fas-angle-right"} className={`h-2 w-2`}/>
             </Button>
             <Button
               aria-label="last page"
-              disabled={currentPageNumber === pageCount}
-              aria-disabled={currentPageNumber === pageCount}
+              disabled={currentPageNumber === pageCount || pageCount === 0}
+              aria-disabled={currentPageNumber === pageCount || pageCount === 0}
               onClick={() => handlePageChange(pageCount)}
             >
                <Icon type={"fas-angles-right"} className={`h-4 w-4`}/>
