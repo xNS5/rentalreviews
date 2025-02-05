@@ -150,42 +150,28 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  const validateActiveFilters = (filters: any) => {
-    let hasActiveFilters = false;
-
-    const validFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, value]: [_: any, value: any]) => {
-          if (value) {
-            hasActiveFilters = true;
-            return true;
-          }
-          return false;
-        }),
-    );
-
-    if (hasActiveFilters) {
+  const filterAnnouncementHandler = (filters: FilterProps) => {
       let messageStringArr: string[] = [];
-      Object.entries(validFilters).forEach(
-          ([key, value]: [key: any, value: any]) => {
-            if (
-                filter_props.hasOwnProperty(key) &&
-                filter_props[key].hasOwnProperty("alt")
-            ) {
-              const filterObj = filter_props[key];
-              const { title, alt } = filterObj;
+      Object.entries(filters).forEach(
+          ([_, value]: [key: any, value: any]) => {
+            if(value.value !== undefined){
+              const { title, alt } = value;
+              console.log(title);
               messageStringArr.push(
-                  `${title} ${alt.prefix} ${value} ${alt.postfix}`
+                  `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
                       .trim()
                       .replace(/\s{2,}/g, " "),
               );
             }
           },
       );
-      announce(
-          `Filtering table records by ${messageStringArr.join(", ")}`,
-          "assertive",
-          500,
-      );
+
+      if(messageStringArr.length > 0){
+        announce(
+            `Filtering table records by ${messageStringArr.join(", ")}`,
+            "assertive",
+            500,
+        );
     } else {
       announce("No filters applied to table records", "assertive", 500);
     }
@@ -236,7 +222,7 @@ export default function DataTable({
     loadingHandler(true);
     const timeout = setTimeout(() => {
       setParams(tableFilters, () => {
-        validateActiveFilters(tableFilters);
+        filterAnnouncementHandler(tableFilters);
         loadingHandler(false);
         handlePageChange(pageCount > 0 ? 1 : 0);
       });
