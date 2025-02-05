@@ -54,7 +54,7 @@ export default function DataTable({
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
-  const [currentPageNumber, setCurrentPageNumberNumber] = useState<number>(1)
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
@@ -141,11 +141,12 @@ export default function DataTable({
         value: prev[key]?.value === value ? undefined : value
       },
     }));
+    console.log(tableFilters);
   };
 
   // Handles page change, sets current page number and resets the hover state object
   const handlePageChange = (page: number) => {
-    setCurrentPageNumberNumber(page);
+    setCurrentPageNumber(page);
     setHoverStates({});
   };
 

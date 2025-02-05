@@ -55,6 +55,7 @@ export function processFilters(filterRules: FilterProps, params:  {[key: string]
 }
 
 const getFilterComp = (component_type: string, key: any, props: any) => {
+
   if (component_type?.toLowerCase() === "select") {
     const {
       data,
@@ -94,19 +95,17 @@ export function Filter(props: any) {
           <b>{heading}</b>
         </h2>
       )}
-      {
-        Object.values<FilterItem>(filterState).map((prop, i: number) =>
-        getFilterComp(prop.component_type, i + 1, {
-          label: prop.title,
-          value: prop.value ?? undefined,
-          data: prop.options,
-          selectedKey: prop.key ?? undefined,
+      {Object.values<FilterItem>(filterState).map(({ title, value, options, key, style, component_type}, i: number) =>
+        getFilterComp(component_type, i + 1, {
+          label: title,
+          value: value ?? undefined,
+          data: options,
+          selectedKey: value ?? undefined,
           onSelectCallbackFn: onSelectCallbackFn,
-          selectedKeyStyle: prop.style ?? undefined,
-          callbackKey: prop.key,
-        })
-      )
-      }
+          selectedKeyStyle: style ?? undefined,
+          callbackKey: key,
+        }),
+      )}
     </Popover>
   );
 }
