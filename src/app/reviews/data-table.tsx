@@ -47,14 +47,15 @@ export default function DataTable({
 
   const { params, setParams } = useURLParams();
 
+
   const [tableFilters, setTableFilters] = useState<FilterProps>(processFilters(filter_props, params));
 
-  const [searchTerm, setSearchTerm] = useState(params.name ?? "");
+  const [searchTerm, setSearchTerm] = useState<string>(params.name ?? "");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
-  const [currentPageNumber, setCurrentPageNumberNumber] = useState(1)
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentPageNumber, setCurrentPageNumberNumber] = useState<number>(1)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
@@ -71,20 +72,16 @@ export default function DataTable({
     () =>
       data.filter((item: Company) =>
         Object.keys(tableFilters).every((key) => {
-          if (data !== null) {
-            const compareDataResult = compareData(
+          if(!tableFilters[key].value) return true;
+
+          return compareData(
               item[key],
               tableFilters[key].value,
-                tableFilters[key].comparison,
-            );
-            if (!compareDataResult) {
-              return false;
-            }
-          }
-          return true;
+              tableFilters[key].comparison,
+          )
         }),
       ),
-    [params, tableFilters],
+    [params, searchTerm, tableFilters],
   );
 
   const sortedData = useMemo(
@@ -108,11 +105,7 @@ export default function DataTable({
     [sortDescriptor, searchTerm, params],
   );
 
-  // Memoizes page count
-  const pageCount = useMemo(
-    () => Math.ceil(sortedData.length / paginationValue),
-    [params],
-  );
+  const pageCount = Math.ceil(sortedData.length / paginationValue);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -143,9 +136,11 @@ export default function DataTable({
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev: FilterProps) => ({
       ...prev,
-      [key]: prev[key].value === value ? null : value,
+      [key]: {
+        ...prev[key],
+        value: prev[key]?.value === value ? undefined : value
+      },
     }));
-    handlePageChange(1);
   };
 
   // Handles page change, sets current page number and resets the hover state object
@@ -242,10 +237,11 @@ export default function DataTable({
       setParams(tableFilters, () => {
         validateActiveFilters(tableFilters);
         loadingHandler(false);
+        handlePageChange(pageCount > 0 ? 1 : 0);
       });
     }, 500);
     return () => clearTimeout(timeout);
-  }, [tableFilters]);
+  }, [tableFilters, searchTerm, filteredData]);
 
 
 
@@ -305,26 +301,25 @@ export default function DataTable({
                 value={searchTerm}
                 placeholder="Company Name"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && tableFilters?.name.length > 0) {
+                  if (e.key === "Enter") {
                     handleFilterChange("name", searchTerm);
                   }
                 }}
                 onChange={(e) => {
-                  setSearchTerm(e.target.value);
                   handleFilterChange("name", e.target.value);
+                  setSearchTerm(e.target.value);
                 }}
               />
               {/* Filter Component */}
-              {/*<Filter*/}
-              {/*  heading={"Filter By"}*/}
-              {/*  filterState={tableFilters}*/}
-              {/*  filterProps={structuredClone(filter_props)}*/}
-              {/*  className={`hidden md:visible`}*/}
-              {/*  onSelectCallbackFn={(*/}
-              {/*    key: string,*/}
-              {/*    value: string | number | null,*/}
-              {/*  ) => handleFilterChange(key, value)}*/}
-              {/*/>*/}
+              <Filter
+                heading={"Filter By"}
+                filterState={structuredClone(tableFilters)}
+                className={`hidden md:visible`}
+                onSelectCallbackFn={(
+                  key: string,
+                  value: string | number | undefined,
+                ) => handleFilterChange(key, value)}
+              />
               <Loading
                 className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
               />

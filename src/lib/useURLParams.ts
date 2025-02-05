@@ -29,7 +29,7 @@ export function useURLParams() {
         (newFilters: { [key: string]: any }, callbackFn?: () => any) => {
             const currSearchParams = new URLSearchParams(searchParams.toString());
             Object.entries(newFilters).forEach(([key, data]) => {
-                if (data?.value === undefined || `${data.value}`.trim().length === 0) {
+                if ((data?.value === null || data?.value === undefined) || `${data.value}`.trim().length === 0) {
                     currSearchParams.delete(key);
                 } else {
                     currSearchParams.set(key, data.value);
