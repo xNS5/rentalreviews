@@ -224,8 +224,8 @@ export default function DataTable({
       setParams(tableFilters, () => {
         filterAnnouncementHandler(tableFilters);
         loadingHandler(false);
-        handlePageChange(pageCount > 0 ? 1 : 0);
       });
+      setCurrentPageNumber(pageCount > 0 ? 1 : 0);
     }, 500);
     return () => clearTimeout(timeout);
   }, [tableFilters, searchTerm, filteredData]);
@@ -234,7 +234,7 @@ export default function DataTable({
 
   return (
     <>
-      <h1 className={"md:text-4xl text-xl my-4"}>{title}</h1>
+      <h1 className={"text-4xl my-4"}>{title}</h1>
       {props.disclaimer && <h2 className={"md:text-lg text-base my-2"}>{props.disclaimer}</h2>}
       <div
           className={cn(

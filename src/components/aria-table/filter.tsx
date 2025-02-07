@@ -69,6 +69,9 @@ const getFilterComp = (component_type: string, key: any, props: any) => {
         key={key}
         data={data}
         selectedKey={selectedKey}
+        labelProps={{
+          className: "mx-2"
+        }}
         onSelectionChange={(value: string) => {
           onSelectCallbackFn(callbackKey, value);
         }}
@@ -81,7 +84,6 @@ const getFilterComp = (component_type: string, key: any, props: any) => {
 
 export function Filter(props: any) {
   const { heading, filterState, onSelectCallbackFn } = props;
-
   return (
     <Popover
       className={{
