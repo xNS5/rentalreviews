@@ -102,7 +102,7 @@ export default function DataTable({
           console.error("Error sorting column: ", e);
         }
       }),
-    [sortDescriptor, searchTerm, params],
+    [filteredData],
   );
 
   const pageCount = Math.ceil(sortedData.length / paginationValue);
@@ -116,7 +116,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [pageCount, sortedData, sortDescriptor, tableFilters, currentPageNumber]);
+  }, [currentPageNumber]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) =>
