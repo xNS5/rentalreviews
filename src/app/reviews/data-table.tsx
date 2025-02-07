@@ -228,7 +228,7 @@ export default function DataTable({
       setCurrentPageNumber(pageCount > 0 ? 1 : 0);
     }, 500);
     return () => clearTimeout(timeout);
-  }, [tableFilters, searchTerm, filteredData]);
+  }, [filteredData]);
 
 
 
