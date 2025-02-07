@@ -14,14 +14,20 @@ import type { Config, Link as LinkType } from "@/lib/types";
 function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
   const urlArr: string[] = url.split("/");
-  const baseStyle = "rounded underline-offset-8 px-2 focus-visible:!ring-1";
+  const baseStyle = "rounded-xl underline-offset-8 px-2 focus-visible:!ring-1";
   if (pathnameArr[1] === urlArr[1]) {
     return {
-      className: `${baseStyle} underline decoration-2 font-bold text-black`,
+      isCurrent: true,
+      props: {
+        className: `${baseStyle} underline decoration-2 font-bold text-black`,
+      },
     };
   } else {
     return {
-      className: `${baseStyle} hover:bg-slate-500 hover:text-white py-2`,
+      isCurrent: false,
+      props: {
+        className: `${baseStyle} hover:bg-sky-300 m-2 p-4`,
+      },
     };
   }
 }
@@ -33,14 +39,11 @@ function NavItem({
   name: string;
   [key: string]: any;
 }>) {
-  // Hacky way to get the active class props
   const { href } = rest;
   const activeClassProps = getActiveClassProps(href);
-  const activeClassPropsCount = Object.keys(activeClassProps).length;
   return (
-    <Link href={"/"} {...activeClassProps} {...rest} aria-current={activeClassPropsCount > 1 ? "page" : undefined}>
+    <Link href={"/"} {...activeClassProps.props} {...rest} aria-current={activeClassProps.isCurrent ? "page" : undefined}>
       {name}
-      {activeClassPropsCount > 1 && <span className="sr-only">current page</span>}
     </Link>
   );
 }
@@ -123,14 +126,14 @@ export default function Navbar({
           {!isMobileNavOpen && (
             <ol className="hidden md:flex flex-row justify-center items-center" >
               {data?.map((link: LinkType, i: number) => (
-                <li key={i} className="text-xl mx-2">
+                <li key={i} className="text-2xl mx-2 py-2">
                   {link.type == "link" ? (
-                    <NavItem id={`headlessui-menu-button-${i}`} href={link.url} name={link.name} />
+                    <NavItem id={`menu-button-${i}`} href={link.url} name={link.name} />
                   ) : (
                     <NavigationMenu
                       data={link}
-                      className={{ trigger: `${getActiveClassProps(link.url)?.className} text-xl` }}
-                      props={{ trigger: { id: `headlessui-menu-button-${i}` } }}
+                      className={{ trigger: `${getActiveClassProps(link.url)?.props.className} text-2xl m-2 p-4` }}
+                      props={{ trigger: { id: `menu-button-${i}` } }}
                     />
                   )}
                 </li>
@@ -142,7 +145,7 @@ export default function Navbar({
             <div id={'mobile-navbar'} ref={MobileNavbarRef}>
               <ol className="flex flex-col justify-start items-center w-full h-screen">
                 {data?.map((link: LinkType, i: number) => (
-                    <li key={i} tabIndex={-1} className="py-4 cursor-pointer capitalize text-2xl hover:text-blue-900">
+                    <li key={i} tabIndex={-1} className="py-2 cursor-pointer capitalize text-3xl hover:text-blue-900">
                       {link.type === "link" ? (
                           <NavItem
                               id={`nav-link-${i}`}
