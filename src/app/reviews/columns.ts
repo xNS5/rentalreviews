@@ -5,8 +5,8 @@ export interface Company extends DocumentData {
   average_rating: number;
   review_count: number;
   type: "company" | "property";
-  timestamp: string,
   summary: {
+    created_timestamp: number,
     disclaimer?: string;
     text: string;
   };
