@@ -20,7 +20,8 @@ import Link from "next/link";
 import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { getAltString } from "@/lib/serverUtils";
-import {Filter, FilterItem, FilterProps, processFilters} from "@/components/aria-table/filter";
+import {Filter, FilterProps, processFilters} from "@/components/aria-table/filter";
+import {SortGroup, processSort} from "@/components/aria-table/sort";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
@@ -42,13 +43,14 @@ export default function DataTable({
   [key: string]: any;
 }>) {
 
-  const { filter_props, title } = props.reviews;
+  const { filter_props, sort_props, title } = props.reviews;
   const altObj = props.alt["reviews"];
 
   const { params, setParams } = useURLParams();
 
 
   const [tableFilters, setTableFilters] = useState<FilterProps>(processFilters(filter_props, params));
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(processSort(sort_props, params));
 
   const [searchTerm, setSearchTerm] = useState<string>(params.name ?? "");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
@@ -56,10 +58,6 @@ export default function DataTable({
   );
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: "name",
-    direction: "ascending",
-  });
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
 
   const sortOptions = [
