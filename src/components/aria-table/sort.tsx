@@ -42,28 +42,12 @@ export function processSort(sortRules: SortProps, params: {[key: string]: string
     return ret as SortDescriptor;
 }
 
-function getSortSelectComp({
-    label,
-    data,
-    dataKey,
-    className,
-    onSelectionChangeFn,
-    selectedKey,
-    ariaLabel,
-  }: {
-    label: string;
-    data: SortProps;
-    dataKey: string;
-    className: string;
-    onSelectionChangeFn: (p: (prev: any) => SortDescriptor) => void;
-    selectedKey: string | number;
-    ariaLabel: string;
-  },
-): React.JSX.Element {
+function getSortSelectComp( sortData: SortProp[], sortLabel: SortLabel, sortDescriptor: SortDescriptor, className: string, onSelectionChangeFn:): React.JSX.Element {
+    const { label, aria_label } = sortLabel;
   return (
     <Select
       label={label}
-      data={data}
+      data={sortData}
       className={`text-base md:text-xl ${className}`}
       onSelectionChange={(val: string) =>
         onSelectionChangeFn(
@@ -72,44 +56,28 @@ function getSortSelectComp({
       }
       selectedKey={selectedKey}
       defaultSelectedKey={defaultSort[dataKey as keyof SortDescriptor]}
-      arialabel={ariaLabel}
+      arialabel={aria_label}
     />
   );
 }
 
 
 export function SortGroup({
-    labelArr,
-    dataArr,
-    dataKeys,
-    className,
-    onSelectionChange,
-    currSortDescriptor,
-    ariaLabel,
+    sortProps,
+    sortDescriptor,
+    onSelectionChangeFn
 }: Readonly<{
-    labelArr: string[],
-    dataArr: SortProps[],
-    dataKeys: string[],
-    className: string,
-    onSelectionChange: () => void,
-    currSortDescriptor: SortDescriptor,
-    ariaLabel: string
+    sortProps: SortProps,
+    sortDescriptor: SortDescriptor,
+    onSelectionChangeFn: (prev: SortDescriptor) => void
 }>){
+    const { valid_keys } = sortProps;
     return (
         <>
             {
-                dataArr.map((prop, i: number) =>
-                    getSortSelectComp({
-                        label: labelArr[i],
-                        data: prop,
-                        className: className,
-                        onSelectionChangeFn: onSelectionChange,
-                        dataKey: dataKeys[i],
-                        selectedKey: currSortDescriptor[dataKeys[i] as keyof SortDescriptor],
-                        ariaLabel:
-                        }
-                    )
-                )
+                valid_keys.map((key: string) => getSortSelectComp({
+
+                }))
             }
         </>
     )
