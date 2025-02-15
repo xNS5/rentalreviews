@@ -42,43 +42,62 @@ export function processSort(sortRules: SortProps, params: {[key: string]: string
     return ret as SortDescriptor;
 }
 
-function getSortSelectComp( sortData: SortProp[], sortLabel: SortLabel, sortDescriptor: SortDescriptor, className: string, onSelectionChangeFn:): React.JSX.Element {
-    const { label, aria_label } = sortLabel;
-  return (
-    <Select
-      label={label}
-      data={sortData}
-      className={`text-base md:text-xl ${className}`}
-      onSelectionChange={(val: string) =>
-        onSelectionChangeFn(
-          (prev: any) => ({ ...prev, [dataKey]: val }) as SortDescriptor,
-        )
-      }
-      selectedKey={selectedKey}
-      defaultSelectedKey={defaultSort[dataKey as keyof SortDescriptor]}
-      arialabel={aria_label}
-    />
-  );
+const getSortSelectComp = (
+    key: number,
+    {
+   colKey,
+   sortData,
+   sortLabel,
+   sortDescriptor,
+   className,
+   onSortChangeFn,
+}: Readonly<{
+    colKey: string,
+    sortData: SortProp[],
+    sortLabel: SortLabel,
+    sortDescriptor: SortDescriptor,
+    className: string,
+    onSortChangeFn: (key: string, value: string) => void
+}>): React.JSX.Element => {
+      const { label, aria_label } = sortLabel;
+      const selectedKey = colKey as keyof SortDescriptor;
+      return (
+        <Select
+            key={key}
+          label={label}
+          data={sortData}
+          className={`text-base md:text-xl ${className}`}
+          onSelectionChange={(val: string) =>
+              onSortChangeFn(colKey, val)
+          }
+          selectedKey={sortDescriptor[selectedKey]}
+          defaultSelectedKey={defaultSort[selectedKey]}
+          arialabel={aria_label}
+        />
+      );
 }
 
 
 export function SortGroup({
     sortProps,
     sortDescriptor,
-    onSelectionChangeFn
+    onSortChangeFn,
+    className
 }: Readonly<{
     sortProps: SortProps,
     sortDescriptor: SortDescriptor,
-    onSelectionChangeFn: (prev: SortDescriptor) => void
+    onSortChangeFn: (key: string, value: string) => void,
+    className?: string
 }>){
     const { valid_keys } = sortProps;
-    return (
-        <>
-            {
-                valid_keys.map((key: string) => getSortSelectComp({
-
-                }))
-            }
-        </>
-    )
+    return valid_keys.map((key: string, i: number) => getSortSelectComp(i+1,
+        {
+            colKey: key,
+            sortData: sortProps[key],
+            sortLabel: sortProps.sort_labels[key],
+            sortDescriptor: sortDescriptor,
+            className: className ?? "",
+            onSortChangeFn
+        }
+    ))
 }

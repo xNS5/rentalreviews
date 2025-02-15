@@ -100,7 +100,7 @@ export default function DataTable({
           console.error("Error sorting column: ", e);
         }
       }),
-    [filteredData],
+    [filteredData, sortDescriptor],
   );
 
   const pageCount = Math.ceil(sortedData.length / paginationValue);
@@ -114,7 +114,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [currentPageNumber]);
+  }, [currentPageNumber, sortDescriptor]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) =>
@@ -124,13 +124,6 @@ export default function DataTable({
   const handleMouseLeave = (key: any) =>
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
-  const handleSortChange = (newSortObj: SortDescriptor) =>
-    setSortDescriptor((prevSortObj: SortDescriptor) => ({
-      column: newSortObj.column,
-      direction:
-        prevSortObj.direction === "ascending" ? "descending" : "ascending",
-    }));
-
   const handleFilterChange = (key: string, value: any) => {
     setTableFilters((prev: FilterProps) => ({
       ...prev,
@@ -139,8 +132,16 @@ export default function DataTable({
         value: prev[key]?.value === value ? undefined : value
       },
     }));
-    console.log(tableFilters);
   };
+
+  const handleSortChange = (key: string, value: any) => {
+    console.log("Ping!");
+    setSortDescriptor((prev: SortDescriptor) => ({
+      ...prev,
+      [key]: value
+    })
+    )
+  }
 
   // Handles page change, sets current page number and resets the hover state object
   const handlePageChange = (page: number) => {
@@ -246,33 +247,34 @@ export default function DataTable({
               "visible md:hidden flex flex-row items-start sm:flex-row justify-center sm:items-center text-center"
             }
           >
-            <Select
-              label={"Sort Column"}
-              data={columns}
-              className={`text-base md:text-xl`}
-              onSelectionChange={(val: string) =>
-                setSortDescriptor(
-                  (prev) => ({ ...prev, column: val }) as SortDescriptor,
-                )
-              }
-              selectedKey={sortDescriptor.column}
-              defaultSelectedKey={sortDescriptor.column}
-              arialabel={"column name dropdown"}
-            />
-            <Select
-              label={"Sort Direction"}
-              data={sortOptions}
-              className={`text-base md:text-xl`}
-              onSelectionChange={(val: string) =>
-                setSortDescriptor(
-                  (prev: SortDescriptor) =>
-                    ({ ...prev, direction: val }) as SortDescriptor,
-                )
-              }
-              selectedKey={sortDescriptor.direction}
-              defaultSelectedKey={sortDescriptor.direction}
-              arialabel={"sort direction dropdown"}
-            />
+            {/*<Select*/}
+            {/*  label={"Sort Column"}*/}
+            {/*  data={columns}*/}
+            {/*  className={`text-base md:text-xl`}*/}
+            {/*  onSelectionChange={(val: string) =>*/}
+            {/*    setSortDescriptor(*/}
+            {/*      (prev) => ({ ...prev, column: val }) as SortDescriptor,*/}
+            {/*    )*/}
+            {/*  }*/}
+            {/*  selectedKey={sortDescriptor.column}*/}
+            {/*  defaultSelectedKey={sortDescriptor.column}*/}
+            {/*  arialabel={"column name dropdown"}*/}
+            {/*/>*/}
+            {/*<Select*/}
+            {/*  label={"Sort Direction"}*/}
+            {/*  data={sortOptions}*/}
+            {/*  className={`text-base md:text-xl`}*/}
+            {/*  onSelectionChange={(val: string) =>*/}
+            {/*    setSortDescriptor(*/}
+            {/*      (prev: SortDescriptor) =>*/}
+            {/*        ({ ...prev, direction: val }) as SortDescriptor,*/}
+            {/*    )*/}
+            {/*  }*/}
+            {/*  selectedKey={sortDescriptor.direction}*/}
+            {/*  defaultSelectedKey={sortDescriptor.direction}*/}
+            {/*  arialabel={"sort direction dropdown"}*/}
+            {/*/>*/}
+            <SortGroup onSortChangeFn={(key: string, value: string | number) => handleSortChange(key, value)} sortDescriptor={sortDescriptor} sortProps={sort_props}/>
           </div>
           <div
             className={`flex flex-col sm:flex-row space-x-2 justify-center items-center`}
