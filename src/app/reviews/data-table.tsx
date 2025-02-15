@@ -134,8 +134,14 @@ export default function DataTable({
     }));
   };
 
-  const handleSortChange = (key: string, value: any) => {
-    console.log("Ping!");
+  const handleTableSortChange = (newSortObj: SortDescriptor) =>
+      setSortDescriptor((prevSortObj: SortDescriptor) => ({
+        column: newSortObj.column,
+        direction:
+            prevSortObj.direction === "ascending" ? "descending" : "ascending",
+      }));
+
+  const handleSortComponentChange = (key: string, value: any) => {
     setSortDescriptor((prev: SortDescriptor) => ({
       ...prev,
       [key]: value
@@ -241,45 +247,18 @@ export default function DataTable({
           className,
         )}
       >
-        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-1">
+        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
           <div
             className={
               "visible md:hidden flex flex-row items-start sm:flex-row justify-center sm:items-center text-center"
             }
           >
-            {/*<Select*/}
-            {/*  label={"Sort Column"}*/}
-            {/*  data={columns}*/}
-            {/*  className={`text-base md:text-xl`}*/}
-            {/*  onSelectionChange={(val: string) =>*/}
-            {/*    setSortDescriptor(*/}
-            {/*      (prev) => ({ ...prev, column: val }) as SortDescriptor,*/}
-            {/*    )*/}
-            {/*  }*/}
-            {/*  selectedKey={sortDescriptor.column}*/}
-            {/*  defaultSelectedKey={sortDescriptor.column}*/}
-            {/*  arialabel={"column name dropdown"}*/}
-            {/*/>*/}
-            {/*<Select*/}
-            {/*  label={"Sort Direction"}*/}
-            {/*  data={sortOptions}*/}
-            {/*  className={`text-base md:text-xl`}*/}
-            {/*  onSelectionChange={(val: string) =>*/}
-            {/*    setSortDescriptor(*/}
-            {/*      (prev: SortDescriptor) =>*/}
-            {/*        ({ ...prev, direction: val }) as SortDescriptor,*/}
-            {/*    )*/}
-            {/*  }*/}
-            {/*  selectedKey={sortDescriptor.direction}*/}
-            {/*  defaultSelectedKey={sortDescriptor.direction}*/}
-            {/*  arialabel={"sort direction dropdown"}*/}
-            {/*/>*/}
-            <SortGroup onSortChangeFn={(key: string, value: string | number) => handleSortChange(key, value)} sortDescriptor={sortDescriptor} sortProps={sort_props}/>
+            <SortGroup onSortChangeFn={(key: string, value: string | number) => handleSortComponentChange(key, value)} sortDescriptor={sortDescriptor} sortProps={sort_props}/>
           </div>
           <div
-            className={`flex flex-col sm:flex-row space-x-2 justify-center items-center`}
+            className={`flex flex-row sm:flex-row space-x-2 justify-center items-center`}
           >
-            <label htmlFor="searchBox" className={`invisible md:hidden`}>
+            <label htmlFor="searchBox" className={`text-xl`}>
               Search
             </label>{" "}
             <div className={`flex flex-row`}>
@@ -287,6 +266,7 @@ export default function DataTable({
                 id={"searchBox"}
                 value={searchTerm}
                 placeholder="Company Name"
+                aria-label={`Search by company name`}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     handleFilterChange("name", searchTerm);
@@ -318,7 +298,7 @@ export default function DataTable({
           <Table
             aria-label={title}
             sortDescriptor={sortDescriptor}
-            onSortChange={handleSortChange}
+            onSortChange={handleTableSortChange}
             className="hidden md:table w-full"
           >
             <TableHeader
