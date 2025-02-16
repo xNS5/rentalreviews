@@ -14,9 +14,9 @@ import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: any) {
-  if (params !== undefined) {
-    const { slug } = params;
+export async function generateMetadata(props: any) {
+  if (props) {
+    const { slug } = await props.params;
     const { metadata }: Config | undefined = await getDocument<Config>(
       "config",
       "config",
@@ -31,12 +31,10 @@ export async function generateMetadata({ params }: any) {
   return {} as Metadata;
 }
 
-export default async function Page({
-  params,
-}: Readonly<{
-  params: { [key: string]: string };
+export default async function Page({params}: Readonly<{
+  params: Promise<{slug: string}>
 }>) {
-  const { slug } = params;
+  const slug = (await params).slug;
   const company: Company = await getCompanyData(slug);
 
   if (slug == undefined || !isValidSlug(slug) || company === undefined) {
@@ -47,15 +45,16 @@ export default async function Page({
     "config",
     "config",
   );
+
   let altObj: { [key: string]: any } = review.displayed_column_ratings.reduce(
-      (acc: any, curr: string) => ({
-        ...acc,
-        [curr]: getAltString(alt["review"], curr, company[curr]),
-      }),
-      {},
+    (acc: any, curr: string) => ({
+      ...acc,
+      [curr]: getAltString(alt["review"], curr, company[curr]),
+    }),
+    {},
   );
 
-  const date = new Date(company.created_timestamp * 1000);
+  const date = new Date(company.summary.created_timestamp * 1000);
   const hasAdjustedReviewValue: boolean =
     company.review_count != company.adjusted_review_count;
 

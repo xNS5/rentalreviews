@@ -6,10 +6,8 @@ import Article from "@/components/article/article";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page({params}: Readonly<{
-    params: { [key: string]: string }
-}>) {
-  const { slug } = params;
+export default async function Page(props: { params: Promise<{ slug: string }> }) {
+    const slug = (await props.params).slug;
 
   if (slug == undefined || !isValidSlug(slug)) {
     notFound();

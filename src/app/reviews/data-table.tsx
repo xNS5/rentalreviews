@@ -20,12 +20,12 @@ import Link from "next/link";
 import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { getAltString } from "@/lib/serverUtils";
-import { Filter } from "@/components/filter/filter";
-
-import { useFilters } from "@/components/filter/useFilters";
+import {Filter, FilterProps, processFilters} from "@/components/aria-table/filter";
+import {SortGroup, processSort} from "@/components/aria-table/sort";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
+import {useURLParams} from "@/lib/useURLParams";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -41,65 +41,40 @@ export default function DataTable({
   className?: string;
   paginationValue?: number;
   [key: string]: any;
-}>) {const { filter_props, title } = props.reviews;
+}>) {
+
+  const { filter_props, sort_props, title } = props.reviews;
   const altObj = props.alt["reviews"];
 
-  const { filter, setFilters } = useFilters();
+  const { params, setFilterParams, setSortParams } = useURLParams();
 
-  const [tableFilters, setTableFilters] = useState(filter);
-  const [searchTerm, setSearchTerm] = useState(filter.name ?? "");
+
+  const [tableFilters, setTableFilters] = useState<FilterProps>(processFilters(filter_props, params));
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(processSort(sort_props, params));
+
+  const [searchTerm, setSearchTerm] = useState<string>(params.name ?? "");
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
-  const [currentPageNumber, setCurrentPageNumberNumber] = useState(1)
-  const [isLoading, setIsLoading] = useState(false);
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: "name",
-    direction: "ascending",
-  });
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
-
-  const sortOptions = [
-    { key: "ascending", title: "Ascending" },
-    { key: "descending", title: "Descending" },
-  ];
-
-  // Maps name to comparison string (e.g. ">", ">=", "==", etc.)
-  const filterComparisonObj = useMemo(
-    () =>
-      filter_props.reduce(
-        (acc: any, curr: any) => ({
-          ...acc,
-          [curr.key]: {
-            comparison: curr.comparison,
-            title: curr.title,
-            ...(curr.style ? { alt: curr.style.alt } : undefined),
-          },
-        }),
-        {},
-      ),
-    [],
-  );
 
   // Filters data based on filter component properties
   const filteredData = useMemo(
     () =>
       data.filter((item: Company) =>
-        Object.entries(tableFilters).every(([key, value]) => {
-          if (value !== null) {
-            const compareDataResult = compareData(
+        Object.keys(tableFilters).every((key) => {
+          if(!tableFilters[key].value) return true;
+
+          return compareData(
               item[key],
-              value,
-              filterComparisonObj[key].comparison,
-            );
-            if (!compareDataResult) {
-              return false;
-            }
-          }
-          return true;
+              tableFilters[key].value,
+              tableFilters[key].comparison,
+          )
         }),
       ),
-    [filter, tableFilters],
+    [params, searchTerm, tableFilters],
   );
 
   const sortedData = useMemo(
@@ -120,16 +95,10 @@ export default function DataTable({
           console.error("Error sorting column: ", e);
         }
       }),
-    [sortDescriptor, searchTerm, filter],
+    [filteredData, sortDescriptor],
   );
 
-  // Memoizes page count
-  const pageCount = useMemo(
-    () => Math.ceil(sortedData.length / paginationValue),
-    [filter],
-  );
-
-
+  const pageCount = Math.ceil(sortedData.length / paginationValue);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -140,7 +109,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [pageCount, sortedData, sortDescriptor, tableFilters, currentPageNumber]);
+  }, [currentPageNumber, sortDescriptor, tableFilters]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) =>
@@ -150,66 +119,60 @@ export default function DataTable({
   const handleMouseLeave = (key: any) =>
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
-  const handleSortChange = (newSortObj: SortDescriptor) =>
+  const handleFilterChange = (key: string, value: any) => {
+    setTableFilters((prev: FilterProps) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        value: prev[key]?.value === value ? undefined : value
+      },
+    }));
+  };
+
+  const handleTableSortChange = (newSortObj: SortDescriptor) => {
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
       column: newSortObj.column,
       direction:
-        prevSortObj.direction === "ascending" ? "descending" : "ascending",
+          prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
+  }
 
-  const handleFilterChange = (key: string, value: any) => {
-    setTableFilters((prev) => {
-      const newFilters: { [key: string]: any } = {
-        ...prev,
-        [key]: prev[key] === value ? null : value,
-      };
-      return newFilters;
-    });
-    handlePageChange(1);
-  };
+  const handleSortComponentChange = (key: string, value: any) => {
+    setSortDescriptor((prev: SortDescriptor) => ({
+      ...prev,
+      [key]: value
+    })
+    )
+  }
 
   // Handles page change, sets current page number and resets the hover state object
   const handlePageChange = (page: number) => {
-    setCurrentPageNumberNumber(page);
+    setCurrentPageNumber(page);
     setHoverStates({});
   };
 
-  const validateActiveFilters = (filters: any) => {
-    let hasActiveFilters = false;
-
-    const validFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, value]: [_: any, value: any]) => {
-          if (value) {
-            hasActiveFilters = true;
-            return true;
-          }
-          return false;
-        }),
-    );
-
-    if (hasActiveFilters) {
+  const filterAnnouncementHandler = (filters: FilterProps) => {
       let messageStringArr: string[] = [];
-      Object.entries(validFilters).forEach(
-          ([key, value]: [key: any, value: any]) => {
-            if (
-                filterComparisonObj.hasOwnProperty(key) &&
-                filterComparisonObj[key].hasOwnProperty("alt")
-            ) {
-              const filterObj = filterComparisonObj[key];
-              const { title, alt } = filterObj;
+      Object.entries(filters).forEach(
+          ([_, value]: [key: any, value: any]) => {
+            if(value.value !== undefined){
+              const { title, alt } = value;
+              console.log(title);
               messageStringArr.push(
-                  `${title} ${alt.prefix} ${value} ${alt.postfix}`
+                  `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
                       .trim()
                       .replace(/\s{2,}/g, " "),
               );
             }
           },
       );
-      announce(
-          `Filtering table records by ${messageStringArr.join(", ")}`,
-          "assertive",
-          500,
-      );
+
+      if(messageStringArr.length > 0){
+        announce(
+            `Filtering table records by ${messageStringArr.join(", ")}`,
+            "assertive",
+            500,
+        );
     } else {
       announce("No filters applied to table records", "assertive", 500);
     }
@@ -259,17 +222,30 @@ export default function DataTable({
   useEffect(() => {
     loadingHandler(true);
     const timeout = setTimeout(() => {
-      setFilters(tableFilters, () => {
-        validateActiveFilters(tableFilters);
+      setFilterParams(tableFilters, () => {
+        filterAnnouncementHandler(tableFilters);
         loadingHandler(false);
       });
+      setCurrentPageNumber(pageCount > 0 ? 1 : 0);
     }, 500);
     return () => clearTimeout(timeout);
   }, [tableFilters]);
 
+  useEffect(() => {
+    loadingHandler(true);
+    const timeout = setTimeout(() => {
+      setSortParams(sortDescriptor, () => {
+        filterAnnouncementHandler(tableFilters);
+        loadingHandler(false);
+      });
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [sortDescriptor]);
+
+
   return (
     <>
-      <h1 className={"md:text-4xl text-xl my-4"}>{title}</h1>
+      <h1 className={"text-4xl my-4"}>{title}</h1>
       {props.disclaimer && <h2 className={"md:text-lg text-base my-2"}>{props.disclaimer}</h2>}
       <div
           className={cn(
@@ -277,44 +253,18 @@ export default function DataTable({
           className,
         )}
       >
-        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-1">
+        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
           <div
             className={
               "visible md:hidden flex flex-row items-start sm:flex-row justify-center sm:items-center text-center"
             }
           >
-            <Select
-              label={"Sort Column"}
-              data={columns}
-              className={`text-base md:text-xl`}
-              onSelectionChange={(val: string) =>
-                setSortDescriptor(
-                  (prev) => ({ ...prev, column: val }) as SortDescriptor,
-                )
-              }
-              selectedKey={sortDescriptor.column}
-              defaultSelectedKey={sortDescriptor.column}
-              arialabel={"column name dropdown"}
-            />
-            <Select
-              label={"Sort Direction"}
-              data={sortOptions}
-              className={`text-base md:text-xl`}
-              onSelectionChange={(val: string) =>
-                setSortDescriptor(
-                  (prev: SortDescriptor) =>
-                    ({ ...prev, direction: val }) as SortDescriptor,
-                )
-              }
-              selectedKey={sortDescriptor.direction}
-              defaultSelectedKey={sortDescriptor.direction}
-              arialabel={"sort direction dropdown"}
-            />
+            <SortGroup onSortChangeFn={(key: string, value: string | number) => handleSortComponentChange(key, value)} sortDescriptor={sortDescriptor} sortProps={sort_props}/>
           </div>
           <div
-            className={`flex flex-col sm:flex-row space-x-2 justify-center items-center`}
+            className={`flex flex-row sm:flex-row space-x-2 justify-center items-center`}
           >
-            <label htmlFor="searchBox" className={`invisible md:hidden`}>
+            <label htmlFor="searchBox" className={`text-xl`}>
               Search
             </label>{" "}
             <div className={`flex flex-row`}>
@@ -322,25 +272,25 @@ export default function DataTable({
                 id={"searchBox"}
                 value={searchTerm}
                 placeholder="Company Name"
+                aria-label={`Search by company name`}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && tableFilters?.name.length > 0) {
+                  if (e.key === "Enter") {
                     handleFilterChange("name", searchTerm);
                   }
                 }}
                 onChange={(e) => {
-                  setSearchTerm(e.target.value);
                   handleFilterChange("name", e.target.value);
+                  setSearchTerm(e.target.value);
                 }}
               />
               {/* Filter Component */}
               <Filter
                 heading={"Filter By"}
-                filter={structuredClone(tableFilters)}
-                filterProps={structuredClone(filter_props)}
+                filterState={structuredClone(tableFilters)}
                 className={`hidden md:visible`}
                 onSelectCallbackFn={(
                   key: string,
-                  value: string | number | null,
+                  value: string | number | undefined,
                 ) => handleFilterChange(key, value)}
               />
               <Loading
@@ -354,7 +304,7 @@ export default function DataTable({
           <Table
             aria-label={title}
             sortDescriptor={sortDescriptor}
-            onSortChange={handleSortChange}
+            onSortChange={handleTableSortChange}
             className="hidden md:table w-full"
           >
             <TableHeader
@@ -474,32 +424,32 @@ export default function DataTable({
             <Button
               variant={"ghost"}
               aria-label="last page"
-              disabled={currentPageNumber === 1}
-              aria-disabled={currentPageNumber === 1}
+              disabled={currentPageNumber === 1 || pageCount === 0}
+              aria-disabled={currentPageNumber === 1 || pageCount === 0}
               onClick={() => handlePageChange(1)}
             >
               <Icon type={"fas-angles-left"} className={`h-4 w-4`}/>
             </Button>
             <Button
               aria-label="previous page"
-              disabled={currentPageNumber === 1}
-              aria-disabled={currentPageNumber === 1}
+              disabled={currentPageNumber === 1 || pageCount === 0}
+              aria-disabled={currentPageNumber === 1 || pageCount === 0}
               onClick={() => handlePageChange(currentPageNumber - 1)}
             >
                <Icon type={"fas-angle-left"} className={`h-2 w-2`}/>
             </Button>
             <Button
               aria-label="next page"
-              disabled={currentPageNumber === pageCount}
-              aria-disabled={currentPageNumber === pageCount}
+              disabled={currentPageNumber === pageCount || pageCount === 0}
+              aria-disabled={currentPageNumber === pageCount || pageCount === 0}
               onClick={() => handlePageChange(currentPageNumber + 1)}
             >
                <Icon type={"fas-angle-right"} className={`h-2 w-2`}/>
             </Button>
             <Button
               aria-label="last page"
-              disabled={currentPageNumber === pageCount}
-              aria-disabled={currentPageNumber === pageCount}
+              disabled={currentPageNumber === pageCount || pageCount === 0}
+              aria-disabled={currentPageNumber === pageCount || pageCount === 0}
               onClick={() => handlePageChange(pageCount)}
             >
                <Icon type={"fas-angles-right"} className={`h-4 w-4`}/>
