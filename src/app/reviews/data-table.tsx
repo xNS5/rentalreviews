@@ -109,7 +109,7 @@ export default function DataTable({
       (currentPageNumber - 1) * paginationValue,
       currentPageNumber * paginationValue,
     );
-  }, [currentPageNumber, sortDescriptor]);
+  }, [currentPageNumber, sortDescriptor, tableFilters]);
 
   // Handles mouse enter link
   const handleMouseEnter = (key: any) =>
