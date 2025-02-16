@@ -2,6 +2,7 @@
 
 import React, { useMemo, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import {SortDescriptor} from "react-stately";
 
 const inputTestRegex = new RegExp("[()[\\]{};.=<>:+\\-*\\/%]");
 
@@ -25,10 +26,10 @@ export function useURLParams() {
         [searchParams],
     );
 
-    const setParams = useCallback(
-        (newFilters: { [key: string]: any }, callbackFn?: () => any) => {
+    const setFilterParams = useCallback(
+        (newParams: { [key: string]: any }, callbackFn?: () => any) => {
             const currSearchParams = new URLSearchParams(searchParams.toString());
-            Object.entries(newFilters).forEach(([key, data]) => {
+            Object.entries(newParams).forEach(([key, data]) => {
                 if ((data?.value === null || data?.value === undefined) || `${data.value}`.trim().length === 0) {
                     currSearchParams.delete(key);
                 } else {
@@ -42,5 +43,17 @@ export function useURLParams() {
         },
         [searchParams],
     );
-    return { params, setParams };
+
+    const setSortParams = useCallback(
+        (newParams: SortDescriptor, callbackFn?: () => any) => {
+            const currSearchParams = new URLSearchParams(searchParams.toString());
+            Object.entries(newParams).forEach(([key, value]) => currSearchParams.set(key, value));
+            router.replace(`?${currSearchParams.toString()}`, { scroll: false });
+            if(callbackFn){
+                callbackFn();
+            }
+        },
+        [searchParams]
+    );
+    return { params, setFilterParams, setSortParams };
 }

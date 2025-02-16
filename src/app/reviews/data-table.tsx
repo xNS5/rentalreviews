@@ -46,7 +46,7 @@ export default function DataTable({
   const { filter_props, sort_props, title } = props.reviews;
   const altObj = props.alt["reviews"];
 
-  const { params, setParams } = useURLParams();
+  const { params, setFilterParams, setSortParams } = useURLParams();
 
 
   const [tableFilters, setTableFilters] = useState<FilterProps>(processFilters(filter_props, params));
@@ -59,11 +59,6 @@ export default function DataTable({
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
-
-  const sortOptions = [
-    { key: "ascending", title: "Ascending" },
-    { key: "descending", title: "Descending" },
-  ];
 
   // Filters data based on filter component properties
   const filteredData = useMemo(
@@ -134,12 +129,13 @@ export default function DataTable({
     }));
   };
 
-  const handleTableSortChange = (newSortObj: SortDescriptor) =>
-      setSortDescriptor((prevSortObj: SortDescriptor) => ({
-        column: newSortObj.column,
-        direction:
-            prevSortObj.direction === "ascending" ? "descending" : "ascending",
-      }));
+  const handleTableSortChange = (newSortObj: SortDescriptor) => {
+    setSortDescriptor((prevSortObj: SortDescriptor) => ({
+      column: newSortObj.column,
+      direction:
+          prevSortObj.direction === "ascending" ? "descending" : "ascending",
+    }));
+  }
 
   const handleSortComponentChange = (key: string, value: any) => {
     setSortDescriptor((prev: SortDescriptor) => ({
@@ -226,15 +222,25 @@ export default function DataTable({
   useEffect(() => {
     loadingHandler(true);
     const timeout = setTimeout(() => {
-      setParams(tableFilters, () => {
+      setFilterParams(tableFilters, () => {
         filterAnnouncementHandler(tableFilters);
         loadingHandler(false);
       });
       setCurrentPageNumber(pageCount > 0 ? 1 : 0);
     }, 500);
     return () => clearTimeout(timeout);
-  }, [filteredData]);
+  }, [tableFilters]);
 
+  useEffect(() => {
+    loadingHandler(true);
+    const timeout = setTimeout(() => {
+      setSortParams(sortDescriptor, () => {
+        filterAnnouncementHandler(tableFilters);
+        loadingHandler(false);
+      });
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [sortDescriptor]);
 
 
   return (
