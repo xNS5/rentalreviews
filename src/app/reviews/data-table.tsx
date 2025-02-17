@@ -17,15 +17,15 @@ import { Company, ColumnType } from "@/app/reviews/columns";
 import { SortDescriptor } from "react-stately";
 import Button from "@/components/button/button";
 import Link from "next/link";
-import Select from "@/components/select/select";
 import { announce } from "@react-aria/live-announcer";
 import { getAltString } from "@/lib/serverUtils";
-import {Filter, FilterProps, processFilters} from "@/components/aria-table/filter";
+import {Filter, processFilters} from "@/components/aria-table/filter";
 import {SortGroup, processSort} from "@/components/aria-table/sort";
 import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
 import {useURLParams} from "@/lib/useURLParams";
+import {ReviewPage, FilterProps, AltRecord, PrefixPostfix} from "@/lib/types";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -34,17 +34,21 @@ export default function DataTable({
   data,
   paginationValue = DEFAULT_PAGINATION_VALUE,
   className,
-  ...props
+  reviews,
+    alt,
+    disclaimer
 }: Readonly<{
   columns: ColumnType[];
   data: Company;
   className?: string;
   paginationValue?: number;
-  [key: string]: any;
+  reviews: ReviewPage;
+  alt: AltRecord,
+  disclaimer: string
 }>) {
 
-  const { filter_props, sort_props, title } = props.reviews;
-  const altObj = props.alt["reviews"];
+  const { filter_props, sort_props, title } = reviews;
+  const altObj = alt["reviews"];
 
   const { params, setFilterParams, setSortParams } = useURLParams();
 
@@ -81,15 +85,15 @@ export default function DataTable({
     () =>
       filteredData.sort((a: Company, b: Company) => {
         try {
-          let first = a[sortDescriptor.column as string];
-          let second = b[sortDescriptor.column as string];
+          const first = a[sortDescriptor.column as string];
+          const second = b[sortDescriptor.column as string];
 
           if (typeof first === "number" && typeof second === "number") {
             return sortDescriptor.direction === "descending"
               ? second - first
               : first - second;
           }
-          let cmp = first.localeCompare(second);
+          const cmp = first.localeCompare(second);
           return sortDescriptor.direction === "descending" ? cmp * -1 : cmp;
         } catch (e) {
           console.error("Error sorting column: ", e);
@@ -112,14 +116,14 @@ export default function DataTable({
   }, [currentPageNumber, sortDescriptor, tableFilters]);
 
   // Handles mouse enter link
-  const handleMouseEnter = (key: any) =>
+  const handleMouseEnter = (key: string) =>
     setHoverStates((prev) => ({ ...prev, [key]: true }));
 
   // Handles mouse leave link
-  const handleMouseLeave = (key: any) =>
+  const handleMouseLeave = (key: string) =>
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
-  const handleFilterChange = (key: string, value: any) => {
+  const handleFilterChange = (key: string, value: string | number | undefined) => {
     setTableFilters((prev: FilterProps) => ({
       ...prev,
       [key]: {
@@ -137,7 +141,7 @@ export default function DataTable({
     }));
   }
 
-  const handleSortComponentChange = (key: string, value: any) => {
+  const handleSortComponentChange = (key: string, value: string | number) => {
     setSortDescriptor((prev: SortDescriptor) => ({
       ...prev,
       [key]: value
@@ -152,9 +156,9 @@ export default function DataTable({
   };
 
   const filterAnnouncementHandler = (filters: FilterProps) => {
-      let messageStringArr: string[] = [];
+      const messageStringArr: string[] = [];
       Object.entries(filters).forEach(
-          ([_, val]: [key: any, val: any]) => {
+          ([_, val]) => {
             if(val.value !== undefined){
               const { title, style: { alt }, value } = val;
               messageStringArr.push(
@@ -254,7 +258,7 @@ export default function DataTable({
   return (
     <>
       <h1 className={"text-4xl my-4"}>{title}</h1>
-      {props.disclaimer && <h2 className={"md:text-lg text-base my-2"}>{props.disclaimer}</h2>}
+      {disclaimer && <h2 className={"md:text-lg text-base my-2"}>{disclaimer}</h2>}
       <div
           className={cn(
               "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",

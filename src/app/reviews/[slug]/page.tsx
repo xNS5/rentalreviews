@@ -7,6 +7,7 @@ import { getDocument } from "@/db/db";
 import Link from "next/link";
 import Icon from "@/components/icon/icon";
 import Text from "@/components/text/text";
+import {MetadataProps} from "@/lib/types"
 import type { Company } from "../columns";
 
 import "./review.css";
@@ -14,9 +15,9 @@ import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata(props: any) {
-  if (props) {
-    const { slug } = await props.params;
+export async function generateMetadata({params}: MetadataProps) {
+  if (params) {
+    const { slug } = await params;
     const { metadata }: Config | undefined = await getDocument<Config>(
       "config",
       "config",
@@ -46,8 +47,8 @@ export default async function Page({params}: Readonly<{
     "config",
   );
 
-  let altObj: { [key: string]: any } = review.displayed_column_ratings.reduce(
-    (acc: any, curr: string) => ({
+  const altObj: { [key: string]: string } = review.displayed_column_ratings.reduce(
+    (acc: {[key: string]: string}, curr: string) => ({
       ...acc,
       [curr]: getAltString(alt["review"], curr, company[curr]),
     }),

@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Icon from "@/components/icon/icon";
 import Accordion from "../accordion/accordion";
 import Logo from "../logo/logo";
@@ -143,14 +143,14 @@ export default function Navbar({
             <div id={'mobile-navbar'} ref={MobileNavbarRef}>
               <ol className="flex flex-col justify-start items-center w-full h-screen">
                 {data?.map((link: LinkType, i: number) => (
-                    <li key={i} className="py-2 text-3xl hover:text-blue-900">
+                    <li key={i} className={`py-2 text-3xl hover:text-blue-900`}>
                       {link.type === "link" ? (
                           <NavItem
                               id={`nav-link-${i}`}
                               href={link.url}
                               name={link.name}
                               onClick={() => setIsMobileNavOpen((prev) => !prev)}
-                              className={`rounded-xl`}
+                              className={`rounded-xl ${getActiveClassProps(link.url).props.className}`}
                           />
                       ) : (
                           <Accordion

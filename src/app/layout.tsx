@@ -29,7 +29,6 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-  metadata: any;
 }>) {
   const config = await getDocument<Config>("config", "config", 604800000);
   const { navbar, footer, metadata } = config;

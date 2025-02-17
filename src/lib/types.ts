@@ -29,7 +29,7 @@ export type AltRecord = {
     };
 };
 
-type PrefixPostfix = {
+export type PrefixPostfix = {
     prefix: string;
     postfix: string;
 };
@@ -88,4 +88,66 @@ export type Link = {
     target?: string,
     children?: Link[],
     className?: string
+}
+
+export type FilterOption = {
+    key: string | number,
+    value: string | number,
+    title: string | number
+}
+
+export type FilterItem = {
+    title: string;
+    key: string | number | null;
+    shouldRender: boolean;
+    comparison: string;
+    component_type: string;
+    data_type: string;
+    style: {
+        alt: {
+            prefix: string;
+            postfix: string;
+        }
+        prefix: string;
+        postfix: string;
+    };
+    options: FilterOption[];
+    value: string | number | undefined;
+}
+
+export type FilterProps = {
+    [key: string]: FilterItem;
+};
+
+export type SortProp = {
+    key: string,
+    title: string
+}
+
+export type SortLabel = {
+    label: string,
+    aria_label: string
+}
+
+export type SortProps = {
+    valid_keys: string[],
+    sort_labels: {
+        [key: string]: SortLabel
+    }
+} & {
+    [key: string]: SortProp[]
+}
+
+
+export type ReviewPage = {
+    name: string,
+    title: string,
+    description: string,
+    filter_props: FilterProps,
+    sort_props: SortProps
+}
+
+export type MetadataProps = {
+    params: Promise<{ slug: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }

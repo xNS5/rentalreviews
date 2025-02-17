@@ -1,4 +1,4 @@
-import {AltRecord} from "@/lib/types";
+import {PrefixPostfix} from "@/lib/types";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -15,7 +15,7 @@ export function isValidSlug(slug: string): boolean{
 }
 
 
-export function getAltString(altObj: AltRecord, key: string, value: any) {
+export function getAltString(altObj: {[key: string]: PrefixPostfix}, key: string, value: any) {
   // console.log(altObj, altObj[key]);
   if (altObj[key]) {
     const { prefix, postfix } = altObj[key];

@@ -7,24 +7,7 @@ const defaultSort: SortDescriptor = {
     direction: "ascending",
 }
 
-type SortProp = {
-    key: string,
-    title: string
-}
 
-type SortLabel = {
-    label: string,
-    aria_label: string
-}
-
-type SortProps = {
-    valid_keys: string[],
-    sort_labels: {
-        [key: string]: SortLabel
-    }
-} & {
-    [key: string]: SortProp[]
-}
 
 function validateSortParam(sortProp: SortProp[], key: string){
     return sortProp.find(x => x.key === key);

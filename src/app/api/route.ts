@@ -8,7 +8,7 @@ import { isValidSlug } from "@/lib/serverUtils";
   SERVER_ERROR = 500,
 }
 
-function getResponse(message: any, code: STATUS) {
+function getResponse(message: string | object, code: STATUS) {
    return NextResponse.json(
     { body: (code == STATUS.SUCCESS ? { data: message } : { error: message }), status: code }
   );

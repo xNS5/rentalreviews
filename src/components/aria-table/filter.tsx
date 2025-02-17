@@ -2,31 +2,7 @@ import React from "react";
 import Popover from "@/components/popover/popover";
 import Icon from "@/components/icon/icon";
 import Select from "@/components/select/select";
-
-export type FilterOption = {
-  key: string | number,
-  value: string | number,
-  title: string | number
-}
-
-export type FilterItem = {
-  title: string;
-  key: string | number | null;
-  shouldRender: boolean;
-  comparison: string;
-  component_type: string;
-  data_type: string;
-  style: {
-    prefix: string;
-    postfix: string;
-  };
-  options: FilterOption[];
-  value: string | number;
-}
-
-export type FilterProps = {
-  [key: string]: FilterItem;
-};
+import { FilterProps, FilterItem } from "@/lib/types";
 
 
 function assertType(val: string, type: string) {
