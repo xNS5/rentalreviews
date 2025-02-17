@@ -6,18 +6,19 @@ import React from "react";
 export default function Article({
   children,
   className = "",
-  ...props
+    announcement,
+  ...rest
 }: Readonly<{
   children: React.ReactNode;
   className?: string;
-  [key: string]: any;
-}>) {
-  if (props.announcement && typeof window !== "undefined") {
-    announce(props.announcement, "assertive", 500);
+  announcement?: string;
+}> & React.HTMLAttributes<HTMLElement>) {
+  if (announcement && typeof window !== "undefined") {
+    announce(announcement, "assertive", 500);
   }
 
   return (
-    <article className={`flex flex-col ${className}`} tabIndex={-1} {...props}>
+    <article className={`flex flex-col ${className}`} tabIndex={-1} {...rest}>
       {children}
     </article>
   );

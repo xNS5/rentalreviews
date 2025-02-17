@@ -17,7 +17,7 @@ export default [
     ...tseslint.configs.recommended,
     pluginReact.configs.flat.recommended,
     ...compat.config({
-        extends: ['eslint:recommended', 'next'],
+        extends: ['eslint:recommended', 'next/core-web-vitals', 'next/typescript'],
     }),
     {
     rules: {
@@ -25,6 +25,7 @@ export default [
         "react/react-in-jsx-scope": "off",
         "react-hooks/exhaustive-deps": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "no-var": "off"
     },
 }];

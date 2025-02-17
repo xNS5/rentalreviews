@@ -9,7 +9,7 @@ import { usePathname as getPathname } from "next/navigation";
 import {getIsMobileWidth} from "@/lib/clientUtils";
 import FocusTrap from "@/components/focus-trap/focustrap"
 import NavigationMenu from "@/components/navigation-menu/navigation-menu";
-import type { Config, Link as LinkType } from "@/lib/types";
+import type {Config, Link as LinkType, NavbarItem} from "@/lib/types";
 
 function getActiveClassProps(url: string) {
   const pathnameArr: string[] = getPathname().split("/");
@@ -34,15 +34,15 @@ function getActiveClassProps(url: string) {
 
 function NavItem({
   name,
+  href,
   ...rest
 }: Readonly<{
   name: string;
-  [key: string]: any;
-}>) {
-  const { href } = rest;
+  href: string;
+}> & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const activeClassProps = getActiveClassProps(href);
   return (
-    <Link href={"/"} {...activeClassProps.props} {...rest} aria-current={activeClassProps.isCurrent ? "page" : undefined}>
+    <Link href={href} {...activeClassProps.props} {...rest} aria-current={activeClassProps.isCurrent ? "page" : undefined}>
       {name}
     </Link>
   );
@@ -53,7 +53,7 @@ export default function Navbar({
   title,
   description,
 }: Readonly<{
-  data: Config;
+  data: NavbarItem[];
   title: string;
   description: string;
 }>) {
@@ -124,7 +124,7 @@ export default function Navbar({
               {data?.map((link: LinkType, i: number) => (
                   <li key={i} className="text-2xl mx-2 py-2">
                     {link.type == "link" ? (
-                        <NavItem id={`menu-button-${i}`} href={link.url} name={link.name} />
+                        <NavItem href={link.url} name={link.name} />
                     ) : (
                         <NavigationMenu
                             data={link}
@@ -146,7 +146,6 @@ export default function Navbar({
                     <li key={i} className={`py-2 text-3xl hover:text-blue-900`}>
                       {link.type === "link" ? (
                           <NavItem
-                              id={`nav-link-${i}`}
                               href={link.url}
                               name={link.name}
                               onClick={() => setIsMobileNavOpen((prev) => !prev)}

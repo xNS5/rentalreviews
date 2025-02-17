@@ -1,20 +1,20 @@
 import React from "react";
-import Image from "next/image";
+import Image, {ImageProps} from "next/image";
 
-export default function Logo({ children, className, ...rest}: Readonly<{
+export default function Logo({ id, children, className, ...rest}: Readonly<{
+  id: string;
   children: React.ReactNode;
   className?: string;
-  [key: string]: any;
-}>){
+}> & React.HTMLAttributes<HTMLImageElement>){
   return( <div className="inline-flex">
     <Image
-    src={"/images/apartment.png"}
+      {...rest}
+      src={"/images/apartment.png"}
       alt="Apartment logo"
       width={60}
       height={60}
       className={`${className} object-contain`}
       unoptimized={true}
-      {...rest}
     />
     {children}
   </div>

@@ -1,8 +1,9 @@
 
 import React from "react";
 import {SortDescriptor} from "react-stately";
-import { SortProp, SortProps, SortLabel } from "@/lib/types";
+import { SelectOption, SortProps, SortLabel } from "@/lib/types";
 import Select from "@/components/select/select";
+import {Key} from "react-aria";
 
 
 const defaultSort: SortDescriptor = {
@@ -10,14 +11,14 @@ const defaultSort: SortDescriptor = {
     direction: "ascending",
 }
 
-function validateSortParam(sortProp: SortProp[], key: string){
+function validateSortParam(sortProp: SelectOption[], key: string){
     return sortProp.find(x => x.key === key);
 }
 
 export function processSort(sortRules: SortProps, params: {[key: string]: string}): SortDescriptor {
     let ret = {};
-    for(let key of sortRules.valid_keys){
-        let isValidKey = params.hasOwnProperty(key) && validateSortParam(sortRules[key], params[key]);
+    for(const key of sortRules.valid_keys){
+        const isValidKey = key in params && validateSortParam(sortRules[key], params[key]);
         ret = {
             ...ret,
             [key]: isValidKey ? params[key] : defaultSort[key as keyof SortDescriptor]
@@ -36,12 +37,12 @@ const getSortSelectComp = (
     className,
     onSortChangeFn,
   }: Readonly<{
-      sortKey: string;
-    sortData: SortProp[];
+    sortKey: string;
+    sortData: SelectOption[];
     sortLabel: SortLabel;
     sortDescriptor: SortDescriptor;
     className: string;
-    onSortChangeFn: (key: string, value: string) => void;
+    onSortChangeFn: (key: string | number, value: Key) => void;
   }>,
 ): React.JSX.Element => {
   const { label, aria_label } = sortLabel;
@@ -52,10 +53,10 @@ const getSortSelectComp = (
       label={label}
       data={sortData}
       className={`text-base md:text-xl ${className}`}
-      onSelectionChange={(val: string) => onSortChangeFn(sortKey, val )}
+      onSelectionChange={(val: Key) => onSortChangeFn(sortKey, val )}
       selectedKey={sortDescriptor[selectedKey]}
       defaultSelectedKey={defaultSort[selectedKey]}
-      arialabel={aria_label}
+      aria-label={aria_label}
     />
   );
 };
@@ -69,7 +70,7 @@ export function SortGroup({
 }: Readonly<{
     sortProps: SortProps,
     sortDescriptor: SortDescriptor,
-    onSortChangeFn:(key: string, value: string) => void,
+    onSortChangeFn:(key: string | number, value: Key) => void,
     className?: string
 }>){
     const { valid_keys } = sortProps;

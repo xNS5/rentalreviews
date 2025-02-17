@@ -39,6 +39,7 @@ export default function Accordion({
       <FocusTrap disabled={isExpanded}>
         <Heading className={`flex flex-col justify-center items-center`}>
           <Button
+              disabled={false}
             onClick={() => setIsExpanded((prev) => !prev)}
             slot="trigger"
             className={`flex flex-row justify-center items-centerT rounded-xl hover:underline ${className?.trigger ?? ""}`}

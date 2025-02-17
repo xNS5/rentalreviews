@@ -15,7 +15,7 @@ export function isValidSlug(slug: string): boolean{
 }
 
 
-export function getAltString(altObj: {[key: string]: PrefixPostfix}, key: string, value: any) {
+export function getAltString(altObj: {[key: string]: PrefixPostfix}, key: string, value: string | number): string | undefined {
   // console.log(altObj, altObj[key]);
   if (altObj[key]) {
     const { prefix, postfix } = altObj[key];

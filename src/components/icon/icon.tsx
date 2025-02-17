@@ -33,11 +33,12 @@ const getIcon = (type: string, delimiter: string) => {
 export default function Icon ({
   type,
   className,
+    title,
   ...rest
 }: Readonly<{
   type: string;
+  title?: string;
   className?: string;
-  [key: string]: any;
 }>) {
   const DynamicIcon = getIcon(type, "-");
 
@@ -50,7 +51,7 @@ export default function Icon ({
       icon={DynamicIcon}
       style={{ height: "inherit" }}
       className={`rounded ${className ?? ""}`}
-      title={rest.title}
+      title={title}
       aria-hidden="true"
       {...rest}
     />

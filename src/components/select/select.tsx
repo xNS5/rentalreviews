@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Icon from "@/components/icon/icon";
 import {
   Button,
@@ -8,28 +8,30 @@ import {
   ListBox,
   ListBoxItem,
   Popover,
-  Select as SelectComp,
+  Select as SelectComp, SelectProps,
   SelectValue,
 } from "react-aria-components";
-import {useId} from 'react-aria';
 
-import {getIsMobileWidth} from "@/lib/clientUtils";
+import {useId} from 'react-aria';
+import {SelectOption, SelectOptionStyle} from "@/lib/types";
 
 export default function Select({
   label,
   labelProps = {},
   data,
   selectedKey,
-  ...props
+    className,
+ selectedKeyStyle,
+  ...rest
 }: Readonly<{
-  labelProps?: { [key: string]: any };
+  className?: string;
+  labelProps?: { [key: string]: string };
   label?: string;
-  data: any;
+  data: SelectOption[];
   selectedKey: number | string | undefined;
-  [key: string]: any;
-}>) {
+  selectedKeyStyle?: SelectOptionStyle;
+}> & SelectProps<SelectOption>) {
   const [isSelectExpanded, setIsSelectExpanded] = useState(false);
-  const {selectedKeyStyle} = props;
   const selectCompId = useId();
   const labelId = useId();
 
@@ -41,10 +43,9 @@ export default function Select({
             isOpen={isSelectExpanded}
             onOpenChange={setIsSelectExpanded}
             selectedKey={selectedKey || -1}
-            {...props}
-            className={`${props.className ?? ""}`}
+            className={`${className ?? ""}`}
             aria-labelledby={labelId}
-
+            {...rest}
         >
           <Button
               className={
@@ -76,18 +77,16 @@ export default function Select({
           </Button>
           <Popover
               className={`bg-white border border-solid border-slate-500 shadow rounded`}
-              aria-labelledby={props.id}
           >
             <ListBox items={data} selectionMode="single" className={`p-2`}>
-              {data.map((elem: any, i: number) => (
+              {data.map((elem: SelectOption, i: number) => (
                   <ListBoxItem
                       id={elem.key}
                       key={i}
                       className={({ isSelected }) =>
                           `text-black text-center my-1 p-4 ${isSelected ? "bg-blue-500 text-white border border-black" : "hover:!bg-blue-500 hover:text-white"} rounded`
                       }
-                      textValue={elem.title}
-                      value={elem.value}
+                      textValue={`${elem.title}`}
                   >
                     {({ isSelected }) => (
                         <>

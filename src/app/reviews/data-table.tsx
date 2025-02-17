@@ -25,7 +25,8 @@ import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
 import {useURLParams} from "@/lib/useURLParams";
-import {ReviewPage, FilterProps, AltRecord, PrefixPostfix} from "@/lib/types";
+import {ReviewsPage, FilterProps, AltRecord} from "@/lib/types";
+import {Key} from "react-aria";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -42,7 +43,7 @@ export default function DataTable({
   data: Company;
   className?: string;
   paginationValue?: number;
-  reviews: ReviewPage;
+  reviews: ReviewsPage;
   alt: AltRecord,
   disclaimer: string
 }>) {
@@ -123,7 +124,7 @@ export default function DataTable({
   const handleMouseLeave = (key: string) =>
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
-  const handleFilterChange = (key: string, value: string | number | undefined) => {
+  const handleFilterChange = (key: string | number, value: string | number | undefined) => {
     setTableFilters((prev: FilterProps) => ({
       ...prev,
       [key]: {
@@ -141,7 +142,7 @@ export default function DataTable({
     }));
   }
 
-  const handleSortComponentChange = (key: string, value: string | number) => {
+  const handleSortComponentChange = (key: string | number, value: Key) => {
     setSortDescriptor((prev: SortDescriptor) => ({
       ...prev,
       [key]: value
@@ -271,7 +272,7 @@ export default function DataTable({
               "visible md:hidden flex flex-row items-start sm:flex-row justify-center sm:items-center text-center"
             }
           >
-            <SortGroup onSortChangeFn={(key: string, value: string | number) => handleSortComponentChange(key, value)} sortDescriptor={sortDescriptor} sortProps={sort_props}/>
+            <SortGroup onSortChangeFn={(key: string | number, value: Key) => handleSortComponentChange(key, value)} sortDescriptor={sortDescriptor} sortProps={sort_props}/>
           </div>
           <div
             className={`flex flex-row sm:flex-row space-x-2 justify-center items-center`}
@@ -299,9 +300,8 @@ export default function DataTable({
               <Filter
                 heading={"Filter By"}
                 filterState={structuredClone(tableFilters)}
-                className={`hidden md:visible`}
                 onSelectCallbackFn={(
-                  key: string,
+                  key: string | number,
                   value: string | number | undefined,
                 ) => handleFilterChange(key, value)}
               />
@@ -434,7 +434,6 @@ export default function DataTable({
         <span className="flex flex-col justify-center text-center items-center py-2">
           <span className="flex flex-row justify-center text-center space-x-1">
             <Button
-              variant={"ghost"}
               aria-label="last page"
               disabled={currentPageNumber === 1 || pageCount === 0}
               aria-disabled={currentPageNumber === 1 || pageCount === 0}

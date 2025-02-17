@@ -36,7 +36,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={cn("bg-white h-screen")}>
-        <SkipToContent className="bg-white" url="#main-content" />
+        <SkipToContent className="bg-white" href="#main-content" />
         <header>
           <Navbar data={navbar} title={metadata.title as string} description={metadata.description as string} />
         </header>

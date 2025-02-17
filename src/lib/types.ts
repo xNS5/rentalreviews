@@ -1,3 +1,15 @@
+
+export type RequestType = {
+    collection_name: string,
+    document_id?: string,
+    query_props: {
+        startAt?: number,
+        endAt?: number,
+        id?: string
+    }
+}
+
+
 export type Config = {
     home: Page,
     privacy_policy: Page,
@@ -5,7 +17,19 @@ export type Config = {
     footer: FooterItem[],
     disclaimer: Disclaimer,
     faq: Faq & Page,
-    [key: string]: any
+    navbar: NavbarItem[]
+    accessibility: Page,
+    review: ReviewPage,
+    reviews: ReviewsPage,
+    alt: AltRecord
+}
+
+export type NavbarItem = {
+    name: string,
+    type: "link" | "dropdown",
+    url: string,
+    target: string
+    children?: NavbarItem[]
 }
 
 export type Page = {
@@ -90,39 +114,36 @@ export type Link = {
     className?: string
 }
 
-export type FilterOption = {
+export type SelectOption = {
     key: string | number,
     value: string | number,
     title: string | number
 }
 
+export type SelectOptionStyle = {
+    alt: {
+        prefix: string;
+        postfix: string;
+    }
+    prefix: string;
+    postfix: string;
+}
+
 export type FilterItem = {
     title: string;
-    key: string | number | null;
+    key: string | number;
     shouldRender: boolean;
     comparison: string;
     component_type: string;
     data_type: string;
-    style: {
-        alt: {
-            prefix: string;
-            postfix: string;
-        }
-        prefix: string;
-        postfix: string;
-    };
-    options: FilterOption[];
+    style: SelectOptionStyle;
+    options: SelectOption[];
     value: string | number | undefined;
 }
 
 export type FilterProps = {
     [key: string]: FilterItem;
 };
-
-export type SortProp = {
-    key: string,
-    title: string
-}
 
 export type SortLabel = {
     label: string,
@@ -135,17 +156,20 @@ export type SortProps = {
         [key: string]: SortLabel
     }
 } & {
-    [key: string]: SortProp[]
+    [key: string]: SelectOption[]
 }
+
+
+export type ReviewsPage = {
+    filter_props: FilterProps,
+    sort_props: SortProps
+} & Page
 
 
 export type ReviewPage = {
-    name: string,
-    title: string,
-    description: string,
-    filter_props: FilterProps,
-    sort_props: SortProps
-}
+    displayed_column_ratings: string[]
+} & Page
+
 
 export type MetadataProps = {
     params: Promise<{ slug: string }>
