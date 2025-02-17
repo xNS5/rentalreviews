@@ -344,7 +344,7 @@ export default function DataTable({
                       <Cell
                         key={j}
                         className={`${j < columns.length - 1 ? "border-black border-r-1" : ""}`}
-                        value={item[column.key]}
+                        textValue={item[column.key]}
                       >
                         {j == 0 ? (
                           <Link

@@ -12,7 +12,7 @@ function assertType(val: string, type: string) {
       case "float":
         return parseFloat(val);
       case "string":
-        return val.replaceAll('[^\w0-9\-]', '');
+        return val.replaceAll('[^\\w0-9\\-]', '');
     }
   } catch (e){
     return undefined;

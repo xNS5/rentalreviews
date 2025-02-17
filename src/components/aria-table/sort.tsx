@@ -1,13 +1,14 @@
-import {SortDescriptor, SortDirection} from "react-stately";
-import Select from "@/components/select/select";
+
 import React from "react";
+import {SortDescriptor} from "react-stately";
+import { SortProp, SortProps, SortLabel } from "@/lib/types";
+import Select from "@/components/select/select";
+
 
 const defaultSort: SortDescriptor = {
     column: "name",
     direction: "ascending",
 }
-
-
 
 function validateSortParam(sortProp: SortProp[], key: string){
     return sortProp.find(x => x.key === key);

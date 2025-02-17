@@ -1,4 +1,4 @@
-export function compareData(a: number | string, b: number | string, type: string) {
+export function compareData(a: number | string, b: string | number | undefined, type: string) {
     switch (type) {
         case ">":
             return parseFloat(<string>a) > parseFloat(<string>b);
@@ -17,7 +17,7 @@ export function compareData(a: number | string, b: number | string, type: string
         case "!==":
             return a !== b;
         case "includes":
-            return a.toString().toLowerCase().includes(b.toString().toLowerCase());
+            return a?.toString().toLowerCase().includes(b?.toString().toLowerCase() ?? "");
         default:
             return false;
     }
