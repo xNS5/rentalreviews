@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Icon from "@/components/icon/icon";
 import Accordion from "../accordion/accordion";
 import Logo from "../logo/logo";
@@ -9,57 +9,56 @@ import { usePathname as getPathname } from "next/navigation";
 import {getIsMobileWidth} from "@/lib/clientUtils";
 import FocusTrap from "@/components/focus-trap/focustrap"
 import NavigationMenu from "@/components/navigation-menu/navigation-menu";
-import type { Config, Link as LinkType } from "@/lib/types";
-
-function getActiveClassProps(url: string) {
-  const pathnameArr: string[] = getPathname().split("/");
-  const urlArr: string[] = url.split("/");
-  const baseStyle = "rounded-xl underline-offset-8 px-2 focus-visible:!ring-1";
-  if (pathnameArr[1] === urlArr[1]) {
-    return {
-      isCurrent: true,
-      props: {
-        className: `${baseStyle} underline decoration-2 font-bold text-black`,
-      },
-    };
-  } else {
-    return {
-      isCurrent: false,
-      props: {
-        className: `${baseStyle} hover:bg-sky-300 m-2 p-4`,
-      },
-    };
-  }
-}
-
-function NavItem({
-  name,
-  ...rest
-}: Readonly<{
-  name: string;
-  [key: string]: any;
-}>) {
-  const { href } = rest;
-  const activeClassProps = getActiveClassProps(href);
-  return (
-    <Link href={"/"} {...activeClassProps.props} {...rest} aria-current={activeClassProps.isCurrent ? "page" : undefined}>
-      {name}
-    </Link>
-  );
-}
+import type {Link as LinkType, NavbarItem} from "@/lib/types";
 
 export default function Navbar({
   data,
   title,
   description,
 }: Readonly<{
-  data: Config;
+  data: NavbarItem[];
   title: string;
   description: string;
 }>) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
   const MobileNavbarRef = useRef(null);
+  const pathnameArr: string[] = getPathname().split("/");
+
+  function getActiveClassProps(url: string) {
+    const urlArr: string[] = url.split("/");
+    const baseStyle = "p-2 text-black rounded-xl underline-offset-8 focus-visible:!ring-1";
+    if (pathnameArr[1] === urlArr[1]) {
+      return {
+        isCurrent: true,
+        props: {
+          className: `${baseStyle} underline decoration-2 font-bold text-black`,
+        },
+      };
+    }
+    return {
+      isCurrent: false,
+      props: {
+        className: `${baseStyle} hover:bg-sky-300`,
+      },
+    };
+  }
+
+  function NavItem({
+   name,
+   href,
+   ...rest
+ }: Readonly<{
+    name: string;
+    href: string;
+  }> & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+    const activeClassProps = getActiveClassProps(href);
+    return (
+        <Link href={href} {...activeClassProps.props} {...rest} aria-current={activeClassProps.isCurrent ? "page" : undefined}>
+          {name}
+        </Link>
+    );
+  }
 
   /* handles the following scenarios:
    User hits `escape` to exit out of navbar
@@ -124,7 +123,7 @@ export default function Navbar({
               {data?.map((link: LinkType, i: number) => (
                   <li key={i} className="text-2xl mx-2 py-2">
                     {link.type == "link" ? (
-                        <NavItem id={`menu-button-${i}`} href={link.url} name={link.name} />
+                        <NavItem href={link.url} name={link.name} />
                     ) : (
                         <NavigationMenu
                             data={link}
@@ -142,27 +141,27 @@ export default function Navbar({
               disabled={isMobileNavOpen}>
             <div id={'mobile-navbar'} ref={MobileNavbarRef}>
               <ol className="flex flex-col justify-start items-center w-full h-screen">
-                {data?.map((link: LinkType, i: number) => (
-                    <li key={i} className="py-2 text-3xl hover:text-blue-900">
+                {
+                  data.map((link: LinkType, i: number) => (
+                    <li key={i} className={`my-2 text-3xl hover:text-blue-900`}>
                       {link.type === "link" ? (
                           <NavItem
-                              id={`nav-link-${i}`}
                               href={link.url}
                               name={link.name}
                               onClick={() => setIsMobileNavOpen((prev) => !prev)}
-                              className={`rounded-xl`}
+                              className={`rounded-xl ${getActiveClassProps(link.url).props.className}`}
                           />
                       ) : (
                           <Accordion
                               id={`nav-accordion-${i}`}
                               triggerText={link.name}
                               className={{
-                                trigger: "text-3xl"
+                                trigger: `text-3xl ${getActiveClassProps(link.url).props.className}`
                               }}
                           >
                             <ol className="text-center">
                               {link.children?.map((child: LinkType, j: number) => (
-                                  <li key={j} className="my-4 px-2">
+                                  <li key={j} className="my-2 px-2">
                                     <NavItem
                                         href={child.url}
                                         name={child.name}

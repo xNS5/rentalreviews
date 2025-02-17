@@ -1,3 +1,15 @@
+
+export type RequestType = {
+    collection_name: string,
+    document_id?: string,
+    query_props: {
+        startAt?: number,
+        endAt?: number,
+        id?: string
+    }
+}
+
+
 export type Config = {
     home: Page,
     privacy_policy: Page,
@@ -5,7 +17,19 @@ export type Config = {
     footer: FooterItem[],
     disclaimer: Disclaimer,
     faq: Faq & Page,
-    [key: string]: any
+    navbar: NavbarItem[]
+    accessibility: Page,
+    review: ReviewPage,
+    reviews: ReviewsPage,
+    alt: AltRecord
+}
+
+export type NavbarItem = {
+    name: string,
+    type: "link" | "dropdown",
+    url: string,
+    target: string
+    children?: NavbarItem[]
 }
 
 export type Page = {
@@ -29,7 +53,7 @@ export type AltRecord = {
     };
 };
 
-type PrefixPostfix = {
+export type PrefixPostfix = {
     prefix: string;
     postfix: string;
 };
@@ -88,4 +112,66 @@ export type Link = {
     target?: string,
     children?: Link[],
     className?: string
+}
+
+export type SelectOption = {
+    key: string | number,
+    value: string | number,
+    title: string | number
+}
+
+export type SelectOptionStyle = {
+    alt: {
+        prefix: string;
+        postfix: string;
+    }
+    prefix: string;
+    postfix: string;
+}
+
+export type FilterItem = {
+    title: string;
+    key: string | number;
+    shouldRender: boolean;
+    comparison: string;
+    component_type: string;
+    data_type: string;
+    style: SelectOptionStyle;
+    options: SelectOption[];
+    value: string | number | undefined;
+}
+
+export type FilterProps = {
+    [key: string]: FilterItem;
+};
+
+export type SortLabel = {
+    label: string,
+    aria_label: string
+}
+
+export type SortProps = {
+    valid_keys: string[],
+    sort_labels: {
+        [key: string]: SortLabel
+    }
+} & {
+    [key: string]: SelectOption[]
+}
+
+
+export type ReviewsPage = {
+    filter_props: FilterProps,
+    sort_props: SortProps
+} & Page
+
+
+export type ReviewPage = {
+    displayed_column_ratings: string[]
+} & Page
+
+
+export type MetadataProps = {
+    params: Promise<{ slug: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }

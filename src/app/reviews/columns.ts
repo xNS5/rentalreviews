@@ -2,18 +2,21 @@ import { DocumentData } from "firebase/firestore";
 
 export interface Company extends DocumentData {
   name: string;
+  address: string,
+  slug: string;
   average_rating: number;
   review_count: number;
+  adjusted_average_rating: number;
+  adjusted_review_count: number;
   type: "company" | "property";
+  distribution: {
+    [key: number]: number
+  };
   summary: {
     created_timestamp: number,
     disclaimer?: string;
     text: string;
   };
-  cellProps?: {
-    fn: () => any;
-  };
-  [key: string]: any | any[];
 }
 
 export type ColumnType = {

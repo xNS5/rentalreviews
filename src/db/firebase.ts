@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import type { Firestore } from "firebase/firestore";
 import type { FirebaseApp } from "firebase/app";
-import type { RequestType } from "./requesttype";
+import type { RequestType } from "@/lib/types";
 
 const firebaseConfig = () => {
   if(process.env.NEXT_PUBLIC_DB_ENV === "test"){
@@ -42,7 +42,7 @@ export const firestoreGetCollection = async <T>(props: RequestType): Promise<T |
     const queryRef = query(collectionRef);
     const docSnapshot = await getDocs(queryRef);
     if(docSnapshot.empty){
-
+      return {} as T;
     }
     return docSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()})) as T;
   } catch (error) {

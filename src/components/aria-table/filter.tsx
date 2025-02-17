@@ -2,31 +2,8 @@ import React from "react";
 import Popover from "@/components/popover/popover";
 import Icon from "@/components/icon/icon";
 import Select from "@/components/select/select";
-
-export type FilterOption = {
-  key: string | number,
-  value: string | number,
-  title: string | number
-}
-
-export type FilterItem = {
-  title: string;
-  key: string | number | null;
-  shouldRender: boolean;
-  comparison: string;
-  component_type: string;
-  data_type: string;
-  style: {
-    prefix: string;
-    postfix: string;
-  };
-  options: FilterOption[];
-  value: string | number;
-}
-
-export type FilterProps = {
-  [key: string]: FilterItem;
-};
+import {Key} from 'react-aria';
+import {FilterProps, FilterItem, SelectOption, SelectOptionStyle} from "@/lib/types";
 
 
 function assertType(val: string, type: string) {
@@ -36,7 +13,7 @@ function assertType(val: string, type: string) {
       case "float":
         return parseFloat(val);
       case "string":
-        return val.replaceAll('[^\w0-9\-]', '');
+        return val.replaceAll(/[^\w0-9\-]/, '');
     }
   } catch (e){
     return undefined;
@@ -54,36 +31,51 @@ export function processFilters(filterRules: FilterProps, params:  {[key: string]
   }), {}) as FilterProps;
 }
 
-const getFilterComp = (component_type: string, key: any, props: any) => {
-
+const getFilterComp = (component_type: string, key: number,
+{
+    label,
+    value,
+    data,
+    selectedKey,
+    onSelectCallbackFn,
+    selectedKeyStyle,
+    callbackKey
+}: Readonly<{
+  label: string,
+  value: string | number | undefined,
+  data: SelectOption[],
+  selectedKey: string | number | undefined,
+  onSelectCallbackFn: (key: string | number, value: Key) => void,
+  selectedKeyStyle: SelectOptionStyle,
+  callbackKey: string | number
+}>) => {
   if (component_type?.toLowerCase() === "select") {
-    const {
-      data,
-      selectedKey,
-      onSelectCallbackFn,
-      callbackKey,
-      selectedKeyStyle,
-    } = props;
     return (
       <Select
+        label={label}
         key={key}
         data={data}
         selectedKey={selectedKey}
         labelProps={{
           className: "mx-2"
         }}
-        onSelectionChange={(value: string) => {
+        onSelectionChange={(value) => {
           onSelectCallbackFn(callbackKey, value);
         }}
-        selectedKeyStyle={selectedKeyStyle}
-        {...props}
-      />
+        selectedKeyStyle={selectedKeyStyle}/>
     );
   }
 };
 
-export function Filter(props: any) {
-  const { heading, filterState, onSelectCallbackFn } = props;
+export function Filter({
+    heading,
+    filterState,
+    onSelectCallbackFn
+}: Readonly<{
+  heading: string,
+  filterState: {[key: string]: FilterItem},
+  onSelectCallbackFn: (key: string | number, value: Key) => void
+}>) {
   return (
     <Popover
       className={{
@@ -97,7 +89,8 @@ export function Filter(props: any) {
           <b>{heading}</b>
         </h2>
       )}
-      {Object.values<FilterItem>(filterState).map(({ title, value, options, key, style, component_type}, i: number) =>
+      {
+        Object.values<FilterItem>(filterState).map(({ title, value, options, key, style, component_type}, i: number) =>
         getFilterComp(component_type, i + 1, {
           label: title,
           value: value ?? undefined,

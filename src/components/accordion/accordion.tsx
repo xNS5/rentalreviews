@@ -18,17 +18,19 @@ export default function Accordion({
   triggerText,
   children,
   className,
+    id,
   ...rest
 }: Readonly<{
+  id: string
   triggerText: string;
   children: React.ReactNode;
   className?: ClassName;
-  [key: string]: any;
 }>) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Disclosure
+        id={id}
       isExpanded={isExpanded}
       className={`${className?.comp ?? ""}`}
       {...(rest ? { ...rest } : undefined)}
@@ -37,6 +39,7 @@ export default function Accordion({
       <FocusTrap disabled={isExpanded}>
         <Heading className={`flex flex-col justify-center items-center`}>
           <Button
+              disabled={false}
             onClick={() => setIsExpanded((prev) => !prev)}
             slot="trigger"
             className={`flex flex-row justify-center items-centerT rounded-xl hover:underline ${className?.trigger ?? ""}`}

@@ -19,7 +19,7 @@ export default function Footer({ data }: {data: FooterItem[]}) {
   return (
     <footer className="grid auto-rows-max">
       {footerData &&
-        Object.values(footerData).map((elem: any[], i: number) => (
+        Object.values<FooterItem[]>(footerData).map((elem, i: number) => (
           <div key={i} className="my-1 flex inline-flex items-center justify-center">
             {elem.map((item: FooterItem, j: number) => {
               if (item.type === "text") {
@@ -32,7 +32,7 @@ export default function Footer({ data }: {data: FooterItem[]}) {
               return (
                 <Link key={j} href={item?.url ?? ""} target={item.target} className={"mx-1"}>
                   {item.icon && item.icon.length > 0 ? (
-                    <Icon type={item.icon} alttext={item.alt} className="!w-10 !h-10 px-3" />
+                    <Icon type={item.icon} aria-label={item.alt} className="!w-10 !h-10 px-3" />
                   ) : (
                     <span className="rounded">{item.text}</span>
                   )}

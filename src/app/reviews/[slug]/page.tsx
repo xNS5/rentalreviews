@@ -2,11 +2,12 @@ import { notFound } from "next/navigation";
 import { getCompanyData, getCompanyMetadata } from "@/lib/getCompanyData";
 import { isValidSlug, getAltString} from "@/lib/serverUtils";
 import Article from "@/components/article/article";
-import { Config } from "@/lib/types";
+import {AltRecord, Config} from "@/lib/types";
 import { getDocument } from "@/db/db";
 import Link from "next/link";
 import Icon from "@/components/icon/icon";
 import Text from "@/components/text/text";
+import {MetadataProps} from "@/lib/types"
 import type { Company } from "../columns";
 
 import "./review.css";
@@ -14,9 +15,9 @@ import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata(props: any) {
-  if (props) {
-    const { slug } = await props.params;
+export async function generateMetadata({params}: MetadataProps) {
+  if (params) {
+    const { slug } = await params;
     const { metadata }: Config | undefined = await getDocument<Config>(
       "config",
       "config",
@@ -41,16 +42,16 @@ export default async function Page({params}: Readonly<{
     notFound();
   }
 
-  const { alt, disclaimer, review }: Config = await getDocument<Config>(
+  const { alt, disclaimer, review, metadata}: Config = await getDocument<Config>(
     "config",
     "config",
   );
 
-  let altObj: { [key: string]: any } = review.displayed_column_ratings.reduce(
-    (acc: any, curr: string) => ({
-      ...acc,
-      [curr]: getAltString(alt["review"], curr, company[curr]),
-    }),
+  const altObj = review.displayed_column_ratings.reduce<Record<string, string>>(
+    (acc, curr: string) => {
+      acc[curr] = getAltString(alt["review"], curr, company[curr]) ?? "";
+      return acc;
+    },
     {},
   );
 
@@ -61,7 +62,7 @@ export default async function Page({params}: Readonly<{
   return (
     <Article
       className="container mx-auto py-10 review-summary"
-      announcement={review.aria_announcement}
+      announcement={metadata.aria_announcement['review']}
     >
       <>
         {date && (

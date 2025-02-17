@@ -20,8 +20,8 @@ export default function NavigationMenu({
         trigger?: string;
         item?: string;
     };
-    props?: {
-        trigger: {[key: string]: any};
+    props: {
+        trigger: {[key: string]: string};
     }
 }>){
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -70,13 +70,12 @@ export default function NavigationMenu({
         <div id={"dropdown-menu"} className={`${className?.comp ?? ''}`}>
             <h3>
                 <Button
-                    id={props?.trigger?.id}
+                    id={props.trigger?.id}
                     type={"button"}
-                    // aria-controls={`${accordionId}`}
+                    disabled={false}
                     aria-expanded={isNavOpen}
                     onClick={() => setIsNavOpen((prev) => !prev)}
                     className={`flex flex-row justify-center items-center ${className?.trigger ?? ''}`}
-                    {...(props?.trigger && props.trigger)}
                 >
                     {data.name}
                     <Icon
