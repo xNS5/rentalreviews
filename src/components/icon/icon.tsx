@@ -8,6 +8,7 @@ import {
   findIconDefinition,
 } from "@fortawesome/fontawesome-svg-core";
 
+import {far} from '@fortawesome/free-regular-svg-icons';
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { library, config } from "@fortawesome/fontawesome-svg-core";
@@ -15,7 +16,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 
 config.autoAddCss = true;
 
-library.add(fas, fab);
+library.add(fas, fab, far);
 
 const getIcon = (type: string, delimiter: string) => {
   const index: number = type.indexOf("-");

@@ -154,10 +154,9 @@ export default function DataTable({
   const filterAnnouncementHandler = (filters: FilterProps) => {
       let messageStringArr: string[] = [];
       Object.entries(filters).forEach(
-          ([_, value]: [key: any, value: any]) => {
-            if(value.value !== undefined){
-              const { title, alt } = value;
-              console.log(title);
+          ([_, val]: [key: any, val: any]) => {
+            if(val.value !== undefined){
+              const { title, style: { alt }, value } = val;
               messageStringArr.push(
                   `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
                       .trim()
@@ -166,7 +165,6 @@ export default function DataTable({
             }
           },
       );
-
       if(messageStringArr.length > 0){
         announce(
             `Filtering table records by ${messageStringArr.join(", ")}`,
@@ -177,6 +175,18 @@ export default function DataTable({
       announce("No filters applied to table records", "assertive", 500);
     }
   };
+
+  const sortAnnouncementHandler = () => {
+    const colName: string = (sortDescriptor.column as string).replace(/_/, " ");
+    const colDirection: string = (sortDescriptor.direction as string);
+
+    announce(
+        `Table sorted on column ${colName} in ${colDirection} order`,
+        "assertive",
+        500
+    );
+
+  }
 
   // Announces when page is loading data and when the loading has finished
   const loadingHandler = (state: boolean) => {
@@ -232,11 +242,9 @@ export default function DataTable({
   }, [tableFilters]);
 
   useEffect(() => {
-    loadingHandler(true);
     const timeout = setTimeout(() => {
       setSortParams(sortDescriptor, () => {
-        filterAnnouncementHandler(tableFilters);
-        loadingHandler(false);
+        sortAnnouncementHandler();
       });
     }, 500);
     return () => clearTimeout(timeout);

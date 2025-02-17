@@ -9,7 +9,7 @@ export default function FocusTrap({ children, disabled, className, ...rest}: Rea
     children: React.ReactNode;
 }>) {
   return (
-    <FocusScope contain={disabled ?? true} restoreFocus autoFocus {...rest}>
+    <FocusScope contain={disabled ?? true} {...rest}>
       {children}
     </FocusScope>
   );

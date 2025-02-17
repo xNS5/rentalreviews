@@ -35,7 +35,7 @@ export default function Select({
 
   return (
       <div className={`flex flex-col md:flex-row m-2 justify-between items-center`}>
-        {label && <Label id={labelId} htmlFor={selectCompId} {...labelProps}>{label}</Label>}
+        {label && <Label id={labelId} {...labelProps}>{label}</Label>}
         <SelectComp
             id={selectCompId}
             isOpen={isSelectExpanded}
@@ -43,6 +43,7 @@ export default function Select({
             selectedKey={selectedKey || -1}
             {...props}
             className={`${props.className ?? ""}`}
+            aria-labelledby={labelId}
 
         >
           <Button

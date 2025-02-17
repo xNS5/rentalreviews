@@ -39,7 +39,7 @@ export default function Accordion({
           <Button
             onClick={() => setIsExpanded((prev) => !prev)}
             slot="trigger"
-            className={`flex flex-row justify-center items-center rounded-xl text-2xl hover:underline ${className?.trigger ?? ""}`}
+            className={`flex flex-row justify-center items-centerT rounded-xl hover:underline ${className?.trigger ?? ""}`}
           >
             {triggerText}
             <Icon
