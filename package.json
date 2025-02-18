@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@cacheable/node-cache": "^1.4.2",
-    "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.20.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
@@ -20,7 +18,7 @@
     "@react-stately/color": "^3.8.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "firebase": "^11.0.2",
+    "firebase": "^11.3.1",
     "framer-motion": "^11.5.4",
     "html-react-parser": "^5.1.10",
     "mongo": "^0.1.0",
@@ -37,6 +35,8 @@
     "view-json-react": "^1.1.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.20.0",
     "@next/eslint-plugin-next": "^15.1.7",
     "@types/loadable__component": "^5.13.9",
     "@types/node": "^20",

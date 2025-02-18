@@ -2,7 +2,7 @@ import { MongoClient, ObjectId } from "mongodb";
 
 function getClient() {
   return new MongoClient(
-    `mongodb://${process.env.NEXT_PUBLIC_MONGODB_USER}:${process.env.NEXT_PUBLIC_MONGODB_PASSWORD}@${process.env.NEXT_PUBLIC_MONGODB_URL}`
+    `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}`
   );
 }
 
