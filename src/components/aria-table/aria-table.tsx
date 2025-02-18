@@ -66,6 +66,7 @@ const Column = ({
 
   return (
     <ColumnComp
+      id={id}
       {...rest}
       className={cn(
         "sticky top-0 py-2 border-0 border-b border-solid border-slate-300 bg-slate-200 font-bold text-left cursor-default whitespace-nowrap ",

@@ -25,7 +25,7 @@ import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
 import {useURLParams} from "@/lib/useURLParams";
-import {ReviewsPage, FilterProps, AltRecord} from "@/lib/types";
+import {ReviewsPage, FilterProps, AltRecord, PrefixPostfix} from "@/lib/types";
 import {Key} from "react-aria";
 
 const DEFAULT_PAGINATION_VALUE = 10;
@@ -161,7 +161,8 @@ export default function DataTable({
       Object.entries(filters).forEach(
           ([_, val]) => {
             if(val.value !== undefined){
-              const { title, style: { alt }, value } = val;
+              const { title, style, value } = val;
+              const alt: PrefixPostfix = style?.alt;
               messageStringArr.push(
                   `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
                       .trim()
@@ -261,63 +262,62 @@ export default function DataTable({
       <h1 className={"text-4xl my-4"}>{title}</h1>
       {disclaimer && <h2 className={"md:text-lg text-base my-2"}>{disclaimer}</h2>}
       <div
-          className={cn(
-              "relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]",
-          className,
+          className={cn("relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]", className,
         )}
       >
-        <div className="flex flex-col-reverse sm:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
-          <div
-            className={
-              "visible md:hidden flex flex-row items-start sm:flex-row justify-center sm:items-center text-center"
-            }
-          >
-            <SortGroup onSortChangeFn={(key: string | number, value: Key) => handleSortComponentChange(key, value)} sortDescriptor={sortDescriptor} sortProps={sort_props}/>
-          </div>
-          <div
-            className={`flex flex-row sm:flex-row space-x-2 justify-center items-center`}
+        <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
+          <div className={`flex flex-col lg:flex-row space-x-2 justify-center items-center`}
           >
             <label htmlFor="searchBox" className={`text-xl`}>
               Search
             </label>{" "}
             <div className={`flex flex-row`}>
               <Input
-                id={"searchBox"}
-                value={searchTerm}
-                placeholder="Company Name"
-                aria-label={`Search by company name`}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleFilterChange("name", searchTerm);
-                  }
-                }}
-                onChange={(e) => {
-                  handleFilterChange("name", e.target.value);
-                  setSearchTerm(e.target.value);
-                }}
+                  id={"searchBox"}
+                  value={searchTerm}
+                  placeholder="Company Name"
+                  aria-label={`Search by company name`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleFilterChange("name", searchTerm);
+                    }
+                  }}
+                  onChange={(e) => {
+                    handleFilterChange("name", e.target.value);
+                    setSearchTerm(e.target.value);
+                  }}
               />
               {/* Filter Component */}
               <Filter
-                heading={"Filter By"}
-                filterState={structuredClone(tableFilters)}
-                onSelectCallbackFn={(
-                  key: string | number,
-                  value: string | number | undefined,
-                ) => handleFilterChange(key, value)}
+                  heading={"Filter By"}
+                  filterState={structuredClone(tableFilters)}
+                  onSelectCallbackFn={(
+                      key: string | number,
+                      value: string | number | undefined,
+                  ) => handleFilterChange(key, value)}
               />
               <Loading
-                className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
+                  className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
               />
+            </div>
+            <div
+                className={
+                  "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"
+                }
+            >
+              <SortGroup onSortChangeFn={(key: string | number, value: Key) => handleSortComponentChange(key, value)}
+                         sortDescriptor={sortDescriptor} sortProps={sort_props}/>
             </div>
           </div>
         </div>
-        <div className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
+        <div
+            className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
           {/* Full-screen data view */}
           <Table
-            aria-label={title}
-            sortDescriptor={sortDescriptor}
-            onSortChange={handleTableSortChange}
-            className="hidden md:table w-full"
+              aria-label={title}
+              sortDescriptor={sortDescriptor}
+              onSortChange={handleTableSortChange}
+              className="hidden md:table w-full"
           >
             <TableHeader
               className={`border-t`}
