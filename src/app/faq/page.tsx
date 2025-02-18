@@ -21,7 +21,7 @@ export default async function Page() {
       announcement={metadata.aria_announcement?.faq ?? undefined}
     >
       <div className="flex flex-col text-center py-2">
-        <h1 className="md:text-4xl">{faq.title}</h1>
+        <h1 className="text-4xl">{faq.title}</h1>
         <h2 className="md:text-2xl no-underline font-normal">
           {faq.description}
         </h2>
