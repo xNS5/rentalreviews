@@ -1,21 +1,23 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 
 export default function SkipToContent({
   className,
-  ...props
+    href,
+  ...rest
 }: Readonly<{
+  href: string
   className?: string;
-  [key: string]: any | any[];
-}>) {
+}> & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 
   return (
     <Link
     id="skip-link"
-    href={props.url}
+    href={"/"}
     className={`transition left-0 bg-primary text-primary-content absolute p-3 m-3 -translate-y-16 focus:translate-y-0 ${className}`}
-    {...props}
+    {...rest}
     >
       <p>Skip to main content</p>
     </Link>

@@ -38,7 +38,7 @@ The same steps should work for Windows machines, assuming Python is installed co
 
 ## Frontend
 1. Copy `.env.template` to `.env.local`
-2. Populate the `NEXT_PUBLIC_MONGODB_*` values
+2. Populate the `MONGODB_*` values
 3. Install the dependencies and run (`npm install` and `npm run dev`). 
 
 # Data Development

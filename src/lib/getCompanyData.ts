@@ -1,4 +1,4 @@
-import { getDocument, getCollection} from "@/db/db";
+import { getDocument } from "@/db/db";
 import { Company } from "@/app/reviews/columns";
 
 export async function getCompanyData(slug: string): Promise<Company> {
@@ -8,11 +8,11 @@ export async function getCompanyData(slug: string): Promise<Company> {
   const [company, review] = await Promise.all([companyPromise, reviewPromise]);
 
   if (company) {
-    delete company[process.env.NEXT_PUBLIC_DB_ENV === "local"? "_id" : "id"];
+    delete company[process.env.DB_ENV === "local"? "_id" : "id"];
   }
 
   if (review) {
-    delete review[process.env.NEXT_PUBLIC_DB_ENV === "local" ? "_id" : "id"];
+    delete review[process.env.DB_ENV === "local" ? "_id" : "id"];
   }
 
   return {
@@ -26,7 +26,7 @@ export async function getCompanyMetadata(slug: string): Promise<Company>{
   const [company] = await Promise.all([companyPromise]);
 
   if (company) {
-    delete company[process.env.NEXT_PUBLIC_DB_ENV === "local"? "_id" : "id"];
+    delete company[process.env.DB_ENV === "local"? "_id" : "id"];
   }
 
   return {

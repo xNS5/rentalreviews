@@ -1,21 +1,21 @@
-import { Button as ShadButton } from "@/components/ui/button";
+import React from "react";
+import {Button as AriaButton, ButtonProps} from 'react-aria-components';
 
 export default function Button({
   onClick,
   className,
   children,
-  ...props
+    disabled,
+  ...rest
 }: Readonly<{
   onClick?: () => void;
   className?: string;
   children: React.ReactNode;
-  [key: string]: any;
-}>) {
+  disabled: boolean;
+}> & ButtonProps) {
   return (
-    <span className={`${props.disabled ? "cursor-not-allowed" : ""}`}>
-      <ShadButton onClick={() => props.disabled === false && onClick ? onClick() : ""} className={`transition-colors ease-in-out duration-400 hover:bg-slate-500 hover:text-white disabled:bg-gray-200 ${className}`} {...props}>
+    <AriaButton onPress={() => onClick ? onClick() : undefined} className={`rounded-lg p-2 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed hover:bg-gray-300 active:bg-gray-500 active:text-white ${className}`} isDisabled={disabled} {...rest}>
       {children}
-    </ShadButton>
-    </span>
+    </AriaButton>
   );
 };

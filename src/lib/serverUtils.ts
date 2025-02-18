@@ -1,3 +1,4 @@
+import {PrefixPostfix} from "@/lib/types";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -13,3 +14,12 @@ export function isValidSlug(slug: string): boolean{
   return !slug_regex_test.test(slug);
 }
 
+
+export function getAltString(altObj: {[key: string]: PrefixPostfix}, key: string, value: string | number): string | undefined {
+  // console.log(altObj, altObj[key]);
+  if (altObj[key]) {
+    const { prefix, postfix } = altObj[key];
+    return `${prefix} ${value} ${postfix}`.trim();
+  }
+  return undefined;
+}

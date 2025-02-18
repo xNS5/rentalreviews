@@ -1,5 +1,5 @@
 import {getDocument} from "@/db/db"
-import { Config } from "@/lib/configProvider";
+import { Config } from "@/lib/types";
 import { headers } from 'next/headers';
 
 export default async function robots(){
@@ -11,8 +11,8 @@ export default async function robots(){
         return {};
     }
     const myHeaders = headers();
-    const origin = myHeaders.get('host');
-    const proto = myHeaders.get("x-forwarded-proto");
+    const origin = (await myHeaders).get('host');
+    const proto = (await myHeaders).get("x-forwarded-proto");
 
     return {sitemap: `${proto ?? "http"}://${origin}/sitemap.xml`, ...robots};
 }

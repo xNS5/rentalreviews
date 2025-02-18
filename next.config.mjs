@@ -2,9 +2,9 @@
 
 const nextConfig = {
     reactStrictMode: false,
-    experimental: {
-        instrumentationHook: true
-    }
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };
 
 export default nextConfig;

@@ -3,12 +3,12 @@ import { getDocument } from "@/db/db";
 import DataTable from "@/app/reviews/data-table";
 import Article from "@/components/article/article";
 import {notFound} from "next/navigation";
-import { Config } from "@/lib/configProvider";
+import { Config } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
-    const {metadata, reviews}: Config | undefined = await getDocument<Config>("config", "config", 604800000);
+    const {metadata, reviews} = await getDocument<Config>("config", "config", 604800000);
     return {
         title: `${metadata.title} | ${reviews.title}`,
         description: metadata.description

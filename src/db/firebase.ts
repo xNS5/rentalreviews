@@ -9,26 +9,26 @@ import {
 } from "firebase/firestore";
 import type { Firestore } from "firebase/firestore";
 import type { FirebaseApp } from "firebase/app";
-import type { RequestType } from "./requesttype";
+import type { RequestType } from "@/lib/types";
 
 const firebaseConfig = () => {
-  if(process.env.NEXT_PUBLIC_DB_ENV === "test"){
+  if(process.env.DB_ENV === "test"){
     return {
-      apiKey: process.env.NEXT_PUBLIC_FIREBASE_STAGING_API_KEY,
-      authDomain: process.env.NEXT_PUBLIC_FIREBASE_STAGING_AUTH_DOMAIN,
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_STAGING_PROJECT_ID,
-      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STAGING_STORAGE_BUCKET,
-      messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_STAGING_MESSAGING_SENDER_ID,
-      appId: process.env.NEXT_PUBLIC_FIREBASE_STAGING_APP_ID,
+      apiKey: process.env.FIREBASE_STAGING_API_KEY,
+      authDomain: process.env.FIREBASE_STAGING_AUTH_DOMAIN,
+      projectId: process.env.FIREBASE_STAGING_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STAGING_STORAGE_BUCKET,
+      messagingSenderId: process.env.FIREBASE_STAGING_MESSAGING_SENDER_ID,
+      appId: process.env.FIREBASE_STAGING_APP_ID,
     };
   }
   return {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
   };
 }
 
@@ -42,7 +42,7 @@ export const firestoreGetCollection = async <T>(props: RequestType): Promise<T |
     const queryRef = query(collectionRef);
     const docSnapshot = await getDocs(queryRef);
     if(docSnapshot.empty){
-
+      return {} as T;
     }
     return docSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()})) as T;
   } catch (error) {

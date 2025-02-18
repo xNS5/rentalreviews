@@ -1,12 +1,13 @@
 import { notFound } from "next/navigation";
 import { getCompanyData, getCompanyMetadata } from "@/lib/getCompanyData";
-import { isValidSlug } from "@/lib/utils";
+import { isValidSlug, getAltString} from "@/lib/serverUtils";
 import Article from "@/components/article/article";
-import { Config, getAltString } from "@/lib/configProvider";
+import {AltRecord, Config} from "@/lib/types";
 import { getDocument } from "@/db/db";
 import Link from "next/link";
 import Icon from "@/components/icon/icon";
 import Text from "@/components/text/text";
+import {MetadataProps} from "@/lib/types"
 import type { Company } from "../columns";
 
 import "./review.css";
@@ -14,9 +15,9 @@ import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: any) {
-  if (params !== undefined) {
-    const { slug } = params;
+export async function generateMetadata({params}: MetadataProps) {
+  if (params) {
+    const { slug } = await params;
     const { metadata }: Config | undefined = await getDocument<Config>(
       "config",
       "config",
@@ -31,38 +32,37 @@ export async function generateMetadata({ params }: any) {
   return {} as Metadata;
 }
 
-export default async function Page({
-  params,
-}: Readonly<{
-  params: { [key: string]: string };
+export default async function Page({params}: Readonly<{
+  params: Promise<{slug: string}>
 }>) {
-  const { slug } = params;
+  const slug = (await params).slug;
   const company: Company = await getCompanyData(slug);
 
   if (slug == undefined || !isValidSlug(slug) || company === undefined) {
     notFound();
   }
 
-  const { alt, disclaimer, review }: Config = await getDocument<Config>(
+  const { alt, disclaimer, review, metadata}: Config = await getDocument<Config>(
     "config",
     "config",
-  );
-  let altObj: { [key: string]: any } = review.displayed_column_ratings.reduce(
-      (acc: any, curr: string) => ({
-        ...acc,
-        [curr]: getAltString(alt["review"], curr, company[curr]),
-      }),
-      {},
   );
 
-  const date = new Date(company.created_timestamp * 1000);
+  const altObj = review.displayed_column_ratings.reduce<Record<string, string>>(
+    (acc, curr: string) => {
+      acc[curr] = getAltString(alt["review"], curr, company[curr]) ?? "";
+      return acc;
+    },
+    {},
+  );
+
+  const date = new Date(company.summary.created_timestamp * 1000);
   const hasAdjustedReviewValue: boolean =
     company.review_count != company.adjusted_review_count;
 
   return (
     <Article
       className="container mx-auto py-10 review-summary"
-      announcement={review.aria_announcement}
+      announcement={metadata.aria_announcement['review']}
     >
       <>
         {date && (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCompanyData } from "@/lib/getCompanyData";
-import { isValidSlug } from "@/lib/utils";
+import { isValidSlug } from "@/lib/serverUtils";
 
  enum STATUS {
   SUCCESS = 200,
@@ -8,7 +8,7 @@ import { isValidSlug } from "@/lib/utils";
   SERVER_ERROR = 500,
 }
 
-function getResponse(message: any, code: STATUS) {
+function getResponse(message: string | object, code: STATUS) {
    return NextResponse.json(
     { body: (code == STATUS.SUCCESS ? { data: message } : { error: message }), status: code }
   );

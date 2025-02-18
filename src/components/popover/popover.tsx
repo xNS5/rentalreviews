@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { FocusTrap, FocusTrapFeatures } from "@headlessui/react";
+import FocusTrap from "@/components/focus-trap/focustrap";
 
 export default function Popover({
   children,
   toggle,
   className,
-  props,
+  ...rest
 }: Readonly<{
   children: React.ReactNode;
   toggle: React.ReactNode;
@@ -15,7 +15,6 @@ export default function Popover({
     toggle?: string;
     popover?: string;
   };
-  [key: string]: any;
 }>) {
   const [isVisible, setIsVisible] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -50,7 +49,7 @@ export default function Popover({
 
   return (
     <div className={`w-10 h-10`}>
-      <div className={`flex flex-row justify-center items-center`} {...props}>
+      <div className={`flex flex-row justify-center items-center`} {...rest}>
         <button
           ref={triggerRef}
           onClick={() =>  setIsVisible((prev) => !prev)}
@@ -64,20 +63,19 @@ export default function Popover({
         </button>
         {isVisible && (
           <FocusTrap
-            id={"filter-menu"}
-            features={
-              isVisible ? FocusTrapFeatures.TabLock : FocusTrapFeatures.None
-            }
+              disabled={isVisible}
           >
-            <div
-              id="popover-content"
-              ref={popoverRef}
-              className={`flex flex-col bg-white border border-black absolute animate ease-in-out bg-white border border-gray-300 shadow-md rounded-md p-2 whitespace-nowrap ${className?.popover ?? ""}`}
-              role="dialog"
-              aria-modal="true"
-            >
+           <span className={`relative`}>
+              <div
+                  id="popover-content"
+                  ref={popoverRef}
+                  className={`flex flex-col bg-white border border-black absolute animate ease-in-out bg-white border border-gray-300 shadow-md rounded-md p-2 whitespace-nowrap ${className?.popover ?? ""}`}
+                  role="dialog"
+                  aria-modal="true"
+              >
               {children}
             </div>
+           </span>
           </FocusTrap>
         )}
       </div>

@@ -21,8 +21,8 @@ export default async function sitemap(){
         return [];
     }
     const myHeaders = headers();
-    const origin = myHeaders.get('host');
-    const proto = myHeaders.get("x-forwarded-proto");
+    const origin = (await myHeaders).get('host');
+    const proto = (await myHeaders).get("x-forwarded-proto");
 
     return sitemap.map((e: SitemapElem) => ({...e, "url": `${proto ?? "http"}://${origin}/${e.url}`}));
 }
