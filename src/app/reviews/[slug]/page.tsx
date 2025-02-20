@@ -120,28 +120,28 @@ export default async function Page({params}: Readonly<{
               </>
             )}
             <li className="grow">
-              <Link
-                href={`/api?id=${company.slug}`}
-                className="hidden md:flex text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"
-              >
-                <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>
-                <Icon type="fas-link" className={`pr-4 h-4 w-4`} />
-              </Link>
-              <Link
-                href={`/reviews/${company.slug}/data`}
-                className="flex md:hidden text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"
-              >
-                <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>
-                <Icon type="fas-link" className={`pr-4 h-4 w-4`} />
-              </Link>
               {/*<Link*/}
-              {/*    href={`https://raw.githubusercontent.com/xNS5/rentalreviewsdata/refs/heads/main/articles/${company.slug}.json`}*/}
-              {/*    className="flex text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"*/}
-              {/*    target={"_blank"}*/}
+              {/*  href={`/api?id=${company.slug}`}*/}
+              {/*  className="hidden md:flex text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"*/}
               {/*>*/}
               {/*  <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>*/}
               {/*  <Icon type="fas-link" className={`pr-4 h-4 w-4`} />*/}
               {/*</Link>*/}
+              {/*<Link*/}
+              {/*  href={`/reviews/${company.slug}/data`}*/}
+              {/*  className="flex md:hidden text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"*/}
+              {/*>*/}
+              {/*  <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>*/}
+              {/*  <Icon type="fas-link" className={`pr-4 h-4 w-4`} />*/}
+              {/*</Link>*/}
+              <Link
+                  href={`https://raw.githubusercontent.com/xNS5/rentalreviewsdata/refs/heads/main/articles/${company.slug}.json`}
+                  className="flex text-center items-center justify-center mx-3 bg-blue-600 text-white h-8 w-auto rounded"
+                  target={"_blank"}
+              >
+                <p className="py-2 pl-4 pr-1 !text-base">Raw Data</p>
+                <Icon type="fas-link" className={`pr-4 h-4 w-4`} />
+              </Link>
             </li>
           </ol>
         </div>
