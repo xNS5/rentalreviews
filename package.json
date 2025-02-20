@@ -15,6 +15,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@microlink/react-json-view": "^1.26.1",
     "@react-stately/color": "^3.8.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -32,7 +33,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-react-aria-components": "^1.1.5",
-    "view-json-react": "^1.1.1"
+    "view-json-react": "^1.1.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

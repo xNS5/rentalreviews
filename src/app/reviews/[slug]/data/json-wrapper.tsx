@@ -1,8 +1,9 @@
 "use client"
 import { JsonViewer } from 'view-json-react';
+import ReactJsonView from '@microlink/react-json-view';
 
 export function JsonWrapper({data}: Readonly<{
     data: { [key: string]: string }
 }>){
-    return <JsonViewer data={data} expandLevel={1}/>
+    return <ReactJsonView src={data}/>
 }
