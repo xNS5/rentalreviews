@@ -42,7 +42,7 @@ export default async function Page({params}: Readonly<{
     notFound();
   }
 
-  const { alt, disclaimer, review, metadata}: Config = await getDocument<Config>(
+  const { alt, disclaimer, review}: Config = await getDocument<Config>(
     "config",
     "config",
   );
@@ -62,7 +62,6 @@ export default async function Page({params}: Readonly<{
   return (
     <Article
       className="container mx-auto py-10 review-summary"
-      announcement={metadata.aria_announcement['review']}
     >
       <>
         {date && (

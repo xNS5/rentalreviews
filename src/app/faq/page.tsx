@@ -13,12 +13,11 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-  const { faq, metadata } = await getDocument<Config>("config", "config", 604800000);
+  const { faq } = await getDocument<Config>("config", "config", 604800000);
 
   return (
     <Article
       className="container"
-      announcement={metadata.aria_announcement?.faq ?? undefined}
     >
       <div className="flex flex-col text-center py-2">
         <h1 className="text-4xl">{faq.title}</h1>
