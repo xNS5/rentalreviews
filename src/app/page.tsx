@@ -15,7 +15,7 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const { home, metadata }: Config = await getDocument<Config>("config", "config");
+  const { home }: Config = await getDocument<Config>("config", "config");
 
   if (home === undefined) {
     console.error("Data is undefined. Check DB connection.");
@@ -25,7 +25,7 @@ export default async function Home() {
   return (
     <div className="container mx-auto px-4">
       <Suspense key={Math.random()} fallback={<Loading />}>
-        <Article announcement={metadata.aria_announcement?.home ?? undefined}>
+        <Article>
           <section className="my-20">
             {home.content?.map((elem: TextType, i: number) => (
               <div key={i} role="article">

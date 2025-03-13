@@ -197,40 +197,22 @@ export default function DataTable({
   // Announces when page is loading data and when the loading has finished
   const loadingHandler = (state: boolean) => {
     if(state){
-      announce("Loading data", "assertive", 500);
+      announce("Loading data", "polite", 500);
     } else {
-      announce("Finished loading data", "assertive", 500);
+      announce("Finished loading data", "polite", 500);
     }
     setIsLoading(state);
   };
 
   useEffect(() => {
-    function announceHandler() {
-      if (isMobileWidth) {
-        announce(
-          "Main content contains a heading and a list of links",
-          "assertive",
-          500,
-        );
-      } else {
-        announce(
-          "Main content contains a heading and a data table",
-          "assertive",
-          500,
-        );
-      }
-    }
 
     function handleResize() {
       const isWindowMobileWidth = getIsMobileWidth();
       if (isWindowMobileWidth != isMobileWidth) {
         setIsMobileWidth(isWindowMobileWidth);
-        announceHandler();
       }
     }
 
-    // To make the layout announcement on first load
-    announceHandler();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
