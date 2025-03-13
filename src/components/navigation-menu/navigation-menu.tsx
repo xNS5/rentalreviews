@@ -68,22 +68,20 @@ export default function NavigationMenu({
     <FocusTrap
         disabled={isNavOpen}>
         <div id={"dropdown-menu"} className={`${className?.comp ?? ''}`}>
-            <h3>
-                <Button
-                    id={props.trigger?.id}
-                    type={"button"}
-                    disabled={false}
-                    aria-expanded={isNavOpen}
-                    onClick={() => setIsNavOpen((prev) => !prev)}
-                    className={`flex flex-row justify-center items-center ${className?.trigger ?? ''}`}
-                >
-                    {data.name}
-                    <Icon
-                        type="fas-chevron-down"
-                        className={`h-4 w-4 ml-1 text-inherit transition-transform ${isNavOpen ? "rotate-180 transform" : ""}`}
-                    />
-                </Button>
-            </h3>
+            <Button
+                id={props.trigger?.id}
+                type={"button"}
+                disabled={false}
+                aria-expanded={isNavOpen}
+                onClick={() => setIsNavOpen((prev) => !prev)}
+                className={`flex flex-row justify-center items-center ${className?.trigger ?? ''}`}
+            >
+                {data.name}
+                <Icon
+                    type="fas-chevron-down"
+                    className={`h-4 w-4 ml-1 text-inherit transition-transform ${isNavOpen ? "rotate-180 transform" : ""}`}
+                />
+            </Button>
             {isNavOpen && (
                     <div ref={navMenuRef} className={`relative text-left ${className?.menu ?? ""}`}>
                         <ol id={accordionId}
@@ -93,11 +91,11 @@ export default function NavigationMenu({
                                     <li
                                         key={i}
                                         className={`${className?.item ?? ""} my-2`}
-
                                     >
                                         <Link
                                             className={`my-2`}
                                             href={child.url}
+                                            target={child.target}
                                             onClick={() => setIsNavOpen((prev) => !prev)}
                                         >
                                             {child.name}
