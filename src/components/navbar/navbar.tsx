@@ -121,13 +121,13 @@ export default function Navbar({
         {!isMobileNavOpen && (
             <ol className="hidden md:flex flex-row justify-center items-center" >
               {data?.map((link: LinkType, i: number) => (
-                  <li key={i} className="text-2xl mx-2 py-2">
+                  <li key={i} className="text-2xl mx-1">
                     {link.type == "link" ? (
                         <NavItem href={link.url} name={link.name} />
                     ) : (
                         <NavigationMenu
                             data={link}
-                            className={{ trigger: `${getActiveClassProps(link.url)?.props.className} text-2xl m-2 p-4` }}
+                            className={{ trigger: `${getActiveClassProps(link.url)?.props.className} text-2xl m-2` }}
                             props={{ trigger: { id: `menu-button-${i}` } }}
                         />
                     )}
