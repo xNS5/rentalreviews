@@ -25,7 +25,7 @@ import { compareData } from "@/app/reviews/tableUtils";
 import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
 import {useURLParams} from "@/lib/useURLParams";
-import {ReviewsPage, FilterProps, AltRecord, PrefixPostfix} from "@/lib/types";
+import {ReviewsPage, FilterProps, AltRecord, PrefixPostfix, SelectOptionStyle} from "@/lib/types";
 import {Key} from "react-aria";
 
 const DEFAULT_PAGINATION_VALUE = 10;
@@ -102,6 +102,36 @@ export default function DataTable({
       }),
     [filteredData, sortDescriptor],
   );
+
+  const filterMessageString = useMemo(() => {
+    const messageStringArr: string[] = [];
+    Object.entries(tableFilters).forEach(
+        ([_, val]) => {
+          if(val.value !== undefined){
+            const { title, style, value } = val;
+            const alt: PrefixPostfix = style?.alt;
+            messageStringArr.push(`${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
+                .trim()
+                .replace(/\s{2,}/g, " "))
+          }
+        }
+    );
+    if(messageStringArr.length > 0){
+      return `Filtering table records by ${messageStringArr.join(", ")}`;
+    }
+    return "No filters applied to table records"
+  }, [tableFilters])
+
+  const sortMessageString = useMemo(() => {
+    const columnName = (sortDescriptor.column as string).replace(/_/, " ");
+    const columnDirection: string = (sortDescriptor.direction as string);
+    return `Table sorted on column ${columnName} in ${columnDirection} order`;
+  }, [sortDescriptor])
+
+  const filterCount = useMemo(
+      () => Object.values(tableFilters).filter(val => val.value !== undefined).length,
+      [tableFilters]
+  )
 
   const pageCount = Math.ceil(sortedData.length / paginationValue);
 
@@ -217,26 +247,26 @@ export default function DataTable({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    loadingHandler(true);
-    const timeout = setTimeout(() => {
-      setFilterParams(tableFilters, () => {
-        filterAnnouncementHandler(tableFilters);
-        loadingHandler(false);
-      });
-      setCurrentPageNumber(pageCount > 0 ? 1 : 0);
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [tableFilters]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSortParams(sortDescriptor, () => {
-        sortAnnouncementHandler();
-      });
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [sortDescriptor]);
+  // useEffect(() => {
+  //   loadingHandler(true);
+  //   const timeout = setTimeout(() => {
+  //     setFilterParams(tableFilters, () => {
+  //       filterAnnouncementHandler(tableFilters);
+  //       loadingHandler(false);
+  //     });
+  //     setCurrentPageNumber(pageCount > 0 ? 1 : 0);
+  //   }, 500);
+  //   return () => clearTimeout(timeout);
+  // }, [tableFilters]);
+  //
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setSortParams(sortDescriptor, () => {
+  //       sortAnnouncementHandler();
+  //     });
+  //   }, 500);
+  //   return () => clearTimeout(timeout);
+  // }, [sortDescriptor]);
 
 
   return (
@@ -247,15 +277,16 @@ export default function DataTable({
           className={cn("relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]", className,
         )}
       >
-        <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
-          <div>
-            Sorting on column <b>{(sortDescriptor.column as string).replace(/_/, " ")}</b>
-            {" "}
-            |
-            {" "}
-            {
-              Object.values(tableFilters).filter(val => val.value !== undefined).length
-            } Filters Applied
+        <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-between m-1 py-2">
+          <div className={`mx-2`} aria-hidden={"true"}>
+              Sorting on column <b>{columns.find(col => col.key === sortDescriptor.column)!.title}</b> |
+            {" "} {
+                filterCount
+              } Filters Applied
+          </div>
+          <div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>
+            {filterMessageString}
+            {sortMessageString}
           </div>
           <div className={`flex flex-col lg:flex-row space-x-2 justify-center items-center`}
           >
