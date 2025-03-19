@@ -248,6 +248,15 @@ export default function DataTable({
         )}
       >
         <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
+          <div>
+            Sorting on column <b>{(sortDescriptor.column as string).replace(/_/, " ")}</b>
+            {" "}
+            |
+            {" "}
+            {
+              Object.values(tableFilters).filter(val => val.value !== undefined).length
+            } Filters Applied
+          </div>
           <div className={`flex flex-col lg:flex-row space-x-2 justify-center items-center`}
           >
             <label htmlFor="searchBox" className={`text-xl`}>
