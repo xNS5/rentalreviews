@@ -277,17 +277,17 @@ export default function DataTable({
           className={cn("relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]", className,
         )}
       >
-        <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-between m-1 py-2">
-          <div className={`mx-2`} aria-hidden={"true"}>
-              Sorting on column <b>{columns.find(col => col.key === sortDescriptor.column)!.title}</b> |
-            {" "} {
-                filterCount
-              } Filters Applied
-          </div>
-          <div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>
-            {filterMessageString}
-            {sortMessageString}
-          </div>
+        <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
+          {/*<div className={`mx-2`} aria-hidden={"true"}>*/}
+          {/*    Sorting on column <b>{columns.find(col => col.key === sortDescriptor.column)!.title}</b> |*/}
+          {/*  {" "} {*/}
+          {/*      filterCount*/}
+          {/*    } Filters Applied*/}
+          {/*</div>*/}
+          {/*<div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>*/}
+          {/*  {filterMessageString}*/}
+          {/*  {sortMessageString}*/}
+          {/*</div>*/}
           <div className={`flex flex-col lg:flex-row space-x-2 justify-center items-center`}
           >
             <label htmlFor="searchBox" className={`text-xl`}>
@@ -318,6 +318,15 @@ export default function DataTable({
                       value: string | number | undefined,
                   ) => handleFilterChange(key, value)}
               />
+              <span aria-hidden={"true"} className={`text-xl my-1`}>
+                ({
+                filterCount
+              })
+              </span>
+              <div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>
+                {filterMessageString}
+                {sortMessageString}
+              </div>
               <Loading
                   className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
               />
