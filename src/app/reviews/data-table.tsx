@@ -104,18 +104,16 @@ export default function DataTable({
   );
 
   const filterMessageString = useMemo(() => {
-    const messageStringArr: string[] = [];
-    Object.entries(tableFilters).forEach(
+    const messageStringArr: string[] = Object.entries(tableFilters).filter(([_, val]) => val.value !== undefined).map(
         ([_, val]) => {
-          if(val.value !== undefined){
-            const { title, style, value } = val;
-            const alt: PrefixPostfix = style?.alt;
-            messageStringArr.push(`${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
-                .trim()
-                .replace(/\s{2,}/g, " "))
-          }
+          const { title, style, value } = val;
+          const alt: PrefixPostfix = style?.alt;
+          return `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
+              .trim()
+              .replace(/\s{2,}/g, " ")
         }
     );
+
     if(messageStringArr.length > 0){
       return `Filtering table records by ${messageStringArr.join(", ")}`;
     }
@@ -133,7 +131,7 @@ export default function DataTable({
       [tableFilters]
   )
 
-  const pageCount = Math.ceil(sortedData.length / paginationValue);
+  const pageCount = useMemo(() => Math.ceil(sortedData.length / paginationValue), [sortedData]);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -186,56 +184,7 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  const filterAnnouncementHandler = (filters: FilterProps) => {
-      const messageStringArr: string[] = [];
-      Object.entries(filters).forEach(
-          ([_, val]) => {
-            if(val.value !== undefined){
-              const { title, style, value } = val;
-              const alt: PrefixPostfix = style?.alt;
-              messageStringArr.push(
-                  `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
-                      .trim()
-                      .replace(/\s{2,}/g, " "),
-              );
-            }
-          },
-      );
-      if(messageStringArr.length > 0){
-        announce(
-            `Filtering table records by ${messageStringArr.join(", ")}`,
-            "assertive",
-            500,
-        );
-    } else {
-      announce("No filters applied to table records", "assertive", 500);
-    }
-  };
-
-  const sortAnnouncementHandler = () => {
-    const colName: string = (sortDescriptor.column as string).replace(/_/, " ");
-    const colDirection: string = (sortDescriptor.direction as string);
-
-    announce(
-        `Table sorted on column ${colName} in ${colDirection} order`,
-        "assertive",
-        500
-    );
-
-  }
-
-  // Announces when page is loading data and when the loading has finished
-  const loadingHandler = (state: boolean) => {
-    if(state){
-      announce("Loading data", "polite", 500);
-    } else {
-      announce("Finished loading data", "polite", 500);
-    }
-    setIsLoading(state);
-  };
-
   useEffect(() => {
-
     function handleResize() {
       const isWindowMobileWidth = getIsMobileWidth();
       if (isWindowMobileWidth != isMobileWidth) {
@@ -247,27 +196,6 @@ export default function DataTable({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // useEffect(() => {
-  //   loadingHandler(true);
-  //   const timeout = setTimeout(() => {
-  //     setFilterParams(tableFilters, () => {
-  //       filterAnnouncementHandler(tableFilters);
-  //       loadingHandler(false);
-  //     });
-  //     setCurrentPageNumber(pageCount > 0 ? 1 : 0);
-  //   }, 500);
-  //   return () => clearTimeout(timeout);
-  // }, [tableFilters]);
-  //
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     setSortParams(sortDescriptor, () => {
-  //       sortAnnouncementHandler();
-  //     });
-  //   }, 500);
-  //   return () => clearTimeout(timeout);
-  // }, [sortDescriptor]);
-
 
   return (
     <>
@@ -278,76 +206,71 @@ export default function DataTable({
         )}
       >
         <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
-          {/*<div className={`mx-2`} aria-hidden={"true"}>*/}
-          {/*    Sorting on column <b>{columns.find(col => col.key === sortDescriptor.column)!.title}</b> |*/}
-          {/*  {" "} {*/}
-          {/*      filterCount*/}
-          {/*    } Filters Applied*/}
-          {/*</div>*/}
-          {/*<div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>*/}
-          {/*  {filterMessageString}*/}
-          {/*  {sortMessageString}*/}
-          {/*</div>*/}
           <div className={`flex flex-col lg:flex-row space-x-2 justify-center items-center`}
           >
             <label htmlFor="searchBox" className={`text-xl`}>
               Search
             </label>{" "}
-            <div className={`flex flex-row`}>
-              <Input
-                  id={"searchBox"}
-                  value={searchTerm}
-                  placeholder="Company Name"
-                  aria-label={`Search by company name`}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleFilterChange("name", searchTerm);
-                    }
-                  }}
-                  onChange={(e) => {
-                    handleFilterChange("name", e.target.value);
-                    setSearchTerm(e.target.value);
-                  }}
-              />
-              {/* Filter Component */}
-              <Filter
-                  heading={"Filter By"}
-                  filterState={structuredClone(tableFilters)}
-                  onSelectCallbackFn={(
-                      key: string | number,
-                      value: string | number | undefined,
-                  ) => handleFilterChange(key, value)}
-              />
-              <span aria-hidden={"true"} className={`text-xl my-1`}>
-                ({
-                filterCount
-              })
-              </span>
-              <div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>
-                {filterMessageString}
-                {sortMessageString}
+              <div className={`flex flex-row`}>
+                  <Input
+                      id={"searchBox"}
+                      value={searchTerm}
+                      placeholder="Company Name"
+                      aria-label={`Search by company name`}
+                      onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                              handleFilterChange("name", searchTerm);
+                          }
+                      }}
+                      onChange={(e) => {
+                          handleFilterChange("name", e.target.value);
+                          setSearchTerm(e.target.value);
+                      }}
+                  />
+                  {/* Filter Component */}
+                  <div className="relative inline-flex">
+                      <Filter
+                          heading={"Filter By"}
+                          filterState={structuredClone(tableFilters)}
+                          onSelectCallbackFn={(
+                              key: string | number,
+                              value: string | number | undefined,
+                          ) => handleFilterChange(key, value)}
+                      />
+                      {
+                          filterCount > 0 && <span aria-hidden={"true"} className="absolute top-0.5 right-0.5 grid min-h-[24px] min-w-[24px] translate-x-2/4 -translate-y-2/4 place-items-center rounded-full bg-red-600 py-1 px-1 text-xs text-white">
+                            {
+                                filterCount
+                            }
+                        </span>
+                      }
+                  </div>
+                  <div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>
+                      {filterMessageString}
+                      {sortMessageString}
+                  </div>
+                  <Loading
+                      className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
+                  />
               </div>
-              <Loading
-                  className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
-              />
-            </div>
-            <div
-                className={
-                  "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"
-                }
-            >
-              <SortGroup onSortChangeFn={(key: string | number, value: Key) => handleSortComponentChange(key, value)}
-                         sortDescriptor={sortDescriptor} sortProps={sort_props}/>
-            </div>
+              <div
+                  className={
+                      "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"
+                  }
+              >
+                  <SortGroup
+                      onSortChangeFn={(key: string | number, value: Key) => handleSortComponentChange(key, value)}
+                      sortDescriptor={sortDescriptor} sortProps={sort_props}/>
+              </div>
           </div>
         </div>
-        <div
-            className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
-          {/* Full-screen data view */}
-          <Table
-              aria-label={title}
-              sortDescriptor={sortDescriptor}
-              onSortChange={handleTableSortChange}
+          <div
+              className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
+              {/* Full-screen data view */}
+              <Table
+                  aria-label={title}
+                  sortDescriptor={sortDescriptor}
+                  onSortChange={handleTableSortChange}
               className="hidden md:table w-full"
           >
             <TableHeader
