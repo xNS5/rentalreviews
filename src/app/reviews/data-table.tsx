@@ -59,7 +59,6 @@ export default function DataTable({
     {},
   );
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1)
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
 
   // Filters data based on filter component properties
