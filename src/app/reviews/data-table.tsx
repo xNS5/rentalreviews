@@ -11,22 +11,19 @@ import {
 
 import React, { useEffect, useMemo, useState } from "react";
 import Icon from "@/components/icon/icon";
+import Button from "@/components/button/button";
+import Link from "next/link";
 import { Input } from "@/components/input/input";
 import { cn } from "@/lib/serverUtils";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { SortDescriptor } from "react-stately";
-import Button from "@/components/button/button";
-import Link from "next/link";
-import { announce } from "@react-aria/live-announcer";
 import { getAltString } from "@/lib/serverUtils";
 import {Filter, processFilters} from "@/components/aria-table/filter";
 import {SortGroup, processSort} from "@/components/aria-table/sort";
 import { compareData } from "@/app/reviews/tableUtils";
-import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
 import {useURLParams} from "@/lib/useURLParams";
-import {ReviewsPage, FilterProps, AltRecord, PrefixPostfix, SelectOptionStyle} from "@/lib/types";
-import {Key} from "react-aria";
+import {ReviewsPage, FilterProps, AltRecord, PrefixPostfix} from "@/lib/types";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -249,9 +246,6 @@ export default function DataTable({
                       {filterMessageString}
                       {sortMessageString}
                   </div>
-                  <Loading
-                      className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
-                  />
               </div>
               <div className={ "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"}
               >
