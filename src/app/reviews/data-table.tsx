@@ -153,29 +153,20 @@ export default function DataTable({
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
   const handleFilterChange = (key: string | number, value: string | number | undefined) => {
-    setTableFilters((prev: FilterProps) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        value: prev[key]?.value === value ? undefined : value
-      },
+    setTableFilters((prevFilterObj: FilterProps) => ({
+        ...prevFilterObj,
+        [key]: {
+            ...prevFilterObj[key],
+            value: prevFilterObj[key]?.value === value ? undefined : value
+        },
     }));
   };
 
   const handleTableSortChange = (newSortObj: SortDescriptor) => {
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
-      column: newSortObj.column,
-      direction:
-          prevSortObj.direction === "ascending" ? "descending" : "ascending",
+        column: newSortObj.column,
+        direction: prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
-  }
-
-  const handleSortComponentChange = (key: string | number, value: Key) => {
-    setSortDescriptor((prev: SortDescriptor) => ({
-      ...prev,
-      [key]: value
-    })
-    )
   }
 
   // Handles page change, sets current page number and resets the hover state object
@@ -185,16 +176,25 @@ export default function DataTable({
   };
 
   useEffect(() => {
+   const controller = new AbortController();
+   const { signal } = controller;
     function handleResize() {
       const isWindowMobileWidth = getIsMobileWidth();
       if (isWindowMobileWidth != isMobileWidth) {
         setIsMobileWidth(isWindowMobileWidth);
       }
     }
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, {signal});
+    return () => controller.abort();
   }, []);
+
+    useEffect(() => {
+        setFilterParams(tableFilters);
+    }, [tableFilters])
+
+    useEffect(() => {
+        setSortParams(sortDescriptor);
+    }, [sortDescriptor])
 
 
   return (
@@ -253,14 +253,13 @@ export default function DataTable({
                       className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
                   />
               </div>
-              <div
-                  className={
-                      "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"
-                  }
+              <div className={ "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"}
               >
                   <SortGroup
-                      onSortChangeFn={(key: string | number, value: Key) => handleSortComponentChange(key, value)}
-                      sortDescriptor={sortDescriptor} sortProps={sort_props}/>
+                      onSortChangeFn={handleTableSortChange}
+                      sortDescriptor={sortDescriptor}
+                      sortProps={sort_props}
+                  />
               </div>
           </div>
         </div>

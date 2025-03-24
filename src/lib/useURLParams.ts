@@ -25,6 +25,7 @@ export function useURLParams() {
 
     const setFilterParams = useCallback(
         (newParams: { [key: string]: FilterItem }, callbackFn?: () => void) => {
+            console.log(newParams);
             const currSearchParams = new URLSearchParams(searchParams.toString());
             Object.entries(newParams).forEach(([key, data]) => {
                 if ((data?.value === null || data?.value === undefined) || `${data.value}`.trim().length === 0) {
