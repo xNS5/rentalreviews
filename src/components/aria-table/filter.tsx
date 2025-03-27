@@ -14,9 +14,17 @@ function assertType(val: string, type: string) {
     switch(type){
       case "int":
       case "float":
-        return parseFloat(val);
+          const floatVal = parseFloat(val);
+          if(isNaN(floatVal)){
+              return undefined;
+          }
+        return floatVal;
       case "string":
-        return val.replaceAll(/[^\w0-9\-]/g, '');
+          const cleaned_string = val.trim().replaceAll(/[^\w0-9\-]/g, '')
+          if(cleaned_string.length == 0){
+              return undefined;
+          }
+        return cleaned_string;
     }
   } catch (e){
       console.error(e, val);
