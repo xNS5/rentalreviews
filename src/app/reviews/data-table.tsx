@@ -50,7 +50,6 @@ export default function DataTable({
 
   const { params, setFilterParams, setSortParams } = useURLParams();
 
-
   const [tableFilters, setTableFilters] = useState<FilterProps>(processFilters(filter_props, params));
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(processSort(sort_props, params));
 
@@ -58,7 +57,7 @@ export default function DataTable({
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
-  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1)
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
 
   // Filters data based on filter component properties
@@ -192,6 +191,12 @@ export default function DataTable({
        setSortParams(sortDescriptor);
     }, [sortDescriptor])
 
+    useEffect(() =>{
+        const timerId = setTimeout(() => handleFilterChange("name", searchTerm), 500);
+        return () => clearTimeout(timerId);
+    }
+    , [searchTerm])
+
 
   return (
     <>
@@ -219,28 +224,19 @@ export default function DataTable({
                           }
                       }}
                       onChange={(e) => {
-                          handleFilterChange("name", e.target.value);
                           setSearchTerm(e.target.value);
                       }}
                   />
                   {/* Filter Component */}
-                  <div className="relative inline-flex p-0.5">
-                      <Filter
-                          heading={"Filter By"}
-                          filterState={structuredClone(tableFilters)}
-                          onSelectCallbackFn={(newFilterObj: FilterProps) => setTableFilters((prev: FilterProps) => ({
-                              ...prev,
-                              ...newFilterObj
-                          }))}
-                      />
-                      {
-                          filterCount > 0 && <span aria-hidden={"true"} className="absolute top-0.5 right-0.5 grid min-h-[24px] min-w-[24px] translate-x-2/4 -translate-y-2/4 place-items-center rounded-full bg-red-600 py-1 px-1 text-xs text-white">
-                            {
-                                filterCount
-                            }
-                        </span>
-                      }
-                  </div>
+                  <Filter
+                      heading={"Filter By"}
+                      filterState={structuredClone(tableFilters)}
+                      onSelectCallbackFn={(newFilterObj: FilterProps) => setTableFilters((prev: FilterProps) => ({
+                          ...prev,
+                          ...newFilterObj
+                      }))}
+                  />
+
                   <div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>
                       {filterMessageString}
                       {sortMessageString}

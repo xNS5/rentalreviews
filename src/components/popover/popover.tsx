@@ -7,10 +7,12 @@ export default function Popover({
   children,
   toggle,
   className,
+  label,
   ...rest
 }: Readonly<{
   children: React.ReactNode;
   toggle: React.ReactNode;
+  label: string;
   className?: {
     toggle?: string;
     popover?: string;
@@ -57,7 +59,7 @@ export default function Popover({
           aria-haspopup="true"
           aria-expanded={isVisible}
           aria-controls="popover-content"
-          aria-label={`${isVisible ? "close" : "open"} data table filter menu`}
+          aria-label={`${isVisible ? "close" : "open"} ${label}`}
         >
           {toggle}
         </button>
@@ -69,7 +71,7 @@ export default function Popover({
               <div
                   id="popover-content"
                   ref={popoverRef}
-                  className={`flex flex-col bg-white border border-black absolute animate ease-in-out bg-white border border-gray-300 shadow-md rounded-md p-2 whitespace-nowrap ${className?.popover ?? ""}`}
+                  className={`flex flex-col bg-white border border-black absolute animate ease-in-out shadow-md rounded-md p-2 whitespace-nowrap ${className?.popover ?? ""}`}
                   role="dialog"
                   aria-modal="true"
               >

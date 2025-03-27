@@ -3,7 +3,7 @@
 import React, { useMemo, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {SortDescriptor} from "react-stately";
-import {FilterItem} from "@/lib/types";
+import {FilterItem, FilterProps} from "@/lib/types";
 
 const inputTestRegex = new RegExp("[()[\\]{};.=<>:+\\-*\\/%]");
 
@@ -25,7 +25,7 @@ export function useURLParams() {
     );
 
     const setFilterParams = useCallback(
-    (newParams: { [key: string]: FilterItem }, callbackFn?: () => void) => {
+    (newParams: FilterProps, callbackFn?: () => void) => {
             const currSearchParams = new URLSearchParams(searchParams.toString());
             Object.entries(newParams).forEach(([key, data]) => {
                 if ((data?.value === null || data?.value === undefined) || `${data.value}`.trim().length === 0) {
