@@ -82,7 +82,7 @@ const getFilterComp = (component_type: string, key: number,
         data={data}
         selectedKey={selectedKey}
         labelProps={{
-          className: "mx-2"
+          className: "mx-2 flex flex-col md:flex-row m-2 justify-between items-center"
         }}
         onSelectionChange={(value) => {
           onSelectCallbackFn(callbackKey, value);
@@ -121,7 +121,8 @@ export function Filter({
         popover:
           "transform -translate-x-[85%] sm:-translate-x-full m-4 border border-slate-400 rounded shadow-lg z-10",
       }}
-      label={"data table filter menu"}
+      ariaLabel={"data table filter menu"}
+      label={heading}
       toggle={
         <>
             <Icon className={"h-5 w-5"} type={"fas-filter"} />
