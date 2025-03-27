@@ -11,6 +11,7 @@ export function useURLParams() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
+
     const params: { [key: string]: string } = useMemo(
         () =>
             [...searchParams.entries()].reduce((acc, [key, val]) =>
@@ -24,8 +25,7 @@ export function useURLParams() {
     );
 
     const setFilterParams = useCallback(
-        (newParams: { [key: string]: FilterItem }, callbackFn?: () => void) => {
-            console.log(newParams);
+    (newParams: { [key: string]: FilterItem }, callbackFn?: () => void) => {
             const currSearchParams = new URLSearchParams(searchParams.toString());
             Object.entries(newParams).forEach(([key, data]) => {
                 if ((data?.value === null || data?.value === undefined) || `${data.value}`.trim().length === 0) {

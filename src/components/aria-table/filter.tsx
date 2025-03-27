@@ -8,27 +8,32 @@ import {FilterProps, FilterItem, SelectOption, SelectOptionStyle} from "@/lib/ty
 
 function assertType(val: string, type: string) {
   try{
+    if(val === undefined){
+        return undefined;
+    }
     switch(type){
-      case "number":
+      case "int":
       case "float":
         return parseFloat(val);
       case "string":
-        return val.replaceAll(/[^\w0-9\-]/, '');
+        return val.replaceAll(/[^\w0-9\-]/g, '');
     }
   } catch (e){
+      console.error(e, val);
     return undefined;
   }
 }
 
 
 export function processFilters(filterRules: FilterProps, params:  {[key: string]: string}): FilterProps {
-  return Object.keys(filterRules).reduce((acc, curr) => ({
-    ...acc,
-    [curr]: {
-      ...filterRules[curr],
-      value: assertType(params[curr], filterRules[curr].data_type)
-    }
+  const temp =  Object.keys(filterRules).reduce((acc, curr) => ({
+      ...acc,
+      [curr]: {
+          ...filterRules[curr],
+          value: assertType(params[curr], filterRules[curr].data_type)
+      }
   }), {}) as FilterProps;
+  return temp;
 }
 
 const getFilterComp = (component_type: string, key: number,
@@ -74,8 +79,20 @@ export function Filter({
 }: Readonly<{
   heading: string,
   filterState: {[key: string]: FilterItem},
-  onSelectCallbackFn: (key: string | number, value: Key) => void
+  onSelectCallbackFn: (newFilterObj: FilterProps) => void
 }>) {
+
+    const handleFilterChange = (key: string | number, value: Key) => {
+        const newFilterObj: FilterProps = {
+            ...filterState,
+            [key]: {
+                ...filterState[key],
+                value: filterState[key]?.value === value ? undefined : value
+            }
+        }
+        onSelectCallbackFn(newFilterObj)
+    };
+
   return (
     <Popover
       className={{
@@ -96,7 +113,7 @@ export function Filter({
           value: value ?? undefined,
           data: options,
           selectedKey: value ?? undefined,
-          onSelectCallbackFn: onSelectCallbackFn,
+          onSelectCallbackFn: handleFilterChange,
           selectedKeyStyle: style ?? undefined,
           callbackKey: key,
         }),

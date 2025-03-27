@@ -185,11 +185,11 @@ export default function DataTable({
   }, []);
 
     useEffect(() => {
-        setFilterParams(tableFilters);
+       setFilterParams(tableFilters);
     }, [tableFilters])
 
     useEffect(() => {
-        setSortParams(sortDescriptor);
+       setSortParams(sortDescriptor);
     }, [sortDescriptor])
 
 
@@ -201,8 +201,8 @@ export default function DataTable({
           className={cn("relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]", className,
         )}
       >
-        <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
-          <div className={`flex flex-col lg:flex-row space-x-2 justify-center items-center`}
+        <div className="flex flex-col md:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
+          <div className={`flex flex-col md:flex-row space-x-2 justify-end items-center`}
           >
             <label htmlFor="searchBox" className={`text-xl`}>
               Search
@@ -224,14 +224,14 @@ export default function DataTable({
                       }}
                   />
                   {/* Filter Component */}
-                  <div className="relative inline-flex">
+                  <div className="relative inline-flex p-0.5">
                       <Filter
                           heading={"Filter By"}
                           filterState={structuredClone(tableFilters)}
-                          onSelectCallbackFn={(
-                              key: string | number,
-                              value: string | number | undefined,
-                          ) => handleFilterChange(key, value)}
+                          onSelectCallbackFn={(newFilterObj: FilterProps) => setTableFilters((prev: FilterProps) => ({
+                              ...prev,
+                              ...newFilterObj
+                          }))}
                       />
                       {
                           filterCount > 0 && <span aria-hidden={"true"} className="absolute top-0.5 right-0.5 grid min-h-[24px] min-w-[24px] translate-x-2/4 -translate-y-2/4 place-items-center rounded-full bg-red-600 py-1 px-1 text-xs text-white">
