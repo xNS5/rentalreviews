@@ -13,12 +13,13 @@ function assertType(val: string, type: string) {
     }
     switch(type){
       case "int":
-      case "float":
-          const floatVal = parseFloat(val);
-          if(isNaN(floatVal)){
+        case "float":
+          const parsed = parseFloat(val);
+          // Ensures that `val` is a number AND is a finite value, otherwise returns undefined
+          if(Number.isNaN(parsed) || !isFinite(parsed)){
               return undefined;
           }
-        return floatVal;
+        return parsed;
       case "string":
           const cleaned_string = val.trim().replaceAll(/[^\w0-9\-]/g, '')
           if(cleaned_string.length == 0){
@@ -34,14 +35,13 @@ function assertType(val: string, type: string) {
 
 
 export function processFilters(filterRules: FilterProps, params:  {[key: string]: string}): FilterProps {
-  const temp =  Object.keys(filterRules).reduce((acc, curr) => ({
+  return Object.keys(filterRules).reduce((acc, curr) => ({
       ...acc,
       [curr]: {
           ...filterRules[curr],
           value: assertType(params[curr], filterRules[curr].data_type)
       }
   }), {}) as FilterProps;
-  return temp;
 }
 
 const getFilterComp = (component_type: string, key: number,
