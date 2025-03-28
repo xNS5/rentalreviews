@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import Popover from "@/components/popover/popover";
 import Icon from "@/components/icon/icon";
 import Select from "@/components/select/select";
@@ -6,29 +6,54 @@ import {Key} from 'react-aria';
 import {FilterProps, FilterItem, SelectOption, SelectOptionStyle} from "@/lib/types";
 
 
-function assertType(val: string, type: string) {
+function assertType(val: string, filterRule: FilterItem) {
+
+    if(val === undefined){
+        return undefined;
+    }
+
+    const {data_type} = filterRule;
+
   try{
-    switch(type){
-      case "number":
-      case "float":
-        return parseFloat(val);
-      case "string":
-        return val.replaceAll(/[^\w0-9\-]/, '');
+    switch(data_type){
+      case "int":
+      case "float": {
+          const parsed = parseFloat(val);
+          // Ensures that `val` is a number AND is a finite value, otherwise returns undefined
+          if (Number.isNaN(parsed) || !isFinite(parsed)) {
+              return undefined;
+          }
+          return parsed;
+      }
+      case "string": {
+          const cleaned_string = val.trim().replaceAll(/[^\w0-9\-]/g, '')
+          if (cleaned_string.length == 0) {
+              return undefined;
+          }
+          return cleaned_string;
+      }
     }
   } catch (e){
+      console.error(e, val);
     return undefined;
   }
 }
 
 
 export function processFilters(filterRules: FilterProps, params:  {[key: string]: string}): FilterProps {
-  return Object.keys(filterRules).reduce((acc, curr) => ({
-    ...acc,
-    [curr]: {
-      ...filterRules[curr],
-      value: assertType(params[curr], filterRules[curr].data_type)
-    }
-  }), {}) as FilterProps;
+  return Object.keys(filterRules).reduce((acc, curr) => {
+      const optionValue = assertType(params[curr], filterRules[curr]);
+
+      return {
+          ...acc,
+          [curr]: {
+              ...filterRules[curr],
+              // Checks to make sure that the parameter exists in the `options` key
+              value: optionValue !== undefined || !filterRules[curr].options || filterRules[curr].options.some(option => option.title == optionValue) ? optionValue : undefined
+          }
+      }
+
+  }, {}) as FilterProps;
 }
 
 const getFilterComp = (component_type: string, key: number,
@@ -57,7 +82,7 @@ const getFilterComp = (component_type: string, key: number,
         data={data}
         selectedKey={selectedKey}
         labelProps={{
-          className: "mx-2"
+          className: "mx-2 flex flex-col md:flex-row m-2 justify-between items-center"
         }}
         onSelectionChange={(value) => {
           onSelectCallbackFn(callbackKey, value);
@@ -73,16 +98,44 @@ export function Filter({
     onSelectCallbackFn
 }: Readonly<{
   heading: string,
-  filterState: {[key: string]: FilterItem},
-  onSelectCallbackFn: (key: string | number, value: Key) => void
+  filterState: FilterProps,
+  onSelectCallbackFn: (newFilterObj: FilterProps) => void
 }>) {
+
+    const handleFilterChange = (key: string | number, value: Key) => {
+        const newFilterObj: FilterProps = {
+            ...filterState,
+            [key]: {
+                ...filterState[key],
+                value: filterState[key]?.value === value ? undefined : value
+            }
+        }
+        onSelectCallbackFn(newFilterObj)
+    };
+
+    const filterCount = Object.values(filterState).filter(val => val.value !== undefined && val.shouldRender).length;
+
   return (
     <Popover
       className={{
         popover:
           "transform -translate-x-[85%] sm:-translate-x-full m-4 border border-slate-400 rounded shadow-lg z-10",
       }}
-      toggle={<Icon className={"h-5 w-5"} type={"fas-filter"} />}
+      ariaLabel={"data table filter menu"}
+      label={heading}
+      toggle={
+        <>
+            <Icon className={"h-5 w-5"} type={"fas-filter"} />
+            {
+                <span aria-hidden={"true"} className={`${filterCount > 0 ? "" : "in"}visible relative right-0.5 grid min-h-[12px] min-w-[12px] translate-x-0.5 -translate-y-4 place-items-center rounded-full bg-red-600 py-0.5 px-2 text-xs text-white`}>
+                {
+                    filterCount
+                }
+            </span>
+            }
+        </>
+
+    }
     >
       {heading && (
         <h2>
@@ -96,7 +149,7 @@ export function Filter({
           value: value ?? undefined,
           data: options,
           selectedKey: value ?? undefined,
-          onSelectCallbackFn: onSelectCallbackFn,
+          onSelectCallbackFn: handleFilterChange,
           selectedKeyStyle: style ?? undefined,
           callbackKey: key,
         }),

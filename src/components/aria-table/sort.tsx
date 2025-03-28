@@ -70,10 +70,19 @@ export function SortGroup({
 }: Readonly<{
     sortProps: SortProps,
     sortDescriptor: SortDescriptor,
-    onSortChangeFn:(key: string | number, value: Key) => void,
+    onSortChangeFn: (params: SortDescriptor) => void;
     className?: string
 }>){
     const { valid_keys } = sortProps;
+
+    function sortChangeHandler(key: string | number, value: Key){
+       const newSortDescriptor: SortDescriptor = {
+           ...sortDescriptor,
+           [key]: value
+       }
+       onSortChangeFn(newSortDescriptor);
+    }
+
     return valid_keys.map((key: string, i: number) => getSortSelectComp(i+1,
         {
             sortKey: key,
@@ -81,7 +90,7 @@ export function SortGroup({
             sortLabel: sortProps.sort_labels[key],
             sortDescriptor: sortDescriptor,
             className: className ?? "",
-            onSortChangeFn
+            onSortChangeFn: sortChangeHandler
         }
     ))
 }
