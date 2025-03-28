@@ -127,7 +127,7 @@ export function Filter({
         <>
             <Icon className={"h-5 w-5"} type={"fas-filter"} />
             {
-                filterCount > 0 && <span aria-hidden={"true"} className="absolute right-0.5 grid min-h-[12px] min-w-[12px] translate-x-0.5 -translate-y-4 place-items-center rounded-full bg-red-600 py-1 px-2 text-xs text-white">
+                <span aria-hidden={"true"} className={`${filterCount > 0 ? "" : "in"}visible relative right-0.5 grid min-h-[12px] min-w-[12px] translate-x-0.5 -translate-y-4 place-items-center rounded-full bg-red-600 py-0.5 px-2 text-xs text-white`}>
                 {
                     filterCount
                 }

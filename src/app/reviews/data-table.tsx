@@ -218,6 +218,7 @@ export default function DataTable({
                       value={searchTerm}
                       placeholder="Company Name"
                       aria-label={`Search by company name`}
+                      className={`mx-2`}
                       onKeyDown={(e) => {
                           if (e.key === "Enter") {
                               handleFilterChange("name", searchTerm);
