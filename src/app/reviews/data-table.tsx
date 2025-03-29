@@ -121,11 +121,6 @@ export default function DataTable({
     return `Table sorted on column ${columnName} in ${columnDirection} order`;
   }, [sortDescriptor])
 
-  const filterCount = useMemo(
-      () => Object.values(tableFilters).filter(val => val.value !== undefined).length,
-      [tableFilters]
-  )
-
   const pageCount = useMemo(() => Math.ceil(sortedData.length / paginationValue), [sortedData]);
 
   // Paginates page data based on currPageNumber
@@ -152,7 +147,7 @@ export default function DataTable({
         ...prevFilterObj,
         [key]: {
             ...prevFilterObj[key],
-            value: prevFilterObj[key]?.shouldRender && prevFilterObj[key]?.value === value ? undefined : value
+            value: prevFilterObj[key]?.component_type === "select" && prevFilterObj[key]?.value === value ? undefined : value
         },
     }));
   };
