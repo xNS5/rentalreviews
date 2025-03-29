@@ -152,7 +152,7 @@ export default function DataTable({
         ...prevFilterObj,
         [key]: {
             ...prevFilterObj[key],
-            value: prevFilterObj[key]?.value === value ? undefined : value
+            value: prevFilterObj[key]?.shouldRender && prevFilterObj[key]?.value === value ? undefined : value
         },
     }));
   };
@@ -226,6 +226,7 @@ export default function DataTable({
                       }}
                       onChange={(e) => {
                           setSearchTerm(e.target.value);
+                          handleFilterChange("name", searchTerm);
                       }}
                   />
                   {/* Filter Component */}

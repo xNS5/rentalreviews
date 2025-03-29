@@ -44,12 +44,21 @@ export function processFilters(filterRules: FilterProps, params:  {[key: string]
   return Object.keys(filterRules).reduce((acc, curr) => {
       const optionValue = assertType(params[curr], filterRules[curr]);
 
+      if(optionValue === undefined) return acc;
+
+
+      let newValue: string | number | undefined = optionValue;
+
+     // If the filter should be rendered, check that the value is a valid option. Otherwise, mark as undefined
+      if(filterRules[curr].shouldRender){
+         newValue = filterRules[curr].options?.some(option => option.title == optionValue) ? optionValue : undefined;
+      }
+
       return {
           ...acc,
           [curr]: {
               ...filterRules[curr],
-              // Checks to make sure that the parameter exists in the `options` key
-              value: optionValue !== undefined || !filterRules[curr].options || filterRules[curr].options.some(option => option.title == optionValue) ? optionValue : undefined
+              value: newValue
           }
       }
 
