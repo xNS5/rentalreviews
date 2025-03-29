@@ -11,22 +11,19 @@ import {
 
 import React, { useEffect, useMemo, useState } from "react";
 import Icon from "@/components/icon/icon";
+import Button from "@/components/button/button";
+import Link from "next/link";
 import { Input } from "@/components/input/input";
 import { cn } from "@/lib/serverUtils";
 import { Company, ColumnType } from "@/app/reviews/columns";
 import { SortDescriptor } from "react-stately";
-import Button from "@/components/button/button";
-import Link from "next/link";
-import { announce } from "@react-aria/live-announcer";
 import { getAltString } from "@/lib/serverUtils";
 import {Filter, processFilters} from "@/components/aria-table/filter";
 import {SortGroup, processSort} from "@/components/aria-table/sort";
 import { compareData } from "@/app/reviews/tableUtils";
-import Loading from "@/app/loading";
 import { getIsMobileWidth } from "@/lib/clientUtils";
 import {useURLParams} from "@/lib/useURLParams";
 import {ReviewsPage, FilterProps, AltRecord, PrefixPostfix} from "@/lib/types";
-import {Key} from "react-aria";
 
 const DEFAULT_PAGINATION_VALUE = 10;
 
@@ -53,7 +50,6 @@ export default function DataTable({
 
   const { params, setFilterParams, setSortParams } = useURLParams();
 
-
   const [tableFilters, setTableFilters] = useState<FilterProps>(processFilters(filter_props, params));
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(processSort(sort_props, params));
 
@@ -61,8 +57,7 @@ export default function DataTable({
   const [hoverStates, setHoverStates] = useState<{ [key: string]: boolean }>(
     {},
   );
-  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1)
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [isMobileWidth, setIsMobileWidth] = useState(getIsMobileWidth());
 
   // Filters data based on filter component properties
@@ -103,7 +98,30 @@ export default function DataTable({
     [filteredData, sortDescriptor],
   );
 
-  const pageCount = Math.ceil(sortedData.length / paginationValue);
+  const filterMessageString = useMemo(() => {
+    const messageStringArr: string[] = Object.entries(tableFilters).filter(([_, val]) => val.value !== undefined).map(
+        ([_, val]) => {
+          const { title, style, value } = val;
+          const alt: PrefixPostfix = style?.alt;
+          return `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
+              .trim()
+              .replace(/\s{2,}/g, " ")
+        }
+    );
+
+    if(messageStringArr.length > 0){
+      return `Filtering table records by ${messageStringArr.join(", ")}`;
+    }
+    return "No filters applied to table records"
+  }, [tableFilters])
+
+  const sortMessageString = useMemo(() => {
+    const columnName = (sortDescriptor.column as string).replace(/_/, " ");
+    const columnDirection: string = (sortDescriptor.direction as string);
+    return `Table sorted on column ${columnName} in ${columnDirection} order`;
+  }, [sortDescriptor])
+
+  const pageCount = useMemo(() => Math.ceil(sortedData.length / paginationValue), [sortedData]);
 
   // Paginates page data based on currPageNumber
   const paginatedPageData = useMemo(() => {
@@ -125,29 +143,20 @@ export default function DataTable({
     setHoverStates((prev) => ({ ...prev, [key]: false }));
 
   const handleFilterChange = (key: string | number, value: string | number | undefined) => {
-    setTableFilters((prev: FilterProps) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        value: prev[key]?.value === value ? undefined : value
-      },
+    setTableFilters((prevFilterObj: FilterProps) => ({
+        ...prevFilterObj,
+        [key]: {
+            ...prevFilterObj[key],
+            value: (prevFilterObj[key]?.component_type === "select" && prevFilterObj[key]?.value === value) || `${prevFilterObj[key]?.value}`.length > 0 ? undefined : value
+        },
     }));
   };
 
   const handleTableSortChange = (newSortObj: SortDescriptor) => {
     setSortDescriptor((prevSortObj: SortDescriptor) => ({
-      column: newSortObj.column,
-      direction:
-          prevSortObj.direction === "ascending" ? "descending" : "ascending",
+        column: newSortObj.column,
+        direction: prevSortObj.direction === "ascending" ? "descending" : "ascending",
     }));
-  }
-
-  const handleSortComponentChange = (key: string | number, value: Key) => {
-    setSortDescriptor((prev: SortDescriptor) => ({
-      ...prev,
-      [key]: value
-    })
-    )
   }
 
   // Handles page change, sets current page number and resets the hover state object
@@ -156,87 +165,32 @@ export default function DataTable({
     setHoverStates({});
   };
 
-  const filterAnnouncementHandler = (filters: FilterProps) => {
-      const messageStringArr: string[] = [];
-      Object.entries(filters).forEach(
-          ([_, val]) => {
-            if(val.value !== undefined){
-              const { title, style, value } = val;
-              const alt: PrefixPostfix = style?.alt;
-              messageStringArr.push(
-                  `${title} ${alt?.prefix ?? ""} ${value} ${alt?.postfix ?? ""}`
-                      .trim()
-                      .replace(/\s{2,}/g, " "),
-              );
-            }
-          },
-      );
-      if(messageStringArr.length > 0){
-        announce(
-            `Filtering table records by ${messageStringArr.join(", ")}`,
-            "assertive",
-            500,
-        );
-    } else {
-      announce("No filters applied to table records", "assertive", 500);
-    }
-  };
-
-  const sortAnnouncementHandler = () => {
-    const colName: string = (sortDescriptor.column as string).replace(/_/, " ");
-    const colDirection: string = (sortDescriptor.direction as string);
-
-    announce(
-        `Table sorted on column ${colName} in ${colDirection} order`,
-        "assertive",
-        500
-    );
-
-  }
-
-  // Announces when page is loading data and when the loading has finished
-  const loadingHandler = (state: boolean) => {
-    if(state){
-      announce("Loading data", "polite", 500);
-    } else {
-      announce("Finished loading data", "polite", 500);
-    }
-    setIsLoading(state);
-  };
-
   useEffect(() => {
-
+   const controller = new AbortController();
+   const { signal } = controller;
     function handleResize() {
       const isWindowMobileWidth = getIsMobileWidth();
       if (isWindowMobileWidth != isMobileWidth) {
         setIsMobileWidth(isWindowMobileWidth);
       }
     }
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, {signal});
+    return () => controller.abort();
   }, []);
 
-  useEffect(() => {
-    loadingHandler(true);
-    const timeout = setTimeout(() => {
-      setFilterParams(tableFilters, () => {
-        filterAnnouncementHandler(tableFilters);
-        loadingHandler(false);
-      });
-      setCurrentPageNumber(pageCount > 0 ? 1 : 0);
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [tableFilters]);
+    useEffect(() => {
+       setFilterParams(tableFilters);
+    }, [tableFilters])
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSortParams(sortDescriptor, () => {
-        sortAnnouncementHandler();
-      });
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [sortDescriptor]);
+    useEffect(() => {
+       setSortParams(sortDescriptor);
+    }, [sortDescriptor])
+
+    useEffect(() =>{
+        const timerId = setTimeout(() => handleFilterChange("name", searchTerm), 500);
+        return () => clearTimeout(timerId);
+    }
+    , [searchTerm])
 
 
   return (
@@ -247,58 +201,61 @@ export default function DataTable({
           className={cn("relative border-2 border-solid border-slate-500 rounded-lg min-h-[25em]", className,
         )}
       >
-        <div className="flex flex-col lg:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
-          <div className={`flex flex-col lg:flex-row space-x-2 justify-center items-center`}
+        <div className="flex flex-col md:flex-row flex-nowrap items-center gap-3 justify-end m-1 py-2">
+          <div className={`flex flex-col md:flex-row space-x-2 justify-end items-center`}
           >
             <label htmlFor="searchBox" className={`text-xl`}>
               Search
             </label>{" "}
-            <div className={`flex flex-row`}>
-              <Input
-                  id={"searchBox"}
-                  value={searchTerm}
-                  placeholder="Company Name"
-                  aria-label={`Search by company name`}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleFilterChange("name", searchTerm);
-                    }
-                  }}
-                  onChange={(e) => {
-                    handleFilterChange("name", e.target.value);
-                    setSearchTerm(e.target.value);
-                  }}
-              />
-              {/* Filter Component */}
-              <Filter
-                  heading={"Filter By"}
-                  filterState={structuredClone(tableFilters)}
-                  onSelectCallbackFn={(
-                      key: string | number,
-                      value: string | number | undefined,
-                  ) => handleFilterChange(key, value)}
-              />
-              <Loading
-                  className={`${isLoading ? "visible" : "invisible"} !min-h-1`}
-              />
-            </div>
-            <div
-                className={
-                  "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"
-                }
-            >
-              <SortGroup onSortChangeFn={(key: string | number, value: Key) => handleSortComponentChange(key, value)}
-                         sortDescriptor={sortDescriptor} sortProps={sort_props}/>
-            </div>
+              <div className={`flex flex-row`}>
+                  <Input
+                      id={"searchBox"}
+                      value={searchTerm}
+                      placeholder="Company Name"
+                      aria-label={`Search by company name`}
+                      className={`mx-2`}
+                      onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                              handleFilterChange("name", searchTerm);
+                          }
+                      }}
+                      onChange={(e) => {
+                          setSearchTerm(e.target.value);
+                          handleFilterChange("name", searchTerm);
+                      }}
+                  />
+                  {/* Filter Component */}
+                  <Filter
+                      heading={"Filter By"}
+                      filterState={structuredClone(tableFilters)}
+                      onSelectCallbackFn={(newFilterObj: FilterProps) => setTableFilters((prev: FilterProps) => ({
+                          ...prev,
+                          ...newFilterObj
+                      }))}
+                  />
+
+                  <div aria-live={"polite"} aria-atomic={"false"} className={`sr-only`}>
+                      {filterMessageString}
+                      {sortMessageString}
+                  </div>
+              </div>
+              <div className={ "visible md:hidden flex flex-row items-start justify-center sm:items-center text-center"}
+              >
+                  <SortGroup
+                      onSortChangeFn={handleTableSortChange}
+                      sortDescriptor={sortDescriptor}
+                      sortProps={sort_props}
+                  />
+              </div>
           </div>
         </div>
-        <div
-            className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
-          {/* Full-screen data view */}
-          <Table
-              aria-label={title}
-              sortDescriptor={sortDescriptor}
-              onSortChange={handleTableSortChange}
+          <div
+              className="flex flex-col relative border-y-1 border-x-0.5 border-solid border-slate-500 rounded flex-shrink-2">
+              {/* Full-screen data view */}
+              <Table
+                  aria-label={title}
+                  sortDescriptor={sortDescriptor}
+                  onSortChange={handleTableSortChange}
               className="hidden md:table w-full"
           >
             <TableHeader
