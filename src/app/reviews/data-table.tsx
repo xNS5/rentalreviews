@@ -147,7 +147,7 @@ export default function DataTable({
         ...prevFilterObj,
         [key]: {
             ...prevFilterObj[key],
-            value: prevFilterObj[key]?.component_type === "select" && prevFilterObj[key]?.value === value ? undefined : value
+            value: (prevFilterObj[key]?.component_type === "select" && prevFilterObj[key]?.value === value) || `${prevFilterObj[key]?.value}`.length > 0 ? undefined : value
         },
     }));
   };
